@@ -62,6 +62,34 @@ class User extends ActiveRecord implements IdentityInterface
             ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'user_id' => 'User ID',
+            'user_name' => 'User Name',
+            'user_email' => 'User Email',
+            'user_contact_number' => 'User Contact Number',
+            'user_bio' => 'User Bio',
+            'user_auth_key' => 'User Auth Key',
+            'user_password_hash' => 'User Password Hash',
+            'user_password_reset_token' => 'User Password Reset Token',
+            'user_status' => 'User Status',
+            'user_created_datetime' => 'User Created Datetime',
+            'user_updated_datetime' => 'User Updated Datetime',
+        ];
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjects()
+    {
+        return $this->hasMany(Project::className(), ['user_id' => 'user_id']);
+    }
 
     /**
      * @inheritdoc
