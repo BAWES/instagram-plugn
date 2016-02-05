@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=startapp',
-            'username' => 'startappuser',
-            'password' => 'startappass!!',
+            'dsn' => 'mysql:host=localhost;dbname=plugto',
+            'username' => 'plugger',
+            'password' => '5397359',
             'charset' => 'utf8',
         ],
         'mailer' => [
