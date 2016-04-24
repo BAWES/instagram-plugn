@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f07f3b3e4ee7802b6bbea9249d371772",
-    "content-hash": "d73ce8c543f53bb7c361088d31b9f4f9",
+    "hash": "b3e1e0510173427502ed3ea4df7f2bc9",
+    "content-hash": "a03285eb96a6755e53f63f8320fee5fc",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -609,6 +609,49 @@
                 "image processing"
             ],
             "time": "2013-07-10 17:25:36"
+        },
+        {
+            "name": "kotchuprik/yii2-instagram-authclient",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kotchuprik/yii2-instagram-authclient.git",
+                "reference": "63e468b402b0a2b5cf31d03cdf0eaac713a1ed7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kotchuprik/yii2-instagram-authclient/zipball/63e468b402b0a2b5cf31d03cdf0eaac713a1ed7f",
+                "reference": "63e468b402b0a2b5cf31d03cdf0eaac713a1ed7f",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2-authclient": "~2.0@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kotchuprik\\authclient\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Constantin Chuprik",
+                    "email": "constantinchuprik@gmail.com"
+                }
+            ],
+            "description": "Instagram extenion for using via yii2-authclient",
+            "homepage": "http://github.com/kotchuprik/yii2-instagram-authclient",
+            "keywords": [
+                "authclient",
+                "instagram",
+                "oauth",
+                "yii2"
+            ],
+            "time": "2015-01-25 19:16:17"
         },
         {
             "name": "openbuildings/swiftmailer-css-inliner",
