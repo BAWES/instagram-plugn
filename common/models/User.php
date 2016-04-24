@@ -13,8 +13,6 @@ use yii\web\IdentityInterface;
  *
  * @property integer $user_id
  * @property string $user_name
- * @property string $user_contact_number
- * @property string $user_bio
  * @property string $user_password_hash
  * @property string $user_password_reset_token
  * @property string $user_email
@@ -45,8 +43,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [
                 'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'job_created_datetime',
-                'updatedAtAttribute' => 'job_updated_datetime',
+                'createdAtAttribute' => 'user_created_datetime',
+                'updatedAtAttribute' => 'user_updated_datetime',
                 'value' => new Expression('NOW()'),
             ],
         ];
@@ -62,7 +60,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -72,8 +70,6 @@ class User extends ActiveRecord implements IdentityInterface
             'user_id' => 'User ID',
             'user_name' => 'User Name',
             'user_email' => 'User Email',
-            'user_contact_number' => 'User Contact Number',
-            'user_bio' => 'User Bio',
             'user_auth_key' => 'User Auth Key',
             'user_password_hash' => 'User Password Hash',
             'user_password_reset_token' => 'User Password Reset Token',
@@ -82,7 +78,7 @@ class User extends ActiveRecord implements IdentityInterface
             'user_updated_datetime' => 'User Updated Datetime',
         ];
     }
-    
+
     /**
      * @return \yii\db\ActiveQuery
      */

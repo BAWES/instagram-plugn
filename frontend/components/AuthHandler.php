@@ -1,8 +1,8 @@
 <?php
 namespace frontend\components;
 
-use app\models\Auth;
-use app\models\User;
+use common\models\Auth;
+use common\models\User;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
@@ -31,28 +31,27 @@ class AuthHandler
 
         /** @var Auth $auth */
         $auth = Auth::find()->where([
-            'source' => $this->client->getId(),
-            'source_id' => $id,
+            'auth_source' => $this->client->getId(),
+            'auth_source_id' => $id,
         ])->one();
 
         if (Yii::$app->user->isGuest) {
             if ($auth) { // login
                 /** @var User $user */
                 $user = $auth->user;
-                $this->updateUserInfo($user);
+
                 Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
             } else { // signup
-                if ($email !== null && User::find()->where(['email' => $email])->exists()) {
+                if ($email !== null && User::find()->where(['user_email' => $email])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
                         Yii::t('app', "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
                     ]);
                 } else {
                     $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
-                        'username' => $nickname,
-                        'github' => $nickname,
-                        'email' => $email,
-                        'password' => $password,
+                        'user_name' => $nickname,
+                        'user_email' => $email,
+                        'user_password_hash' => $password,
                     ]);
                     $user->generateAuthKey();
                     $user->generatePasswordResetToken();
@@ -61,9 +60,9 @@ class AuthHandler
 
                     if ($user->save()) {
                         $auth = new Auth([
-                            'user_id' => $user->id,
-                            'source' => $this->client->getId(),
-                            'source_id' => (string)$id,
+                            'auth_user_id' => $user->id,
+                            'auth_source' => $this->client->getId(),
+                            'auth_source_id' => (string)$id,
                         ]);
                         if ($auth->save()) {
                             $transaction->commit();
@@ -89,14 +88,13 @@ class AuthHandler
         } else { // user already logged in
             if (!$auth) { // add auth provider
                 $auth = new Auth([
-                    'user_id' => Yii::$app->user->id,
-                    'source' => $this->client->getId(),
-                    'source_id' => (string)$attributes['id'],
+                    'auth_user_id' => Yii::$app->user->id,
+                    'auth_source' => $this->client->getId(),
+                    'auth_source_id' => (string)$attributes['id'],
                 ]);
                 if ($auth->save()) {
                     /** @var User $user */
                     $user = $auth->user;
-                    $this->updateUserInfo($user);
                     Yii::$app->getSession()->setFlash('success', [
                         Yii::t('app', 'Linked {client} account.', [
                             'client' => $this->client->getTitle()
@@ -120,16 +118,4 @@ class AuthHandler
         }
     }
 
-    /**
-     * @param User $user
-     */
-    private function updateUserInfo(User $user)
-    {
-        $attributes = $this->client->getUserAttributes();
-        $github = ArrayHelper::getValue($attributes, 'login');
-        if ($user->github === null && $github) {
-            $user->github = $github;
-            $user->save();
-        }
-    }
 }

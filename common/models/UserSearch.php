@@ -19,7 +19,7 @@ class UserSearch extends User
     {
         return [
             [['user_id', 'user_status'], 'integer'],
-            [['user_name', 'user_email', 'user_contact_number', 'user_bio', 'user_auth_key', 'user_password_hash', 'user_password_reset_token', 'user_created_datetime', 'user_updated_datetime'], 'safe'],
+            [['user_name', 'user_email', 'user_auth_key', 'user_password_hash', 'user_password_reset_token', 'user_created_datetime', 'user_updated_datetime'], 'safe'],
         ];
     }
 
@@ -64,8 +64,6 @@ class UserSearch extends User
 
         $query->andFilterWhere(['like', 'user_name', $this->user_name])
             ->andFilterWhere(['like', 'user_email', $this->user_email])
-            ->andFilterWhere(['like', 'user_contact_number', $this->user_contact_number])
-            ->andFilterWhere(['like', 'user_bio', $this->user_bio])
             ->andFilterWhere(['like', 'user_auth_key', $this->user_auth_key])
             ->andFilterWhere(['like', 'user_password_hash', $this->user_password_hash])
             ->andFilterWhere(['like', 'user_password_reset_token', $this->user_password_reset_token]);
