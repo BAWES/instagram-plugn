@@ -53,7 +53,7 @@ class Auth extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAuthUser()
+    public function getUser()
     {
         return $this->hasOne(User::className(), ['user_id' => 'auth_user_id']);
     }
