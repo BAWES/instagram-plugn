@@ -15,7 +15,7 @@ use yii\web\IdentityInterface;
  * @property string $user_name
  * @property string $user_password_hash
  * @property string $user_password_reset_token
- * @property string $user_email
+ * @property string $user_fullname
  * @property string $user_auth_key
  * @property integer $user_status
  * @property integer $user_created_datetime
@@ -69,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'user_id' => 'User ID',
             'user_name' => 'User Name',
-            'user_email' => 'User Email',
+            'user_fullname' => 'User Fullname',
             'user_auth_key' => 'User Auth Key',
             'user_password_hash' => 'User Password Hash',
             'user_password_reset_token' => 'User Password Reset Token',
@@ -101,17 +101,6 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    /**
-     * Finds user by email
-     *
-     * @param string $email
-     * @return static|null
-     */
-    public static function findByEmail($email)
-    {
-        return static::findOne(['user_email' => $email, 'user_status' => self::STATUS_ACTIVE]);
     }
 
     /**

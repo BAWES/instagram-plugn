@@ -27,8 +27,8 @@ class AuthHandler
         $attributes = $this->client->getUserAttributes();
 
         $id = ArrayHelper::getValue($attributes, 'id');
-        $email = ArrayHelper::getValue($attributes, 'full_name');
-        $nickname = ArrayHelper::getValue($attributes, 'username');
+        $fullname = ArrayHelper::getValue($attributes, 'full_name');
+        $username = ArrayHelper::getValue($attributes, 'username');
 
         /** @var Auth $auth */
         $auth = Auth::find()->where([
@@ -43,15 +43,15 @@ class AuthHandler
 
                 Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
             } else { // signup
-                if ($email !== null && User::find()->where(['user_email' => $email])->exists()) {
+                if ($username !== null && User::find()->where(['user_name' => $username])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', "User with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
+                        Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
                     ]);
                 } else {
                     $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
-                        'user_name' => $nickname,
-                        'user_email' => $email,
+                        'user_name' => $username,
+                        'user_fullname' => $fullname,
                         'user_password_hash' => $password,
                     ]);
                     $user->generateAuthKey();
