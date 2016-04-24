@@ -149,6 +149,7 @@ class SiteController extends Controller
      */
     public function onAuthSuccess($client)
     {
+        //Yii::error(print_r($client, false));
         (new AuthHandler($client))->handle();
     }
 
