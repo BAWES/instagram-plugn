@@ -76,21 +76,26 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //$authCollection = Yii::$app->authClientCollection;
-        //$instagram = $authCollection->clients['instagram'];
-        
+        $instagram = Yii::$app->authClientCollection->clients['instagram'];
+
         //print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
-        //          'users/self', 
+        //          'users/self',
         //          'GET'));
-        
-        /*print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
+
+        echo "<br/><br><br><br><br>";
+        //Now test if this access token can expire, and respond to that as needed
+        /**
+         * - If user logs in for first time, his accesstoken is stored in the user table.
+        - If access token is found to be expired/invalid (must check every instagram response for invalid access token), user will be logged out and prompted to log back in again. + his old auth records are deleted
+        - When user logs in with IG + he already has an account, update his access token and create a new auth rule for him.
+         */
+        print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
                 'users/self/media/recent',
                 'GET',
                 [
                     'count' => 2,
                 ]));
-         * 
-         */
+
 
         //BAWES ACCESS Token
         //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86

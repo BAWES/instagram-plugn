@@ -23,17 +23,31 @@ class AuthHandler
     }
 
     public function handle()
-    {        
+    {
         $attributes = $this->client->getUserAttributes();
 
-        $id = ArrayHelper::getValue($attributes, 'id');
-        $fullname = ArrayHelper::getValue($attributes, 'full_name');
-        $username = ArrayHelper::getValue($attributes, 'username');
+        /**
+         * Response from Instagram
+         */
+        $id = ArrayHelper::getValue($attributes, 'id'); //Unique Instagram User ID
+        $username = ArrayHelper::getValue($attributes, 'username'); //Unique Instagram User Name
+        $fullname = ArrayHelper::getValue($attributes, 'full_name'); //Full name as specified in Instagram
+        $profilePhoto = ArrayHelper::getValue($attributes, 'profile_picture');
+        $bio = ArrayHelper::getValue($attributes, 'bio');
+        $website = ArrayHelper::getValue($attributes, 'website');
+        $mediaCount = ArrayHelper::getValue($attributes, 'counts.media');
+        $followsCount = ArrayHelper::getValue($attributes, 'counts.follows');
+        $followersCount = ArrayHelper::getValue($attributes, 'counts.followed_by');
+
+
+        // TODO
+        //Get rid of Auth table. Merge it with User table. Auth source will always be Instagram so no need to store
+
 
         /** @var Auth $auth */
         $auth = Auth::find()->where([
-            'auth_source' => $this->client->getId(),
-            'auth_source_id' => $id,
+            'auth_source' => $this->client->getId(), //useless field
+            'auth_source_id' => $id, //id in instagram
         ])->one();
 
         if (Yii::$app->user->isGuest) {
