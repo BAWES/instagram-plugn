@@ -23,7 +23,7 @@ class AuthHandler
     }
 
     public function handle()
-    {
+    {        
         $attributes = $this->client->getUserAttributes();
 
         $id = ArrayHelper::getValue($attributes, 'id');

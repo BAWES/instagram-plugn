@@ -2,7 +2,6 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -77,6 +76,27 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        //$authCollection = Yii::$app->authClientCollection;
+        //$instagram = $authCollection->clients['instagram'];
+        
+        //print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
+        //          'users/self', 
+        //          'GET'));
+        
+        /*print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
+                'users/self/media/recent',
+                'GET',
+                [
+                    'count' => 2,
+                ]));
+         * 
+         */
+
+        //BAWES ACCESS Token
+        //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86
+        //KHALID ACCESS Token
+        //35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3
+
         return $this->render('index');
     }
 
@@ -149,8 +169,60 @@ class SiteController extends Controller
      */
     public function onAuthSuccess($client)
     {
+        Yii::error(print_r($client->accessToken, false));
+
+
         //Yii::error(print_r($client, false));
-        (new AuthHandler($client))->handle();
+
+        //The following is whats inside $client
+        /*
+        'kotchuprik\\authclient\\Instagram_4e92fdc99bbdbf7ffd5c30393987fa08ca9f1f6e_token' => yii\authclient\OAuthToken#1
+        (
+            [tokenParamKey] => 'access_token'
+            [tokenSecretParamKey] => 'oauth_token_secret'
+            [createTimestamp] => 1461525528
+            [yii\authclient\OAuthToken:_expireDurationParamKey] => null
+            [yii\authclient\OAuthToken:_params] => [
+                'access_token' => '1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86'
+                'user' => [
+                    'username' => 'bawestech'
+                    'bio' => 'BAWES is a creative agency located in Kuwait. We specialize in working with advertising agencies to craft amazing digital work for major brands'
+                    'website' => 'http://www.bawes.net'
+                    'profile_picture' => 'https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/1169833_717533781633797_1900069462_a.jpg'
+                    'full_name' => 'BAWES - Built Awesome'
+                    'id' => '1512951558'
+                ]
+            ]
+        )
+        */
+
+
+        //Yii::error(print_r($client->getUserAttributes()));
+
+        //The following is whats inside $client->getUserAttributes()
+        /*
+        'kotchuprik\\authclient\\Instagram_4e92fdc99bbdbf7ffd5c30393987fa08ca9f1f6e_token' => yii\authclient\OAuthToken#1
+            (
+                [tokenParamKey] => 'access_token'
+                [tokenSecretParamKey] => 'oauth_token_secret'
+                [createTimestamp] => 1461525717
+                [yii\authclient\OAuthToken:_expireDurationParamKey] => 'expires_in'
+                [yii\authclient\OAuthToken:_params] => [
+                    'access_token' => '1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86'
+                    'user' => [
+                        'username' => 'bawestech'
+                        'bio' => 'BAWES is a creative agency located in Kuwait. We specialize in working with advertising agencies to craft amazing digital work for major brands'
+                        'website' => 'http://www.bawes.net'
+                        'profile_picture' => 'https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/1169833_717533781633797_1900069462_a.jpg'
+                        'full_name' => 'BAWES - Built Awesome'
+                        'id' => '1512951558'
+                    ]
+                ]
+            )
+        */
+
+
+        //(new AuthHandler($client))->handle();
     }
 
     /**
