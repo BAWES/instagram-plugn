@@ -86,9 +86,14 @@ class SiteController extends Controller
         //Now test if this access token can expire, and respond to that as needed
         /**
          * - If user logs in for first time, his accesstoken is stored in the user table.
-        - If access token is found to be expired/invalid (must check every instagram response for invalid access token), user will be logged out and prompted to log back in again. + his old auth records are deleted
-        - When user logs in with IG + he already has an account, update his access token and create a new auth rule for him.
+         * - If access token is found to be expired/invalid (must check every instagram response for invalid access token), user will be logged out and prompted to log back in again. + his old auth records are deleted
+         * - When user logs in with IG + he already has an account, update his access token and create a new auth rule for him.
          */
+
+        //Test Meta responses, if anything other than code 200 is returned, log an error Yii2 / Maybe Slack?
+        //More info: https://www.instagram.com/developer/endpoints/
+        //Any errors related to the token must log the user out and disables all functionality until he re-enables his token
+
         print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
                 'users/self/media/recent',
                 'GET',
