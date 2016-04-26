@@ -179,7 +179,7 @@ class SiteController extends Controller
      */
     public function onAuthSuccess($client)
     {
-        Yii::error(print_r($client->accessToken, false));
+        //Yii::error(print_r($client->accessToken, false));
 
 
         //Yii::error(print_r($client, false));
@@ -232,7 +232,7 @@ class SiteController extends Controller
         */
 
 
-        //(new AuthHandler($client))->handle();
+        (new AuthHandler($client))->handle();
     }
 
     /**

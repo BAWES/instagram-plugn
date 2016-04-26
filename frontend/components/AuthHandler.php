@@ -39,58 +39,43 @@ class AuthHandler
         $followsCount = ArrayHelper::getValue($attributes, 'counts.follows');
         $followersCount = ArrayHelper::getValue($attributes, 'counts.followed_by');
 
-
-        // TODO
-        //Get rid of Auth table. Merge it with User table. Auth source will always be Instagram so no need to store
-
-
-        /** @var Auth $auth */
-        $auth = Auth::find()->where([
-            'auth_source' => $this->client->getId(), //useless field
-            'auth_source_id' => $id, //id in instagram
+        
+        /** @var User $user */
+        $user = User::find()->where([
+            'user_instagram_id' => $id, //id in instagram
         ])->one();
 
         if (Yii::$app->user->isGuest) {
-            if ($auth) { // login
-                /** @var User $user */
-                $user = $auth->user;
-
+            if ($user) { 
+                /**
+                 * Login
+                 */
                 Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
-            } else { // signup
+            } else {
+                /**
+                 * Signup
+                 */
                 if ($username !== null && User::find()->where(['user_name' => $username])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
                         Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
                     ]);
                 } else {
-                    $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
                         'user_name' => $username,
                         'user_fullname' => $fullname,
-                        'user_password_hash' => $password,
+                        'user_instagram_id' => $id,
+                        'user_profile_pic' => $profilePhoto,
+                        'user_bio' => $bio,
+                        'user_website' => $website,
+                        'user_media_count' => $mediaCount,
+                        'user_following_count' => $followsCount,
+                        'user_follower_count' => $followersCount,
+                        'user_ig_access_token' => "tokengoeshere", //need to get the token here
+                        
                     ]);
                     $user->generateAuthKey();
-                    $user->generatePasswordResetToken();
 
-                    $transaction = User::getDb()->beginTransaction();
-
-                    if ($user->save()) {
-                        $auth = new Auth([
-                            'auth_user_id' => $user->id,
-                            'auth_source' => $this->client->getId(),
-                            'auth_source_id' => (string)$id,
-                        ]);
-                        if ($auth->save()) {
-                            $transaction->commit();
-                            Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
-                        } else {
-                            Yii::$app->getSession()->setFlash('error', [
-                                Yii::t('app', 'Unable to save {client} account: {errors}', [
-                                    'client' => $this->client->getTitle(),
-                                    'errors' => json_encode($auth->getErrors()),
-                                ]),
-                            ]);
-                        }
-                    } else {
+                    if (!$user->save()) {
                         Yii::$app->getSession()->setFlash('error', [
                             Yii::t('app', 'Unable to save user: {errors}', [
                                 'client' => $this->client->getTitle(),
@@ -99,36 +84,6 @@ class AuthHandler
                         ]);
                     }
                 }
-            }
-        } else { // user already logged in
-            if (!$auth) { // add auth provider
-                $auth = new Auth([
-                    'auth_user_id' => Yii::$app->user->id,
-                    'auth_source' => $this->client->getId(),
-                    'auth_source_id' => (string)$attributes['id'],
-                ]);
-                if ($auth->save()) {
-                    /** @var User $user */
-                    $user = $auth->user;
-                    Yii::$app->getSession()->setFlash('success', [
-                        Yii::t('app', 'Linked {client} account.', [
-                            'client' => $this->client->getTitle()
-                        ]),
-                    ]);
-                } else {
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', 'Unable to link {client} account: {errors}', [
-                            'client' => $this->client->getTitle(),
-                            'errors' => json_encode($auth->getErrors()),
-                        ]),
-                    ]);
-                }
-            } else { // there's existing auth
-                Yii::$app->getSession()->setFlash('error', [
-                    Yii::t('app',
-                        'Unable to link {client} account. There is another user using it.',
-                        ['client' => $this->client->getTitle()]),
-                ]);
             }
         }
     }
