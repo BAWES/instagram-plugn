@@ -11,7 +11,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\components\AuthHandler;
+use frontend\components\InstagramAuthHandler;
 
 /**
  * Site controller
@@ -78,34 +78,9 @@ class SiteController extends Controller
     {
         $instagram = Yii::$app->authClientCollection->clients['instagram'];
 
-        //print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
-        //          'users/self',
-        //          'GET'));
 
         echo "<br/><br><br><br><br>";
-        //Now test if this access token can expire, and respond to that as needed
-        /**
-         * - If user logs in for first time, his accesstoken is stored in the user table.
-         * - If access token is found to be expired/invalid (must check every instagram response for invalid access token), user will be logged out and prompted to log back in again. + his old auth records are deleted
-         * - When user logs in with IG + he already has an account, update his access token and create a new auth rule for him.
-         */
-
-        //Test Meta responses, if anything other than code 200 is returned, log an error Yii2 / Maybe Slack?
-        //More info: https://www.instagram.com/developer/endpoints/
-        //Any errors related to the token must log the user out and disables all functionality until he re-enables his token
-
-        print_r($instagram->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
-                'users/self/media/recent',
-                'GET',
-                [
-                    'count' => 2,
-                ]));
-
-
-        //BAWES ACCESS Token
-        //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86
-        //KHALID ACCESS Token
-        //35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3
+        $instagram->testRandom();
 
         return $this->render('index');
     }
@@ -140,29 +115,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending email.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Displays about page.
      *
      * @return mixed
@@ -179,60 +131,9 @@ class SiteController extends Controller
      */
     public function onAuthSuccess($client)
     {
-        //Yii::error(print_r($client->accessToken, false));
+        //Client is an Instance of Instagram/OAuth2/BaseOAuth classes
 
-
-        //Yii::error(print_r($client, false));
-
-        //The following is whats inside $client
-        /*
-        'kotchuprik\\authclient\\Instagram_4e92fdc99bbdbf7ffd5c30393987fa08ca9f1f6e_token' => yii\authclient\OAuthToken#1
-        (
-            [tokenParamKey] => 'access_token'
-            [tokenSecretParamKey] => 'oauth_token_secret'
-            [createTimestamp] => 1461525528
-            [yii\authclient\OAuthToken:_expireDurationParamKey] => null
-            [yii\authclient\OAuthToken:_params] => [
-                'access_token' => '1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86'
-                'user' => [
-                    'username' => 'bawestech'
-                    'bio' => 'BAWES is a creative agency located in Kuwait. We specialize in working with advertising agencies to craft amazing digital work for major brands'
-                    'website' => 'http://www.bawes.net'
-                    'profile_picture' => 'https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/1169833_717533781633797_1900069462_a.jpg'
-                    'full_name' => 'BAWES - Built Awesome'
-                    'id' => '1512951558'
-                ]
-            ]
-        )
-        */
-
-
-        //Yii::error(print_r($client->getUserAttributes()));
-
-        //The following is whats inside $client->getUserAttributes()
-        /*
-        'kotchuprik\\authclient\\Instagram_4e92fdc99bbdbf7ffd5c30393987fa08ca9f1f6e_token' => yii\authclient\OAuthToken#1
-            (
-                [tokenParamKey] => 'access_token'
-                [tokenSecretParamKey] => 'oauth_token_secret'
-                [createTimestamp] => 1461525717
-                [yii\authclient\OAuthToken:_expireDurationParamKey] => 'expires_in'
-                [yii\authclient\OAuthToken:_params] => [
-                    'access_token' => '1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86'
-                    'user' => [
-                        'username' => 'bawestech'
-                        'bio' => 'BAWES is a creative agency located in Kuwait. We specialize in working with advertising agencies to craft amazing digital work for major brands'
-                        'website' => 'http://www.bawes.net'
-                        'profile_picture' => 'https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xfp1/t51.2885-19/1169833_717533781633797_1900069462_a.jpg'
-                        'full_name' => 'BAWES - Built Awesome'
-                        'id' => '1512951558'
-                    ]
-                ]
-            )
-        */
-
-
-        (new AuthHandler($client))->handle();
+        (new InstagramAuthHandler($client))->handle();
     }
 
     /**

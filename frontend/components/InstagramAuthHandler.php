@@ -1,16 +1,15 @@
 <?php
 namespace frontend\components;
 
-use common\models\Auth;
 use common\models\User;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
 
 /**
- * AuthHandler handles successful authentification via Yii auth component
+ * InstagramAuthHandler handles successful authentification via Yii auth component
  */
-class AuthHandler
+class InstagramAuthHandler
 {
     /**
      * @var ClientInterface
@@ -24,6 +23,8 @@ class AuthHandler
 
     public function handle()
     {
+        $accessToken = $this->client->accessToken->token;
+
         $attributes = $this->client->getUserAttributes();
 
         /**
@@ -39,18 +40,31 @@ class AuthHandler
         $followsCount = ArrayHelper::getValue($attributes, 'counts.follows');
         $followersCount = ArrayHelper::getValue($attributes, 'counts.followed_by');
 
-        
+
         /** @var User $user */
         $user = User::find()->where([
             'user_instagram_id' => $id, //id in instagram
         ])->one();
 
         if (Yii::$app->user->isGuest) {
-            if ($user) { 
+            if ($user) {
                 /**
-                 * Login
+                 * Login: Update his details and Login
                  */
-                Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
+                $user->user_name = $username;
+                $user->user_fullname = $fullname;
+                $user->user_profile_pic = $fullname;
+                $user->user_bio = $fullname;
+                $user->user_website = $website;
+                $user->user_media_count = $mediaCount;
+                $user->user_following_count = $followsCount;
+                $user->user_follower_count = $followersCount;
+                $user->user_ig_access_token = $accessToken;
+
+
+                if ($user->save()) {
+                    Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
+                }
             } else {
                 /**
                  * Signup
@@ -70,8 +84,8 @@ class AuthHandler
                         'user_media_count' => $mediaCount,
                         'user_following_count' => $followsCount,
                         'user_follower_count' => $followersCount,
-                        'user_ig_access_token' => "tokengoeshere", //need to get the token here
-                        
+                        'user_ig_access_token' => $accessToken,
+
                     ]);
                     $user->generateAuthKey();
 
@@ -82,6 +96,8 @@ class AuthHandler
                                 'errors' => json_encode($user->getErrors()),
                             ]),
                         ]);
+                    }else{
+                        Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
                     }
                 }
             }
