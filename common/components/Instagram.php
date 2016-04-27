@@ -2,7 +2,9 @@
 
 namespace common\components;
 
+use Yii;
 use yii\base\Exception;
+use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
 
 
@@ -58,44 +60,25 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     protected function apiInternalWithToken($accessToken, $url, $method, array $params, array $headers)
     {
-        $response = $this->sendRequest($method, $url . '?access_token=' . $accessToken, $params, $headers);
+        try{
+            $response = $this->sendRequest($method, $url . '?access_token=' . $accessToken, $params, $headers);
+        }catch(InvalidResponseException $e){
+            /**
+             * If the request is not successful ie. Metacode 400
+             * Example:
+             * 400 Error - OAuthAccessTokenException: The access_token provided is invalid.
+             */
+            $metaResponse = json_decode($e->responseBody);
 
-        return $this->checkMetaResponse($response);
-    }
+            $errorCode = ArrayHelper::getValue($metaResponse, 'meta.code', "???");
+            $errorType = ArrayHelper::getValue($metaResponse, 'meta.error_type', "Not set");
+            $errorMessage = ArrayHelper::getValue($metaResponse, 'meta.error_message', "Not set");
 
-    /**
-     * Checks the Meta Response from Instagram and reacts to issues
-     * More info: https://www.instagram.com/developer/endpoints/
-     * @param array $response response from Instagram API
-     * @return array API response
-     * @throws Exception on failure.
-     */
-    protected function checkMetaResponse($response)
-    {
-        $meta = ArrayHelper::getValue($response, 'meta.code');
-        //return $meta;
-
-        /**
-         * Current Todo:
-         * Research ArrayHelper to check for error_type or error_message existence?
-         * Alternative: Log error if code not 200
-         */
-
-        /*
-        "meta": {
-            "error_type": "OAuthException",
-            "code": 400,
-            "error_message": "..."
+            throw new Exception("$errorCode Error - $errorType: $errorMessage");
         }
-        */
-
-        //Test Meta response code and error messages on every request to Instagram API
-        //If anything other than code 200 is returned, log an error Yii2 / Maybe Slack?
-
-        //Any errors related to the token must disable all functionality until he re-enables his token
-        //User must login to Instagram section of website to update or refresh his token if the error is a token issue
 
         return $response;
     }
+
 
 }
