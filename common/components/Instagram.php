@@ -45,7 +45,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * Updates all users data
      */
     public function updateUserData(){
-        $activeUsers = User::find()->active()->count();
+        $activeUsers = User::find()->active()->all();
         print_r($activeUsers);
     }
 
