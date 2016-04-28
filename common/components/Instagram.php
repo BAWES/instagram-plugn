@@ -15,18 +15,22 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function testRandom(){
 
-        print_r($this->apiWithToken('35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3' ,
+        print_r($this->apiWithToken('35734335.a9d7f8a.5a08489a4f8b4a5a8b512dfbf01c5586' ,
                 'users/self/media/recent',
                 'GET',
                 [
                     'count' => 2,
                 ]));
 
+        //TO DO: All queries must take an IG User model as a parameter, not an AccessToken.
+        //Then to get access token, the functions will query $user->ig_access_token
+        //MAKE SURE IG USER IS DISABLED ON INVALID ACCESS TOKEN + ACC MANAGERS ARE EMAILED
+
 
         //BAWES ACCESS Token
         //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86
         //KHALID ACCESS Token
-        //35734335.a9d7f8a.1a5d6221613c40b6a1763c9c46fe3bc3
+        //35734335.a9d7f8a.5a08489a4f8b4a5a8b512dfbf01c5586
     }
 
 
