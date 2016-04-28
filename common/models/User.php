@@ -98,6 +98,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Disable this users account for invalid access token
+     */
+    public function disableForInvalidToken(){
+        $this->user_status = self::STATUS_INVALID_ACCESS_TOKEN;
+        $this->save();
+    }
+
+    /**
      * @inheritdoc
      */
     public static function findIdentity($id)

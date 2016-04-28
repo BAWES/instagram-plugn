@@ -16,11 +16,12 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function testRandom(){
 
-        print_r($this->apiWithToken('35734335.a9d7f8a.5a08489a4f8b4a5a8b512dfbf01c5586' ,
+        $user = User::findIdentity(3);
+        print_r($this->apiWithUser($user ,
                 'users/self/media/recent',
                 'GET',
                 [
-                    'count' => 2,
+                    'count' => Yii::$app->params['instagram.numberOfPastPostsToCrawl'],
                 ]));
 
         //TO DO: All queries must take an IG User model as a parameter, not an AccessToken.
@@ -42,11 +43,25 @@ class Instagram extends \kotchuprik\authclient\Instagram
     }
 
     /**
-     * Updates all users data
+     * Updates all users data once a day
+     * Also creates a record for the date to keep track of changes over time
      */
     public function updateUserData(){
-        $activeUsers = User::find()->active()->all();
-        print_r($activeUsers);
+        $activeUsers = User::find()->active();
+
+        //Loop through users in batches of 50
+        foreach($activeUsers->each(50) as $user){
+            $output = $this->apiWithUser($user,
+                    'users/self/media/recent',
+                    'GET',
+                    [
+                        'count' => 2,
+                    ]);
+            //do stuff
+            if($output){
+                print_r($output);
+            }
+        }
     }
 
 
@@ -56,7 +71,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
     /**
      * Performs request to the OAuth API.
-     * @param string $token the user token that will be used for this request
+     * @param common\models\User $user the user that has token which will be used for this request
      * @param string $apiSubUrl API sub URL, which will be append to [[apiBaseUrl]], or absolute API URL.
      * @param string $method request method.
      * @param array $params request parameters.
@@ -64,7 +79,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * @return array API response
      * @throws Exception on failure.
      */
-    public function apiWithToken($token, $apiSubUrl, $method = 'GET', array $params = [], array $headers = [])
+    public function apiWithUser($user, $apiSubUrl, $method = 'GET', array $params = [], array $headers = [])
     {
         if (preg_match('/^https?:\\/\\//is', $apiSubUrl)) {
             $url = $apiSubUrl;
@@ -72,14 +87,16 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $url = $this->apiBaseUrl . '/' . $apiSubUrl;
         }
 
-        return $this->apiInternalWithToken($token, $url, $method, $params, $headers);
+        return $this->apiInternalWithUser($user, $url, $method, $params, $headers);
     }
 
     /**
-     * @inheritdoc
+     * Takes user instead of access token
      */
-    protected function apiInternalWithToken($accessToken, $url, $method, array $params, array $headers)
+    protected function apiInternalWithUser($user, $url, $method, array $params, array $headers)
     {
+        $accessToken = $user->user_ig_access_token;
+
         try{
             $response = $this->sendRequest($method, $url . '?access_token=' . $accessToken, $params, $headers);
         }catch(InvalidResponseException $e){
@@ -94,7 +111,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $errorType = ArrayHelper::getValue($metaResponse, 'meta.error_type', "Not set");
             $errorMessage = ArrayHelper::getValue($metaResponse, 'meta.error_message', "Not set");
 
-            throw new Exception("$errorCode Error - $errorType: $errorMessage");
+            /**
+             * Disable User Account with Invalid Access Token
+             */
+            Yii::error("Disabling user for invalid response. $errorCode Error - $errorType: $errorMessage", __METHOD__);
+            $user->disableForInvalidToken();
+
+            return false;
         }
 
         return $response;
