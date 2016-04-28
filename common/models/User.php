@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
@@ -41,6 +42,11 @@ class User extends ActiveRecord implements IdentityInterface
         return '{{%user}}';
     }
 
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
+    }
+
     /**
      * @inheritdoc
      */
@@ -63,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['user_status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_INVALID_ACCESS_TOKEN]],
         ];
     }
 
@@ -140,4 +146,15 @@ class User extends ActiveRecord implements IdentityInterface
         $this->user_auth_key = Yii::$app->security->generateRandomString();
     }
 
+}
+
+/**
+ * Custom queries for easier management of selection
+ */
+class UserQuery extends ActiveQuery
+{
+    public function active()
+    {
+        return $this->andWhere(['user_status' => User::STATUS_ACTIVE]);
+    }
 }

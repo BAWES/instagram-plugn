@@ -16,9 +16,9 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
-        
+
         $instagram = Yii::$app->authClientCollection->clients['instagram'];
-        $instagram->testRandom();
+        $instagram->updateUserData();
     }
 
     /**

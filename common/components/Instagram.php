@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Exception;
 use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
+use common\models\User;
 
 
 class Instagram extends \kotchuprik\authclient\Instagram
@@ -31,6 +32,21 @@ class Instagram extends \kotchuprik\authclient\Instagram
         //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86
         //KHALID ACCESS Token
         //35734335.a9d7f8a.5a08489a4f8b4a5a8b512dfbf01c5586
+    }
+
+    /**
+     * Gets the latest n number of posts by all users then updates db with their details.
+     */
+    public function updateUsersLatestPosts(){
+        $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl'];
+    }
+
+    /**
+     * Updates all users data
+     */
+    public function updateUserData(){
+        $activeUsers = User::find()->active()->count();
+        print_r($activeUsers);
     }
 
 
