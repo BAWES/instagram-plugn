@@ -11,21 +11,29 @@ use yii\db\Expression;
  */
 class CronController extends \yii\console\Controller {
 
+    public $instagram;
+
+
+    public function init() {
+        parent::init();
+        $this->instagram = Yii::$app->authClientCollection->clients['instagram'];
+
+        //Delete this later
+        $this->instagram->on("newline", function(){
+            $this->stdout("\n===================================", Console::FG_YELLOW, Console::BOLD);
+            $this->stdout("\n===================================\n", Console::FG_YELLOW, Console::BOLD);
+        });
+        //End Deletethis later
+    }
+
+
     /**
      * Used for testing only
      */
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
 
-        $instagram = Yii::$app->authClientCollection->clients['instagram'];
-
-        //Delete this later
-        $instagram->on("newline", function(){
-            $this->stdout("\n-------- \n", Console::FG_YELLOW, Console::BOLD);
-        });
-        //End Deletethis later
-
-        //$instagram->updateUserData();
+        $this->instagram->getUsersLatestPosts();
 
     }
 
@@ -33,18 +41,25 @@ class CronController extends \yii\console\Controller {
      * Method called once a day
      */
     public function actionDaily() {
-        $instagram = Yii::$app->authClientCollection->clients['instagram'];
-
         //Update user data once a day to keep track of progress over time
-        $instagram->updateUserData();
+        $this->instagram->updateUserData();
 
         return self::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Method called by cron every 5 minutes or so
+     * Method called every 30 minutes
      */
-    public function actionMinute() {
+    public function actionEvery10Min() {
+        //Check if user uploaded any new media
+
+        return self::EXIT_CODE_NORMAL;
+    }
+
+    /**
+     * Method called by cron every minute
+     */
+    public function actionEveryMinute() {
 
         return self::EXIT_CODE_NORMAL;
     }

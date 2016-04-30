@@ -34,12 +34,28 @@ class Instagram extends \kotchuprik\authclient\Instagram
     /**
      * Gets the latest n number of posts by all users then updates db with their details.
      */
-    public function updateUsersLatestPosts(){
-        $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl'];
+    public function getUsersLatestPosts(){
+        $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl']; //Around 20
+        $activeUsers = User::find()->active();
 
-        //trigger newline event // delete this later
-        print_r($record->user_bio);
-        $this->trigger("newline");
+        //Loop through users in batches of 50
+        foreach($activeUsers->each(50) as $user){
+
+            $output = $this->apiWithUser($user ,
+                        'users/self/media/recent',
+                        'GET',
+                        [
+                            'count' => $numPostsToCrawl,
+                        ]);
+
+            if($output){
+
+                //trigger newline event // delete this later
+                print_r($output);
+                $this->trigger("newline");
+            }
+        }
+
     }
 
     /**
