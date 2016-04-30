@@ -52,14 +52,20 @@ class Instagram extends \kotchuprik\authclient\Instagram
         //Loop through users in batches of 50
         foreach($activeUsers->each(50) as $user){
             $output = $this->apiWithUser($user,
-                    'users/self/media/recent',
-                    'GET',
-                    [
-                        'count' => 2,
-                    ]);
-            //do stuff
+                    'users/self',
+                    'GET');
+
             if($output){
                 print_r($output);
+                $var = ArrayHelper::getValue($metaResponse, 'username');
+                $var = ArrayHelper::getValue($metaResponse, 'bio');
+                $var = ArrayHelper::getValue($metaResponse, 'website');
+                $var = ArrayHelper::getValue($metaResponse, 'profile_picture');
+                $var = ArrayHelper::getValue($metaResponse, 'full_name');
+                $var = ArrayHelper::getValue($metaResponse, 'counts.media');
+                $var = ArrayHelper::getValue($metaResponse, 'counts.followed_by');
+                $var = ArrayHelper::getValue($metaResponse, 'counts.follows');
+
             }
         }
     }
