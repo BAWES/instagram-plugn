@@ -68,6 +68,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count'], 'integer'],
+            [['user_instagram_id'], 'required'],
+            [['user_bio'], 'string'],
             ['user_status', 'default', 'value' => self::STATUS_ACTIVE],
             ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_INVALID_ACCESS_TOKEN]],
         ];
@@ -86,6 +89,14 @@ class User extends ActiveRecord implements IdentityInterface
             'user_status' => 'User Status',
             'user_created_datetime' => 'User Created Datetime',
             'user_updated_datetime' => 'User Updated Datetime',
+            'user_profile_pic' => 'User Profile Pic',
+            'user_bio' => 'User Bio',
+            'user_website' => 'User Website',
+            'user_instagram_id' => 'User Instagram ID',
+            'user_media_count' => 'User Media Count',
+            'user_following_count' => 'User Following Count',
+            'user_follower_count' => 'User Follower Count',
+            'user_ig_access_token' => 'User Ig Access Token',
         ];
     }
 
