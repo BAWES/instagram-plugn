@@ -103,6 +103,14 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getRecords()
+    {
+        return $this->hasMany(Record::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getProjects()
     {
         return $this->hasMany(Project::className(), ['user_id' => 'user_id']);
