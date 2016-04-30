@@ -24,18 +24,27 @@ class CronController extends \yii\console\Controller {
             $this->stdout("\n-------- \n", Console::FG_YELLOW, Console::BOLD);
         });
         //End Deletethis later
-        
+
+        //$instagram->updateUserData();
+
+    }
+
+    /**
+     * Method called once a day
+     */
+    public function actionDaily() {
+        $instagram = Yii::$app->authClientCollection->clients['instagram'];
+
+        //Update user data once a day to keep track of progress over time
         $instagram->updateUserData();
 
-
+        return self::EXIT_CODE_NORMAL;
     }
 
     /**
      * Method called by cron every 5 minutes or so
      */
     public function actionMinute() {
-        //Process next job in queue
-        //JobProcessQueue::processNextJob();
 
         return self::EXIT_CODE_NORMAL;
     }
