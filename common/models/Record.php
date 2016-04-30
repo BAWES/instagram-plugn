@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "record".
@@ -32,10 +34,24 @@ class Record extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'record_date'], 'required'],
+            [['user_id'], 'required'],
             [['user_id', 'record_media_count', 'record_following_count', 'record_follower_count'], 'integer'],
-            [['record_date'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'record_date',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 

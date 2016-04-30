@@ -7,6 +7,7 @@ use yii\base\Exception;
 use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
 use common\models\User;
+use common\models\Record;
 
 
 class Instagram extends \kotchuprik\authclient\Instagram
@@ -24,15 +25,10 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     'count' => Yii::$app->params['instagram.numberOfPastPostsToCrawl'],
                 ]));
 
-        //TO DO: All queries must take an IG User model as a parameter, not an AccessToken.
-        //Then to get access token, the functions will query $user->ig_access_token
-        //MAKE SURE IG USER IS DISABLED ON INVALID ACCESS TOKEN + ACC MANAGERS ARE EMAILED
+        //trigger newline event // delete this later
+        print_r($record->user_bio);
+        $this->trigger("newline");
 
-
-        //BAWES ACCESS Token
-        //1512951558.a9d7f8a.e6a6122d8a0a486ebb351b25c9f4ad86
-        //KHALID ACCESS Token
-        //35734335.a9d7f8a.5a08489a4f8b4a5a8b512dfbf01c5586
     }
 
     /**
@@ -40,6 +36,10 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function updateUsersLatestPosts(){
         $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl'];
+
+        //trigger newline event // delete this later
+        print_r($record->user_bio);
+        $this->trigger("newline");
     }
 
     /**
@@ -51,12 +51,15 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
         //Loop through users in batches of 50
         foreach($activeUsers->each(50) as $user){
+
             $output = $this->apiWithUser($user,
                     'users/self',
                     'GET');
 
             if($output){
-                //Update User Data
+                /**
+                 * Update User Data
+                 */
                 $user->user_name = ArrayHelper::getValue($output, 'data.username');
                 $user->user_bio = ArrayHelper::getValue($output, 'data.bio');
                 $user->user_website = ArrayHelper::getValue($output, 'data.website');
@@ -67,15 +70,15 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 $user->user_following_count = ArrayHelper::getValue($output, 'data.counts.follows');
                 $user->save();
 
-                //Add a Record for media,follower,following count for this date
-                
-
-
-
-                print_r($user->user_bio);
-
-                //trigger newline event // delete this later
-                $this->trigger("newline");
+                /**
+                 * Add a Record for media,follower,following count for this date
+                 */
+                $record = new Record();
+                $record->user_id = $user->user_id;
+                $record->record_media_count = $user->user_media_count;
+                $record->record_follower_count = $user->user_follower_count;
+                $record->record_following_count = $user->user_following_count;
+                $record->save();
 
             }
         }
