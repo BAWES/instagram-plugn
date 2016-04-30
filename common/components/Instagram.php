@@ -56,15 +56,26 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     'GET');
 
             if($output){
-                print_r($output);
-                $var = ArrayHelper::getValue($metaResponse, 'username');
-                $var = ArrayHelper::getValue($metaResponse, 'bio');
-                $var = ArrayHelper::getValue($metaResponse, 'website');
-                $var = ArrayHelper::getValue($metaResponse, 'profile_picture');
-                $var = ArrayHelper::getValue($metaResponse, 'full_name');
-                $var = ArrayHelper::getValue($metaResponse, 'counts.media');
-                $var = ArrayHelper::getValue($metaResponse, 'counts.followed_by');
-                $var = ArrayHelper::getValue($metaResponse, 'counts.follows');
+                //Update User Data
+                $user->user_name = ArrayHelper::getValue($output, 'data.username');
+                $user->user_bio = ArrayHelper::getValue($output, 'data.bio');
+                $user->user_website = ArrayHelper::getValue($output, 'data.website');
+                $user->user_profile_pic = ArrayHelper::getValue($output, 'data.profile_picture');
+                $user->user_fullname = ArrayHelper::getValue($output, 'data.full_name');
+                $user->user_media_count = ArrayHelper::getValue($output, 'data.counts.media');
+                $user->user_follower_count = ArrayHelper::getValue($output, 'data.counts.followed_by');
+                $user->user_following_count = ArrayHelper::getValue($output, 'data.counts.follows');
+                $user->save();
+
+                //Add a Record for media,follower,following count for this date
+                
+
+
+
+                print_r($user->user_bio);
+
+                //trigger newline event // delete this later
+                $this->trigger("newline");
 
             }
         }

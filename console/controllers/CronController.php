@@ -18,7 +18,16 @@ class CronController extends \yii\console\Controller {
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
 
         $instagram = Yii::$app->authClientCollection->clients['instagram'];
+
+        //Delete this later
+        $instagram->on("newline", function(){
+            $this->stdout("\n-------- \n", Console::FG_YELLOW, Console::BOLD);
+        });
+        //End Deletethis later
+        
         $instagram->updateUserData();
+
+
     }
 
     /**
