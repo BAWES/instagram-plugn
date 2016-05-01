@@ -103,6 +103,15 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getMedia()
+    {
+        return $this->hasMany(Media::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * Records are day by day summaries of number of media/followers/following
+     * @return \yii\db\ActiveQuery
+     */
     public function getRecords()
     {
         return $this->hasMany(Record::className(), ['user_id' => 'user_id']);
