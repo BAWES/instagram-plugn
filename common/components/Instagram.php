@@ -8,6 +8,7 @@ use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
 use common\models\User;
 use common\models\Record;
+use common\models\Media;
 
 
 class Instagram extends \kotchuprik\authclient\Instagram
@@ -56,12 +57,39 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 $posts = ArrayHelper::getValue($output, 'data');
                 foreach($posts as $post){
 
+                    $media = new Media();
+                    $media->user_id = $user->user_id;
+                    $media->media_instagram_id = ArrayHelper::getValue($post, 'id');
+                    $media->media_type = ArrayHelper::getValue($post, 'type');
+                    $media->media_link = ArrayHelper::getValue($post, 'link');
+                    $media->media_num_comments = ArrayHelper::getValue($post, 'comments.count');
+                    $media->media_num_likes = ArrayHelper::getValue($post, 'likes.count');
+                    $media->media_caption = ArrayHelper::getValue($post, 'caption.text');
+
+                    $media->media_image_lowres = ArrayHelper::getValue($post, 'images.low_resolution.url');
+                    $media->media_image_thumb = ArrayHelper::getValue($post, 'images.thumbnail.url');
+                    $media->media_image_standard = ArrayHelper::getValue($post, 'images.standard_resolution.url');
+
+                    $media->media_video_lowres = ArrayHelper::getValue($post, 'videos.low_resolution.url');
+                    $media->media_video_lowbandwidth = ArrayHelper::getValue($post, 'videos.low_bandwidth.url');
+                    $media->media_video_standard = ArrayHelper::getValue($post, 'videos.standard_resolution.url');
+
+                    $media->media_location_name = ArrayHelper::getValue($post, 'location.name');
+                    $media->media_location_longitude = ArrayHelper::getValue($post, 'location.longitude');
+                    $media->media_location_latitude = ArrayHelper::getValue($post, 'location.latitude');
+
+                    //Convert unix time to datetime
+                    $unixTime = ArrayHelper::getValue($post, 'created_time');
+                    $media->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
+
+                    $media->save(false);
+
                     //If post isnt in DB, add it to db and to the comment crawler queue
 
                     //If post is in DB, update its stats and if comment count changed, add to comment crawl queue
 
                     // delete this later
-                    print_r($post);
+                    print_r($media->media_type);
                     $this->trigger("newline");
                 }
 

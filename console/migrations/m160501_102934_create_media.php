@@ -20,6 +20,7 @@ class m160501_102934_create_media extends Migration
             'user_id' => $this->integer()->notNull()->unsigned(),
             'media_instagram_id' => $this->string()->notNull()->unique(), //1229816053673214945_35734335
             'media_type' => $this->string()->notNull(), //video vs image
+            'media_link' => $this->string()->notNull(), //url
             'media_num_comments' => $this->integer()->notNull(), //Number of comments
             'media_num_likes' => $this->integer()->notNull(), //Number of likes
             'media_caption' => $this->text(), //Firemen trying to get us out of the elevator
@@ -27,7 +28,7 @@ class m160501_102934_create_media extends Migration
             'media_image_thumb' => $this->string(),
             'media_image_standard' => $this->string(),
             'media_video_lowres' => $this->string(),
-            'media_video_thumb' => $this->string(),
+            'media_video_lowbandwidth' => $this->string(),
             'media_video_standard' => $this->string(),
             'media_location_name' => $this->string(), //Kuwait City (sharq)
             'media_location_longitude' => $this->string(), //47.984060789421
