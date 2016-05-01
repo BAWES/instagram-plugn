@@ -47,8 +47,7 @@ class Media extends \yii\db\ActiveRecord
             [['user_id', 'media_instagram_id', 'media_type', 'media_link', 'media_num_comments', 'media_num_likes', 'media_created_datetime'], 'required'],
             [['user_id', 'media_num_comments', 'media_num_likes'], 'integer'],
             [['media_caption'], 'string'],
-            [['media_created_datetime'], 'safe'],
-            [['media_instagram_id', 'media_type', 'media_link', 'media_image_lowres', 'media_image_thumb', 'media_image_standard', 'media_video_lowres', 'media_video_lowbandwidth', 'media_video_standard', 'media_location_name', 'media_location_longitude', 'media_location_latitude'], 'string', 'max' => 255],
+            [['media_type', 'media_link', 'media_image_lowres', 'media_image_thumb', 'media_image_standard', 'media_video_lowres', 'media_video_lowbandwidth', 'media_video_standard', 'media_location_name'], 'string', 'max' => 255],
             [['media_instagram_id'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];

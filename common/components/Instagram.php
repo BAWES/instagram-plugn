@@ -57,39 +57,65 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 $posts = ArrayHelper::getValue($output, 'data');
                 foreach($posts as $post){
 
-                    $media = new Media();
-                    $media->user_id = $user->user_id;
-                    $media->media_instagram_id = ArrayHelper::getValue($post, 'id');
-                    $media->media_type = ArrayHelper::getValue($post, 'type');
-                    $media->media_link = ArrayHelper::getValue($post, 'link');
-                    $media->media_num_comments = ArrayHelper::getValue($post, 'comments.count');
-                    $media->media_num_likes = ArrayHelper::getValue($post, 'likes.count');
-                    $media->media_caption = ArrayHelper::getValue($post, 'caption.text');
+                    $tempMedia = new Media();
+                    $tempMedia->user_id = $user->user_id;
+                    $tempMedia->media_instagram_id = ArrayHelper::getValue($post, 'id');
+                    $tempMedia->media_type = ArrayHelper::getValue($post, 'type');
+                    $tempMedia->media_link = ArrayHelper::getValue($post, 'link');
+                    $tempMedia->media_num_comments = ArrayHelper::getValue($post, 'comments.count');
+                    $tempMedia->media_num_likes = ArrayHelper::getValue($post, 'likes.count');
+                    $tempMedia->media_caption = ArrayHelper::getValue($post, 'caption.text');
 
-                    $media->media_image_lowres = ArrayHelper::getValue($post, 'images.low_resolution.url');
-                    $media->media_image_thumb = ArrayHelper::getValue($post, 'images.thumbnail.url');
-                    $media->media_image_standard = ArrayHelper::getValue($post, 'images.standard_resolution.url');
+                    $tempMedia->media_image_lowres = ArrayHelper::getValue($post, 'images.low_resolution.url');
+                    $tempMedia->media_image_thumb = ArrayHelper::getValue($post, 'images.thumbnail.url');
+                    $tempMedia->media_image_standard = ArrayHelper::getValue($post, 'images.standard_resolution.url');
 
-                    $media->media_video_lowres = ArrayHelper::getValue($post, 'videos.low_resolution.url');
-                    $media->media_video_lowbandwidth = ArrayHelper::getValue($post, 'videos.low_bandwidth.url');
-                    $media->media_video_standard = ArrayHelper::getValue($post, 'videos.standard_resolution.url');
+                    $tempMedia->media_video_lowres = ArrayHelper::getValue($post, 'videos.low_resolution.url');
+                    $tempMedia->media_video_lowbandwidth = ArrayHelper::getValue($post, 'videos.low_bandwidth.url');
+                    $tempMedia->media_video_standard = ArrayHelper::getValue($post, 'videos.standard_resolution.url');
 
-                    $media->media_location_name = ArrayHelper::getValue($post, 'location.name');
-                    $media->media_location_longitude = ArrayHelper::getValue($post, 'location.longitude');
-                    $media->media_location_latitude = ArrayHelper::getValue($post, 'location.latitude');
+                    $tempMedia->media_location_name = ArrayHelper::getValue($post, 'location.name');
+                    $tempMedia->media_location_longitude = ArrayHelper::getValue($post, 'location.longitude');
+                    $tempMedia->media_location_latitude = ArrayHelper::getValue($post, 'location.latitude');
 
                     //Convert unix time to datetime
                     $unixTime = ArrayHelper::getValue($post, 'created_time');
-                    $media->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
+                    $tempMedia->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
 
-                    $media->save(false);
-
-                    //If post isnt in DB, add it to db and to the comment crawler queue
-
-                    //If post is in DB, update its stats and if comment count changed, add to comment crawl queue
+                    //Check if Media already exists
+                    $media = Media::findOne(['media_instagram_id' => $tempMedia->media_instagram_id]);
+                    
+                    if($media){
+                        $oldCommentCount = $media->media_num_comments;
+                        
+                        //Update Existing Media
+                        $media->media_num_comments = $tempMedia->media_num_comments;
+                        $media->media_num_likes = $tempMedia->media_num_likes;
+                        $media->media_caption = $tempMedia->media_caption;
+                        
+                        //If Number of Comments has changed, Crawl comments again
+                        //Make sure to soft-delete comments that have been manually deleted via Instagram
+                        //All soft-deleted comments must have "Source" to know who soft deleted it
+                        
+                        if($oldCommentCount != $media->media_num_comments){
+                            //Send media to have comments crawled
+                            //$this->crawlComments($user, $media);
+                        }
+                        
+                        print_r("media exists");
+                    }else{
+                        //Create new Media record
+                        if($tempMedia->save()){
+                            //Send media to have comments crawled
+                            //$this->crawlComments($user, $media);
+                            
+                        }else{
+                            Yii::error(print_r($tempMedia->errors, true));
+                        }
+                    }
 
                     // delete this later
-                    print_r($media->media_type);
+                    print_r($tempMedia->media_type);
                     $this->trigger("newline");
                 }
 

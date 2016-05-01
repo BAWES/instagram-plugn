@@ -33,6 +33,7 @@ class CronController extends \yii\console\Controller {
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
 
+        //Get latest 20 posts, see if user uploaded any new media or got updates on existing media.
         $this->instagram->getUsersLatestPosts();
 
     }
