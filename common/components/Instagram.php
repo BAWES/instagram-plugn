@@ -41,18 +41,30 @@ class Instagram extends \kotchuprik\authclient\Instagram
         //Loop through users in batches of 50
         foreach($activeUsers->each(50) as $user){
 
+            //Get the latest 20 posts from the user
             $output = $this->apiWithUser($user ,
                         'users/self/media/recent',
                         'GET',
                         [
-                            'count' => $numPostsToCrawl,
+                            'count' => 1//$numPostsToCrawl,
                         ]);
 
             if($output){
+                /**
+                 * Loop Through The Posts
+                 */
+                $posts = ArrayHelper::getValue($output, 'data');
+                foreach($posts as $post){
 
-                //trigger newline event // delete this later
-                print_r($output);
-                $this->trigger("newline");
+                    //If post isnt in DB, add it to db and to the comment crawler queue
+
+                    //If post is in DB, update its stats and if comment count changed, add to comment crawl queue
+
+                    // delete this later
+                    print_r($post);
+                    $this->trigger("newline");
+                }
+
             }
         }
 
