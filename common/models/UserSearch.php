@@ -18,8 +18,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['user_id', 'user_status'], 'integer'],
-            [['user_name', 'user_email', 'user_auth_key', 'user_password_hash', 'user_password_reset_token', 'user_created_datetime', 'user_updated_datetime'], 'safe'],
+            [['user_id', 'user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count'], 'integer'],
+            [['user_name', 'user_fullname', 'user_auth_key', 'user_created_datetime', 'user_updated_datetime', 'user_profile_pic', 'user_bio', 'user_website', 'user_ig_access_token'], 'safe'],
         ];
     }
 
@@ -43,6 +43,8 @@ class UserSearch extends User
     {
         $query = User::find();
 
+        // add conditions that should always apply here
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -55,18 +57,25 @@ class UserSearch extends User
             return $dataProvider;
         }
 
+        // grid filtering conditions
         $query->andFilterWhere([
             'user_id' => $this->user_id,
             'user_status' => $this->user_status,
             'user_created_datetime' => $this->user_created_datetime,
             'user_updated_datetime' => $this->user_updated_datetime,
+            'user_instagram_id' => $this->user_instagram_id,
+            'user_media_count' => $this->user_media_count,
+            'user_following_count' => $this->user_following_count,
+            'user_follower_count' => $this->user_follower_count,
         ]);
 
         $query->andFilterWhere(['like', 'user_name', $this->user_name])
-            ->andFilterWhere(['like', 'user_email', $this->user_email])
+            ->andFilterWhere(['like', 'user_fullname', $this->user_fullname])
             ->andFilterWhere(['like', 'user_auth_key', $this->user_auth_key])
-            ->andFilterWhere(['like', 'user_password_hash', $this->user_password_hash])
-            ->andFilterWhere(['like', 'user_password_reset_token', $this->user_password_reset_token]);
+            ->andFilterWhere(['like', 'user_profile_pic', $this->user_profile_pic])
+            ->andFilterWhere(['like', 'user_bio', $this->user_bio])
+            ->andFilterWhere(['like', 'user_website', $this->user_website])
+            ->andFilterWhere(['like', 'user_ig_access_token', $this->user_ig_access_token]);
 
         return $dataProvider;
     }
