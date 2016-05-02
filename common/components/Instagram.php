@@ -47,7 +47,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         'users/self/media/recent',
                         'GET',
                         [
-                            'count' => 1//$numPostsToCrawl,
+                            'count' => $numPostsToCrawl,
                         ]);
 
             if($output){
@@ -82,46 +82,71 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     $unixTime = ArrayHelper::getValue($post, 'created_time');
                     $tempMedia->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
 
-                    //Check if Media already exists
+                    //If Media already exists
                     $media = Media::findOne(['media_instagram_id' => $tempMedia->media_instagram_id]);
-                    
                     if($media){
                         $oldCommentCount = $media->media_num_comments;
-                        
+
                         //Update Existing Media
                         $media->media_num_comments = $tempMedia->media_num_comments;
                         $media->media_num_likes = $tempMedia->media_num_likes;
                         $media->media_caption = $tempMedia->media_caption;
-                        
-                        //If Number of Comments has changed, Crawl comments again
+
+                        //Make sure to get $media "with" comments via eager loading, then to know if comment
+                        //is already saved in our db, we compare comment id from IG with the ones in our array
+
+                        //To find comments that have manually been deleted from IG, we check IG comments response
+                        //if there's any comments currently in our records with no ID listed in IG response array then
+                        //that has been deleted manually.
                         //Make sure to soft-delete comments that have been manually deleted via Instagram
                         //All soft-deleted comments must have "Source" to know who soft deleted it
-                        
+
+                        //If Number of Comments has changed, Crawl comments again
                         if($oldCommentCount != $media->media_num_comments){
                             //Send media to have comments crawled
-                            //$this->crawlComments($user, $media);
+                            $this->crawlComments($user, $media);
                         }
-                        
+
                         print_r("media exists");
-                    }else{
+
+                    }else{//If Media doesn't exist
                         //Create new Media record
                         if($tempMedia->save()){
+
                             //Send media to have comments crawled
-                            //$this->crawlComments($user, $media);
-                            
+                            $this->crawlComments($user, $tempMedia);
+
                         }else{
                             Yii::error(print_r($tempMedia->errors, true));
                         }
                     }
 
                     // delete this later
-                    print_r($tempMedia->media_type);
+                    print_r($tempMedia->media_type. " - ". $tempMedia->media_caption . "\n");
                     $this->trigger("newline");
                 }
 
             }
         }
 
+    }
+
+    /**
+     * Crawls comments belonging to a users media
+     * @param \common\models\User $user the user that has token which will be used for this request
+     * @param \common\models\Media $media the media that will be crawled
+     * @return array API response
+     */
+    public function crawlComments($user, $media)
+    {
+        //Crawl comments
+        $output = $this->apiWithUser($user ,
+                'media/'.$media->media_instagram_id.'/comments',
+                'GET');
+
+        print_r($output);
+
+        return true;
     }
 
     /**
@@ -173,7 +198,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
     /**
      * Performs request to the OAuth API.
-     * @param common\models\User $user the user that has token which will be used for this request
+     * @param \common\models\User $user the user that has token which will be used for this request
      * @param string $apiSubUrl API sub URL, which will be append to [[apiBaseUrl]], or absolute API URL.
      * @param string $method request method.
      * @param array $params request parameters.
