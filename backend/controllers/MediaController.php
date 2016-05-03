@@ -3,16 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\User;
-use common\models\UserSearch;
+use common\models\Media;
+use common\models\MediaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * MediaController implements the CRUD actions for Media model.
  */
-class UserController extends Controller
+class MediaController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class UserController extends Controller
     }
 
     /**
-     * Lists all User models.
+     * Lists all Media models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
+        $searchModel = new MediaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,8 +45,8 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
+     * Displays a single Media model.
+     * @param string $id
      * @return mixed
      */
     public function actionView($id)
@@ -57,9 +57,9 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing Media model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -70,15 +70,15 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Media model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return User the loaded model
+     * @param string $id
+     * @return Media the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = Media::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
