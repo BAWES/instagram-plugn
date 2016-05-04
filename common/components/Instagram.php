@@ -144,6 +144,12 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
+        //To find comments that have manually been deleted from IG, we check IG comments response
+        //if there's any comments currently in our records with no ID listed in IG response array then
+        //that has been deleted manually.
+        //Make sure to soft-delete comments that have been manually deleted via Instagram
+        //All soft-deleted comments must have "Source" to know who soft deleted it
+
         print_r($output);
 
         return true;
