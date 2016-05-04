@@ -53,8 +53,8 @@ class InstagramAuthHandler
                  */
                 $user->user_name = $username;
                 $user->user_fullname = $fullname;
-                $user->user_profile_pic = $fullname;
-                $user->user_bio = $fullname;
+                $user->user_profile_pic = $profilePhoto;
+                $user->user_bio = $bio;
                 $user->user_website = $website;
                 $user->user_media_count = $mediaCount;
                 $user->user_following_count = $followsCount;
