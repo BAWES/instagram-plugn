@@ -41,7 +41,7 @@ class Comment extends \yii\db\ActiveRecord
             [['media_id', 'comment_deleted'], 'integer'],
             [['comment_text', 'comment_deleted_reason'], 'string'],
             [['comment_datetime'], 'safe'],
-            [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string', 'max' => 255],
+            [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string'],
             [['comment_instagram_id'], 'unique'],
             //[['media_id'], 'exist', 'skipOnError' => true, 'targetClass' => Media::className(), 'targetAttribute' => ['media_id' => 'media_id']],
         ];

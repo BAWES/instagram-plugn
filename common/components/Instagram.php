@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use common\models\User;
 use common\models\Record;
 use common\models\Media;
+use common\models\Comment;
 
 
 class Instagram extends \kotchuprik\authclient\Instagram
@@ -83,7 +84,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     $tempMedia->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
 
                     //If Media already exists
-                    $media = Media::findOne(['media_instagram_id' => $tempMedia->media_instagram_id]);
+                    $media = Media::find()->with('comments')->where(['media_instagram_id' => $tempMedia->media_instagram_id])->one();
                     if($media){
                         $oldCommentCount = $media->media_num_comments;
 
@@ -92,22 +93,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         $media->media_num_likes = $tempMedia->media_num_likes;
                         $media->media_caption = $tempMedia->media_caption;
 
-                        //Make sure to get $media "with" comments via eager loading, then to know if comment
-                        //is already saved in our db, we compare comment id from IG with the ones in our array
-
-                        //To find comments that have manually been deleted from IG, we check IG comments response
-                        //if there's any comments currently in our records with no ID listed in IG response array then
-                        //that has been deleted manually.
-                        //Make sure to soft-delete comments that have been manually deleted via Instagram
-                        //All soft-deleted comments must have "Source" to know who soft deleted it
-
                         //If Number of Comments has changed, Crawl comments again
                         if($oldCommentCount != $media->media_num_comments){
                             //Send media to have comments crawled
                             $this->crawlComments($user, $media);
                         }
 
-                        print_r("media exists");
+                        print_r("media exists ");
 
                     }else{//If Media doesn't exist
                         //Create new Media record
@@ -144,13 +136,40 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
+        //CURRENT TODO
+        // 1) Get an array of comment IG-ID's already saved in our db for this media
+        // 2) Loop through comments
+        // 2A) Save the comments who dont exist in our array
+        // 2B) Soft Delete comments who exist in array but not in IG query
+
+        foreach($output['data'] as $instagramComment){
+
+            /*
+            $comment = new Comment();
+            $comment->media_id = ArrayHelper::getValue($instagramComment, 'id');
+            $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
+            $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
+            $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
+            $comment->comment_by_id = ArrayHelper::getValue($instagramComment, 'from.id');
+            $comment->comment_by_fullname = ArrayHelper::getValue($instagramComment, 'from.full_name');
+
+            $unixTime = ArrayHelper::getValue($instagramComment, 'created_time');
+            $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
+            $comment->save();
+            */
+
+
+            //print_r($instagramComment);
+        }
+
         //To find comments that have manually been deleted from IG, we check IG comments response
         //if there's any comments currently in our records with no ID listed in IG response array then
         //that has been deleted manually.
         //Make sure to soft-delete comments that have been manually deleted via Instagram
         //All soft-deleted comments must have "Source" to know who soft deleted it
 
-        print_r($output);
+        //to know if comment is already saved in our db,
+        //we compare comment id from IG with the ones in our array
 
         return true;
     }
