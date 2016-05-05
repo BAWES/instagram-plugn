@@ -23,6 +23,9 @@ use Yii;
  */
 class Comment extends \yii\db\ActiveRecord
 {
+    const DELETED_TRUE = 1;
+    const DELETED_FALSE = 0;
+
     /**
      * @inheritdoc
      */
