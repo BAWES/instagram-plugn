@@ -146,7 +146,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
             /*
             $comment = new Comment();
-            $comment->media_id = ArrayHelper::getValue($instagramComment, 'id');
+            $comment->media_id = $media->media_id;
+            $comment->comment_instagram_id = ArrayHelper::getValue($instagramComment, 'id');
             $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
             $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
             $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
@@ -157,6 +158,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
             $comment->save();
             */
+
+            //print_r($comment->errors);
 
 
             //print_r($instagramComment);
