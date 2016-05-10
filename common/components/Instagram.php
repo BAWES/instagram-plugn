@@ -86,6 +86,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     //If Media already exists
                     $media = Media::find()->with('comments')->where(['media_instagram_id' => $tempMedia->media_instagram_id])->one();
                     if($media){
+                        print_r("Media was found in db ");
                         $oldCommentCount = $media->media_num_comments;
 
                         //Update Existing Media
@@ -99,9 +100,9 @@ class Instagram extends \kotchuprik\authclient\Instagram
                             $this->crawlComments($user, $media);
                         }
 
-                        print_r("media exists ");
-
+                        $media->save();
                     }else{//If Media doesn't exist
+                        print_r("Didn't find media in db ");
                         //Create new Media record
                         if($tempMedia->save()){
 
@@ -114,7 +115,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     }
 
                     // delete this later
-                    print_r($tempMedia->media_type. " - ". $tempMedia->media_caption . "\n");
+                    print_r("\n". $tempMedia->media_type. " post - ". $tempMedia->media_caption . "\n");
                     $this->trigger("newline");
                 }
 
@@ -135,6 +136,9 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $output = $this->apiWithUser($user ,
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
+
+        $currentComments = $media->comments;
+        print_r($currentComments);
 
         //CURRENT TODO
         // 1) Get an array of comment IG-ID's already saved in our db for this media
