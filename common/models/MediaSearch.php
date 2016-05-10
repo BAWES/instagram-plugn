@@ -57,6 +57,9 @@ class MediaSearch extends Media
             return $dataProvider;
         }
 
+        //Eager load with user to get name
+        $query->with("user");
+
         // grid filtering conditions
         $query->andFilterWhere([
             'media_id' => $this->media_id,
