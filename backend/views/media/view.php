@@ -48,4 +48,15 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <h1>Comments</h1>
+    <ul>
+    <?php
+    foreach($model->comments as $comment){ ?>
+        <li>
+            <b><a href="<?= yii\helpers\Url::to(["comment/view", 'id'=>$comment->comment_id]) ?>">
+                <?= Yii::$app->formatter->asDatetime($comment->comment_datetime, "medium") ?></a></b><br/>
+            <i><?= $comment->comment_by_username ?>:</i> <?= $comment->comment_text; ?>
+        </li>
+    <?php } ?>
+    </ul>
 </div>

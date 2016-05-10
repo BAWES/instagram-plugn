@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //['class' => 'yii\grid\SerialColumn'],
 
             //'media_id',
+            'media_image_thumb:image',
             'user.user_name',
             'media_instagram_id',
             'media_type',

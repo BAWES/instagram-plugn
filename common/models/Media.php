@@ -85,7 +85,7 @@ class Media extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['media_id' => 'media_id']);
+        return $this->hasMany(Comment::className(), ['media_id' => 'media_id'])->orderBy("comment_datetime DESC");
     }
 
     /**
