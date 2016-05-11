@@ -28,20 +28,20 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'StartApp',
+        'brandLabel' => 'Plugn.io',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
+    $menuItems = [];
+
+    if (Yii::$app->user->isGuest) { //Logged Out Menu
+        $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
+    } else { //Logged In Menu
+        $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
+        $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->user_name . ')',
             'url' => ['/site/logout'],

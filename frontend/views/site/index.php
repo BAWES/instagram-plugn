@@ -7,9 +7,9 @@ $this->title = 'Startapp - Start building your team!';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Startapp!</h1>
+        <h1>Plugn.io</h1>
 
-        <p class="lead">The best application.</p>
+        <p class="lead">Instagram Comment Management for Teams</p>
 
         <p><a class="btn btn-lg btn-success" href="#">Get started</a></p>
     </div>
@@ -17,7 +17,7 @@ $this->title = 'Startapp - Start building your team!';
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -26,7 +26,7 @@ $this->title = 'Startapp - Start building your team!';
 
                 <p><a class="btn btn-default" href="#">Link1 &raquo;</a></p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -35,7 +35,7 @@ $this->title = 'Startapp - Start building your team!';
 
                 <p><a class="btn btn-default" href="#">Link2 &raquo;</a></p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Heading</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
