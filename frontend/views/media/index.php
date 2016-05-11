@@ -18,10 +18,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
                         ["media/view", 'id' => $mediaItem->media_id]
                         ) ?>
-                <table width=100% border>
-                    <tr><td>Comments</td><td><?= $mediaItem->media_num_comments ?></td></tr>
-                    <tr><td>Likes</td><td><?= $mediaItem->media_num_likes ?></td></tr>
-                </table>
+                <div class=row>
+                    <div class=col-sm-6>
+                        <?= $mediaItem->media_num_comments ?> Comments
+                    </div>
+                    <div class=col-sm-6>
+                        <?= $mediaItem->media_num_likes ?> Likes
+                    </div>
+                </div>
             </div>
         <?php } ?>
     </div>

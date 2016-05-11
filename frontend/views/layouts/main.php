@@ -42,6 +42,7 @@ AppAsset::register($this);
     } else { //Logged In Menu
         $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
         $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
+        $menuItems[] = ['label' => 'Stats', 'url' => ['/stats/index']];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->user_name . ')',
             'url' => ['/site/logout'],
