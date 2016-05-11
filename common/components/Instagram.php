@@ -83,10 +83,10 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     $unixTime = ArrayHelper::getValue($post, 'created_time');
                     $tempMedia->media_created_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
 
-                    //If Media already exists
+
                     $media = Media::find()->with('comments')->where(['media_instagram_id' => $tempMedia->media_instagram_id])->one();
+                    //If Media already exists
                     if($media){
-                        print_r("Media was found in db ");
                         $oldCommentCount = $media->media_num_comments;
 
                         //Update Existing Media
@@ -97,20 +97,16 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
                         //If Number of Comments has changed, Crawl comments again
                         if($oldCommentCount != $media->media_num_comments){
-                            //Send media to have comments crawled
                             $this->crawlComments($user, $media);
                         }
 
                     }else{//If Media doesn't exist
-                        print_r("Didn't find media in db ");
-                        //Create new Media record
+                        //Create new Media record and have its comments crawled
                         if($tempMedia->save()){
-
-                            //Send media to have comments crawled
+                            //Crawl this medias comments as it is newly added to our db
                             $this->crawlComments($user, $tempMedia);
-
                         }else{
-                            Yii::error(print_r($tempMedia->errors, true));
+                            Yii::error("[Fatal Error] Issue saving new media. ".print_r($tempMedia->errors, true), __METHOD__);
                         }
                     }
 
@@ -137,6 +133,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
+        $liveCommentsArray = array();
         $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
         /** $oldCommentsArray returns a map of old Instagram IDs mapped to its ID in our database
          * Example Output:
@@ -145,49 +142,62 @@ class Instagram extends \kotchuprik\authclient\Instagram
         */
 
         // Loop through comments returned from Instagram for this media
-        foreach($output['data'] as $instagramComment){
+        foreach($output['data'] as $instagramComment)
+        {
 
             $commentInstagramId = ArrayHelper::getValue($instagramComment, 'id');
+            $liveCommentsArray[$commentInstagramId] = 1;
 
             //Check if this comment doesn't already exist in our database
-            if(!isset($oldCommentsArray[$commentInstagramId])){
-                print_r("This comment already exists");
-                //Add it to our database
-                //Make sure if this comment is made by current medias user , then the
+            if(!isset($oldCommentsArray[$commentInstagramId]))
+            {
+                //TODO Make sure if this comment is made by current medias user , then the
                 //source of this comment is through Instagram and not through Plugn App.
+                //This we can only develop once we program history of users who responded to comments
+                //This will help track the blame for each comment
+                //Note: This might not be needed once we develop the commenting feature
+
+
+                //Add it to our database
+                $comment = new Comment();
+                $comment->media_id = $media->media_id;
+                $comment->comment_instagram_id = $commentInstagramId;
+                $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
+                $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
+                $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
+                $comment->comment_by_id = ArrayHelper::getValue($instagramComment, 'from.id');
+                $comment->comment_by_fullname = ArrayHelper::getValue($instagramComment, 'from.full_name');
+
+                $unixTime = ArrayHelper::getValue($instagramComment, 'created_time');
+                $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
+
+                if(!$comment->save())
+                {
+                    Yii::error("[Fatal Error] Unable to save comment ".print_r($comment->errors, true), __METHOD__);
+                }else{
+                    //Add this new saved comment to oldCommentsArray to know what comments our db has for this post
+                    $oldCommentsArray[$comment->comment_instagram_id] = $comment->comment_id;
+                }
             }
 
-            // TODO Soft Delete comments who exist in Old comments but not in IG query
-
-            /*
-            $comment = new Comment();
-            $comment->media_id = $media->media_id;
-            $comment->comment_instagram_id = $commentInstagramId;
-            $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
-            $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
-            $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
-            $comment->comment_by_id = ArrayHelper::getValue($instagramComment, 'from.id');
-            $comment->comment_by_fullname = ArrayHelper::getValue($instagramComment, 'from.full_name');
-
-            $unixTime = ArrayHelper::getValue($instagramComment, 'created_time');
-            $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
-            $comment->save();
-            */
-
-            //print_r($comment->errors);
-
-
-            //print_r($instagramComment);
         }
 
-        //To find comments that have manually been deleted from IG, we check IG comments response
-        //if there's any comments currently in our records with no ID listed in IG response array then
-        //that has been deleted manually.
-        //Make sure to soft-delete comments that have been manually deleted via Instagram
-        //All soft-deleted comments must have "Source" to know who soft deleted it
+        //Check if there are any comments in our database for this media that aren't on Instagram (manually deleted by someone)
+        $deletedComments = array_diff_key($oldCommentsArray, $liveCommentsArray);
+        $commentIdsToDelete = array_values($deletedComments);
 
-        //to know if comment is already saved in our db,
-        //we compare comment id from IG with the ones in our array
+        //If there are comments to delete, execute the query for soft deletion
+        if(!empty($commentIdsToDelete)){
+            //Soft delete any deleted comments that aren't already marked as soft-deleted
+            //to avoid repetitive/overwriting issues
+            $query = Yii::$app->db->createCommand()->update('comment', [
+                'comment_deleted' => Comment::DELETED_TRUE,
+                'comment_deleted_reason' => Comment::REASON_DELETED_DEFAULT,
+            ],[
+                'comment_deleted' => Comment::DELETED_FALSE,
+                'comment_id' => $commentIdsToDelete,
+            ])->execute();
+        }
 
         return true;
     }
@@ -196,17 +206,20 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * Updates all users data once a day
      * Also creates a record for the date to keep track of changes over time
      */
-    public function updateUserData(){
+    public function updateUserData()
+    {
         $activeUsers = User::find()->active();
 
         //Loop through users in batches of 50
-        foreach($activeUsers->each(50) as $user){
+        foreach($activeUsers->each(50) as $user)
+        {
 
             $output = $this->apiWithUser($user,
                     'users/self',
                     'GET');
 
-            if($output){
+            if($output)
+            {
                 /**
                  * Update User Data
                  */
@@ -284,7 +297,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
             /**
              * Disable User Account with Invalid Access Token
              */
-            Yii::error("Disabling user for invalid response. $errorCode Error - $errorType: $errorMessage", __METHOD__);
+            Yii::error("[Fatal Error] Disabling user for invalid response. $errorCode Error - $errorType: $errorMessage", __METHOD__);
             $user->disableForInvalidToken();
 
             return false;
