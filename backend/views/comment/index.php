@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'media_id',
             //'comment_instagram_id',
             'comment_text:ntext',
+            'comment_deleted',
 
             // 'comment_by_photo',
             // 'comment_by_id',
