@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class='row'>
     <h3>Comments</h3>
     <ul>
-    <? foreach($media->comments as $comment){ ?>
+    <?php foreach($media->comments as $comment){ ?>
         <li style="<?= $comment->comment_deleted?"color:red;":"" ?>">
             <b><?= Yii::$app->formatter->asDatetime($comment->comment_datetime, "medium") ?></b><br/>
             <i><?= $comment->comment_by_username ?>:</i> <?= $comment->comment_text ?>
