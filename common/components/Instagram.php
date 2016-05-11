@@ -93,6 +93,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         $media->media_num_comments = $tempMedia->media_num_comments;
                         $media->media_num_likes = $tempMedia->media_num_likes;
                         $media->media_caption = $tempMedia->media_caption;
+                        $media->save();
 
                         //If Number of Comments has changed, Crawl comments again
                         if($oldCommentCount != $media->media_num_comments){
@@ -100,7 +101,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
                             $this->crawlComments($user, $media);
                         }
 
-                        $media->save();
                     }else{//If Media doesn't exist
                         print_r("Didn't find media in db ");
                         //Create new Media record
@@ -137,21 +137,32 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
-        $currentComments = $media->comments;
-        print_r($currentComments);
+        $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
+        /** $oldCommentsArray returns a map of old Instagram IDs mapped to its ID in our database
+         * Example Output:
+         *    [17856567064059917] => 22
+         *    [17856289873059917] => 21
+        */
 
-        //CURRENT TODO
-        // 1) Get an array of comment IG-ID's already saved in our db for this media
-        // 2) Loop through comments
-        // 2A) Save the comments who dont exist in our array
-        // 2B) Soft Delete comments who exist in array but not in IG query
-
+        // Loop through comments returned from Instagram for this media
         foreach($output['data'] as $instagramComment){
+
+            $commentInstagramId = ArrayHelper::getValue($instagramComment, 'id');
+
+            //Check if this comment doesn't already exist in our database
+            if(!isset($oldCommentsArray[$commentInstagramId])){
+                print_r("This comment already exists");
+                //Add it to our database
+                //Make sure if this comment is made by current medias user , then the
+                //source of this comment is through Instagram and not through Plugn App.
+            }
+
+            // TODO Soft Delete comments who exist in Old comments but not in IG query
 
             /*
             $comment = new Comment();
             $comment->media_id = $media->media_id;
-            $comment->comment_instagram_id = ArrayHelper::getValue($instagramComment, 'id');
+            $comment->comment_instagram_id = $commentInstagramId;
             $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
             $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
             $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
