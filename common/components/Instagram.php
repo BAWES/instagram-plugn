@@ -17,7 +17,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
     /**
      * All functions to Interact with Instagram will be listed here
      */
-    public function testRandom(){
+    public function testRandom()
+    {
 
         $user = User::findIdentity(3);
         print_r($this->apiWithUser($user ,
@@ -36,12 +37,14 @@ class Instagram extends \kotchuprik\authclient\Instagram
     /**
      * Gets the latest n number of posts by all users then updates db with their details.
      */
-    public function getUsersLatestPosts(){
+    public function getUsersLatestPosts()
+    {
         $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl']; //Around 20
         $activeUsers = User::find()->active();
 
         //Loop through users in batches of 50
-        foreach($activeUsers->each(50) as $user){
+        foreach($activeUsers->each(50) as $user)
+        {
 
             //Get the latest 20 posts from the user
             $output = $this->apiWithUser($user ,
@@ -51,12 +54,14 @@ class Instagram extends \kotchuprik\authclient\Instagram
                             'count' => $numPostsToCrawl,
                         ]);
 
-            if($output){
+            if($output)
+            {
                 /**
                  * Loop Through The Posts
                  */
                 $posts = ArrayHelper::getValue($output, 'data');
-                foreach($posts as $post){
+                foreach($posts as $post)
+                {
 
                     $tempMedia = new Media();
                     $tempMedia->user_id = $user->user_id;
@@ -86,7 +91,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
                     $media = Media::find()->with('comments')->where(['media_instagram_id' => $tempMedia->media_instagram_id])->one();
                     //If Media already exists
-                    if($media){
+                    if($media)
+                    {
                         $oldCommentCount = $media->media_num_comments;
 
                         //Update Existing Media
@@ -96,13 +102,15 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         $media->save();
 
                         //If Number of Comments has changed, Crawl comments again
-                        if($oldCommentCount != $media->media_num_comments){
+                        if($oldCommentCount != $media->media_num_comments)
+                        {
                             $this->crawlComments($user, $media);
                         }
 
                     }else{//If Media doesn't exist
                         //Create new Media record and have its comments crawled
-                        if($tempMedia->save()){
+                        if($tempMedia->save())
+                        {
                             //Crawl this medias comments as it is newly added to our db
                             $this->crawlComments($user, $tempMedia);
                         }else{
@@ -110,9 +118,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         }
                     }
 
-                    // delete this later
-                    print_r("\n". $tempMedia->media_type. " post - ". $tempMedia->media_caption . "\n");
-                    $this->trigger("newline");
                 }
 
             }
@@ -187,7 +192,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $commentIdsToDelete = array_values($deletedComments);
 
         //If there are comments to delete, execute the query for soft deletion
-        if(!empty($commentIdsToDelete)){
+        if(!empty($commentIdsToDelete))
+        {
             //Soft delete any deleted comments that aren't already marked as soft-deleted
             //to avoid repetitive/overwriting issues
             $query = Yii::$app->db->createCommand()->update('comment', [
