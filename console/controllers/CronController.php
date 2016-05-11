@@ -33,8 +33,7 @@ class CronController extends \yii\console\Controller {
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
 
-        //Get latest 20 posts, see if user uploaded any new media or got updates on existing media.
-        $this->instagram->getUsersLatestPosts();
+
 
     }
 
@@ -42,7 +41,7 @@ class CronController extends \yii\console\Controller {
      * Method called once a day
      */
     public function actionDaily() {
-        //Update user data once a day to keep track of progress over time
+        //Update User data to keep track of follow/foller stats over time
         $this->instagram->updateUserData();
 
         return self::EXIT_CODE_NORMAL;
@@ -61,6 +60,9 @@ class CronController extends \yii\console\Controller {
      * Method called by cron every minute
      */
     public function actionEveryMinute() {
+        //Get latest 20 posts from every user and crawl comments if needed.
+        //This should be called once a minute
+        $this->instagram->getUsersLatestPosts();
 
         return self::EXIT_CODE_NORMAL;
     }
