@@ -105,7 +105,8 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getMedia()
     {
-        return $this->hasMany(Media::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(Media::className(), ['user_id' => 'user_id'])
+                    ->orderBy("media_created_datetime DESC");
     }
 
     /**
