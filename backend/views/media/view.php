@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <ul>
     <?php
     foreach($model->comments as $comment){ ?>
-        <li>
+        <li style="<?= $comment->comment_deleted?"color:red;":"" ?>">
             <b><a href="<?= yii\helpers\Url::to(["comment/view", 'id'=>$comment->comment_id]) ?>">
                 <?= Yii::$app->formatter->asDatetime($comment->comment_datetime, "medium") ?></a></b><br/>
             <i><?= $comment->comment_by_username ?>:</i> <?= $comment->comment_text; ?>
