@@ -11,12 +11,12 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'agent\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
-    'components' => [
+    'modules' => [
         'user' => [
-            'identityClass' => 'common\models\Admin',
-            'enableAutoLogin' => true,
+            'class' => 'dektrium\user\Module',
         ],
+    ],
+    'components' => [
         'session' => [
             'name' => 'app-agent',
         ],
