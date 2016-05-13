@@ -2,16 +2,16 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Admin Panel';
+$this->title = 'Agent Panel';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Admin Panel</h1>
+        <h1>Agent Panel</h1>
 
-        <p class="lead">Access to the admin panel.</p>
+        <p class="lead">Access to the agents panel.</p>
 
-        <p><a class="btn btn-lg btn-success" href="#">Access to the Admin Panel</a></p>
+        <p><a class="btn btn-lg btn-success" href="#">Continue with the Agents Panel</a></p>
     </div>
 
 </div>

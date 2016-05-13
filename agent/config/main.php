@@ -14,7 +14,7 @@ return [
     'modules' => [
         'user' => [
             'class' => 'dektrium\user\Module',
-            'as frontend' => 'dektrium\user\filters\FrontendFilter',
+            //'as frontend' => 'dektrium\user\filters\FrontendFilter',
         ],
     ],
     'components' => [
