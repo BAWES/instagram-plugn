@@ -36,6 +36,8 @@ return [
             'backend/web/assets',
             'frontend/runtime',
             'frontend/web/assets',
+            'agent/runtime',
+            'agent/web/assets',
             'api/runtime',
             'api/web/assets',
         ],
@@ -46,6 +48,7 @@ return [
         'setCookieValidationKey' => [
             'backend/config/main-local.php',
             'frontend/config/main-local.php',
+            'agent/config/main-local.php',
             'api/config/main-local.php',
         ],
     ],
@@ -56,6 +59,8 @@ return [
             'backend/web/assets',
             'frontend/runtime',
             'frontend/web/assets',
+            'agent/runtime',
+            'agent/web/assets',
             'api/runtime',
             'api/web/assets',
         ],
@@ -65,6 +70,7 @@ return [
         'setCookieValidationKey' => [
             'backend/config/main-local.php',
             'frontend/config/main-local.php',
+            'agent/config/main-local.php',
             'api/config/main-local.php',
         ],
     ],
