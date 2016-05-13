@@ -26,7 +26,7 @@ use Yii;
  * @property string $media_location_latitude
  * @property string $media_created_datetime
  *
- * @property User $user
+ * @property InstagramUser $user
  */
 class Media extends \yii\db\ActiveRecord
 {
@@ -49,7 +49,7 @@ class Media extends \yii\db\ActiveRecord
             [['media_caption'], 'string'],
             [['media_type', 'media_link', 'media_image_lowres', 'media_image_thumb', 'media_image_standard', 'media_video_lowres', 'media_video_lowbandwidth', 'media_video_standard', 'media_location_name'], 'string'],
             [['media_instagram_id'], 'unique'],
-            //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
+            //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
     }
 
@@ -93,6 +93,6 @@ class Media extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['user_id' => 'user_id']);
+        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
     }
 }

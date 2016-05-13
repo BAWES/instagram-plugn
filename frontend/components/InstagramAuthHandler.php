@@ -1,7 +1,7 @@
 <?php
 namespace frontend\components;
 
-use common\models\User;
+use common\models\InstagramUser;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
@@ -41,8 +41,8 @@ class InstagramAuthHandler
         $followersCount = ArrayHelper::getValue($attributes, 'counts.followed_by');
 
 
-        /** @var User $user */
-        $user = User::find()->where([
+        /** @var InstagramUser $user */
+        $user = InstagramUser::find()->where([
             'user_instagram_id' => $id, //id in instagram
         ])->one();
 
@@ -70,12 +70,12 @@ class InstagramAuthHandler
                 /**
                  * Signup
                  */
-                if ($username !== null && User::find()->where(['user_name' => $username])->exists()) {
+                if ($username !== null && InstagramUser::find()->where(['user_name' => $username])->exists()) {
                     Yii::$app->getSession()->setFlash('error', [
                         Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
                     ]);
                 } else {
-                    $user = new User([
+                    $user = new InstagramUser([
                         'user_name' => $username,
                         'user_fullname' => $fullname,
                         'user_instagram_id' => $id,

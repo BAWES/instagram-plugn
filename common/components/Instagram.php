@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Exception;
 use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
-use common\models\User;
+use common\models\InstagramUser;
 use common\models\Record;
 use common\models\Media;
 use common\models\Comment;
@@ -20,7 +20,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function testRandom()
     {
 
-        $user = User::findIdentity(3);
+        $user = InstagramUser::findIdentity(3);
         print_r($this->apiWithUser($user ,
                 'users/self/media/recent',
                 'GET',
@@ -40,7 +40,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function getUsersLatestPosts()
     {
         $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl']; //Around 20
-        $activeUsers = User::find()->active();
+        $activeUsers = InstagramUser::find()->active();
 
         //Loop through users in batches of 50
         foreach($activeUsers->each(50) as $user)
@@ -214,7 +214,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function updateUserData()
     {
-        $activeUsers = User::find()->active();
+        $activeUsers = InstagramUser::find()->active();
 
         //Loop through users in batches of 50
         foreach($activeUsers->each(50) as $user)

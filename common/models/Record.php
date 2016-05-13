@@ -16,7 +16,7 @@ use yii\db\Expression;
  * @property integer $record_follower_count
  * @property string $record_date
  *
- * @property User $user
+ * @property InstagramUser $user
  */
 class Record extends \yii\db\ActiveRecord
 {
@@ -36,7 +36,7 @@ class Record extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['user_id', 'record_media_count', 'record_following_count', 'record_follower_count'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
     }
 
@@ -75,6 +75,6 @@ class Record extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['user_id' => 'user_id']);
+        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
     }
 }

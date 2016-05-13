@@ -10,7 +10,7 @@ use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
- * User model
+ * InstagramUser model
  *
  * @property integer $user_id
  * @property string $user_name
@@ -28,7 +28,7 @@ use yii\web\IdentityInterface;
  * @property integer $user_follower_count
  * @property string $user_ig_access_token
  */
-class User extends ActiveRecord implements IdentityInterface
+class InstagramUser extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -39,12 +39,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%instagram_user}}';
     }
 
     public static function find()
     {
-        return new UserQuery(get_called_class());
+        return new InstagramUserQuery(get_called_class());
     }
 
     /**
@@ -188,10 +188,10 @@ class User extends ActiveRecord implements IdentityInterface
 /**
  * Custom queries for easier management of selection
  */
-class UserQuery extends ActiveQuery
+class InstagramUserQuery extends ActiveQuery
 {
     public function active()
     {
-        return $this->andWhere(['user_status' => User::STATUS_ACTIVE]);
+        return $this->andWhere(['user_status' => InstagramUser::STATUS_ACTIVE]);
     }
 }

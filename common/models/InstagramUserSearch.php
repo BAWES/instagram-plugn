@@ -5,12 +5,12 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\User;
+use common\models\InstagramUser;
 
 /**
  * UserSearch represents the model behind the search form about `common\models\User`.
  */
-class UserSearch extends User
+class InstagramUserSearch extends InstagramUser
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = InstagramUser::find();
 
         // add conditions that should always apply here
 
