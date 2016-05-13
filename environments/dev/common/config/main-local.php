@@ -16,5 +16,13 @@ return [
             // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
+        'session' => [ //Use Redis Database for Session Storage
+            'class' => 'yii\redis\Session',
+            'redis' => [
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 0,
+            ]
+        ],
     ],
 ];

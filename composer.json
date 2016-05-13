@@ -12,6 +12,7 @@
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-imagine": "~2.0.0",
         "yiisoft/yii2-httpclient": "dev-master",
+        "yiisoft/yii2-redis": "~2.0.0",
         "understeam/yii2-slack": "*",
         "openbuildings/swiftmailer-css-inliner": "*",
         "stichoza/google-translate-php": "~3.2",
