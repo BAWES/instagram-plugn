@@ -40,7 +40,7 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
+        $menuItems[] = ['label' => 'Instagram Users', 'url' => ['/instagram-user/index']];
         $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
         $menuItems[] = ['label' => 'Comments', 'url' => ['/comment/index']];
         $menuItems[] = ['label' => 'Admin', 'url' => ['/admin/index']];
