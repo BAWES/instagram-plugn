@@ -60,7 +60,7 @@ class InstagramAuthHandler
                 $user->user_following_count = $followsCount;
                 $user->user_follower_count = $followersCount;
                 $user->user_ig_access_token = $accessToken;
-                $user->user_status = User::STATUS_ACTIVE;
+                $user->user_status = InstagramUser::STATUS_ACTIVE;
 
 
                 if ($user->save()) {
