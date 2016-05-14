@@ -20,8 +20,8 @@ class m160514_130322_create_agent_auth extends Migration
             'agent_password_reset_token' => $this->string()->unique(),
 
             'agent_status' => $this->smallInteger()->notNull()->defaultValue(10),
-            'agent_created_at' => $this->integer()->notNull(),
-            'agent_updated_at' => $this->integer()->notNull(),
+            'agent_created_at' => $this->datetime()->notNull(),
+            'agent_updated_at' => $this->datetime()->notNull(),
         ]);
 
         $this->createTable('agent_auth', [
