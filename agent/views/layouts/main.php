@@ -41,12 +41,9 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Sign up', 'url' => ['/user/registration/register']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/user/security/login']];
     } else {
-        $menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
-        $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
-        $menuItems[] = ['label' => 'Comments', 'url' => ['/comment/index']];
-        $menuItems[] = ['label' => 'Admin', 'url' => ['/admin/index']];
+        //$menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
         $menuItems[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->admin_name . ')',
+            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
             'url' => ['/user/security/logout'],
             'linkOptions' => ['data-method' => 'post']
         ];
