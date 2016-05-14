@@ -14,7 +14,9 @@ class m160514_130322_create_agent_auth extends Migration
     {
         $this->createTable('agent', [
             'agent_id' => $this->bigPrimaryKey()->unsigned(),
+            'agent_name' => $this->string(),
             'agent_email' => $this->string()->notNull()->unique(),
+            'agent_email_verified' => $this->boolean()->defaultValue(0),
             'agent_auth_key' => $this->string(32)->notNull(),
             'agent_password_hash' => $this->string(), //Can be null if they're using social login
             'agent_password_reset_token' => $this->string()->unique(),
