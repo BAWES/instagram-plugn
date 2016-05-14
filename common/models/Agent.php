@@ -27,6 +27,15 @@ use yii\db\ActiveRecord;
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
+    //Email notification preference values for `agent_notification_preference`
+    const NOTIFICATION_OFF = 0;
+    const NOTIFICATION_DAILY = 1;
+    const NOTIFICATION_WEEKLY = 2;
+
+    //Email verification values for `agent_email_verified`
+    const EMAIL_VERIFIED = 1;
+    const EMAIL_NOT_VERIFIED = 0;
+
     /**
      * @inheritdoc
      */
