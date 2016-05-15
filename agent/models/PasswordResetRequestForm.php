@@ -54,7 +54,7 @@ class PasswordResetRequestForm extends Model
         }
 
         if ($agent) {
-            if (!Employer::isPasswordResetTokenValid($agent->agent_password_reset_token)) {
+            if (!Agent::isPasswordResetTokenValid($agent->agent_password_reset_token)) {
                 $agent->generatePasswordResetToken();
             }
 
@@ -62,8 +62,6 @@ class PasswordResetRequestForm extends Model
             $agent->agent_limit_email = new \yii\db\Expression('NOW()');
 
             if ($agent->save(false)) {
-                //Set language based on preference stored in DB
-                Yii::$app->view->params['isArabic'] = false;
 
                 //Send English Email
                 return \Yii::$app->mailer->compose(['html' => 'agent/passwordResetToken-html', 'text' => 'agent/passwordResetToken-text'], ['agent' => $agent])
