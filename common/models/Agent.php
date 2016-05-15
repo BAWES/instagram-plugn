@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property string $agent_password_hash
  * @property string $agent_password_reset_token
  * @property integer $agent_status
+ * @property string $agent_limit_email
  * @property string $agent_created_at
  * @property string $agent_updated_at
  *
@@ -27,11 +28,6 @@ use yii\db\ActiveRecord;
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
-    //Email notification preference values for `agent_notification_preference`
-    const NOTIFICATION_OFF = 0;
-    const NOTIFICATION_DAILY = 1;
-    const NOTIFICATION_WEEKLY = 2;
-
     //Email verification values for `agent_email_verified`
     const EMAIL_VERIFIED = 1;
     const EMAIL_NOT_VERIFIED = 0;
@@ -78,15 +74,16 @@ class Agent extends ActiveRecord implements IdentityInterface
     {
         return [
             'agent_id' => 'Agent ID',
-            'agent_name' => 'Agent Name',
-            'agent_email' => 'Agent Email',
-            'agent_email_verified' => 'Agent Email Verified',
-            'agent_auth_key' => 'Agent Auth Key',
-            'agent_password_hash' => 'Agent Password Hash',
-            'agent_password_reset_token' => 'Agent Password Reset Token',
-            'agent_status' => 'Agent Status',
-            'agent_created_at' => 'Agent Created At',
-            'agent_updated_at' => 'Agent Updated At',
+            'agent_name' => 'Name',
+            'agent_email' => 'Email',
+            'agent_email_verified' => 'Email Verified',
+            'agent_auth_key' => 'Auth Key',
+            'agent_password_hash' => 'Password Hash',
+            'agent_password_reset_token' => 'Password Reset Token',
+            'agent_status' => 'Status',
+            'agent_limit_email' => 'Email Verif Limit',
+            'agent_created_at' => 'Created At',
+            'agent_updated_at' => 'Updated At',
         ];
     }
 
