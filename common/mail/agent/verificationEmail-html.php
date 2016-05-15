@@ -6,7 +6,7 @@ $verificationUrl = Yii::$app->urlManager->createAbsoluteUrl(['site/email-verify'
 ?>
 <tr>
     <td>
-        <h1>Hi, <?= $agent->agent_contact_firstname ?></h1>
+        <h1>Hi <?= $agent->agent_name ?>,</h1>
         <p class="lead">Thanks for joining <strong>Plugn</strong>. Please click the following link to verify your email.</p>
     </td>
     <td class="expander"></td>

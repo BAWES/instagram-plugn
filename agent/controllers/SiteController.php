@@ -213,7 +213,7 @@ class SiteController extends Controller
         if ($agent) {
             //Check if this user sent an email in past few minutes (to limit email spam)
             $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
-            date_add($emailLimitDatetime, date_interval_create_from_date_string('4 minutes'));
+            date_add($emailLimitDatetime, date_interval_create_from_date_string('3 minutes'));
             $currentDatetime = new \DateTime();
 
             if ($currentDatetime < $emailLimitDatetime) {
@@ -228,7 +228,7 @@ class SiteController extends Controller
 
                 Yii::$app->getSession()->setFlash('warning', $warningMessage);
 
-            } else if ($agent->agent_email_verification == Agent::EMAIL_NOT_VERIFIED) {
+            } else if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
                 $agent->sendVerificationEmail();
                 Yii::$app->getSession()->setFlash('success', Yii::t('register', 'Please click on the link sent to you by email to verify your account'));
             }

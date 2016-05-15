@@ -6,6 +6,10 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'formatter' => [
+            'currencyCode' => 'KWD',
+            'defaultTimeZone' => 'Asia/Kuwait',
+        ],
         'assetManager' => [
             //Link assets -> create symbolic links to assets
             'linkAssets' => true,
