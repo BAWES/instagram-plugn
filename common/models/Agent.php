@@ -125,7 +125,7 @@ class Agent extends ActiveRecord implements IdentityInterface
         $this->agent_limit_email = new Expression('NOW()');
         $this->save(false);
 
-        /*
+
         return Yii::$app->mailer->compose([
                     'html' => 'agent/verificationEmail-html',
                     'text' => 'agent/verificationEmail-text',
@@ -136,7 +136,7 @@ class Agent extends ActiveRecord implements IdentityInterface
                 ->setTo($this->agent_email)
                 ->setSubject('[Plugn] Email Verification')
                 ->send();
-                */
+
 
     }
 
