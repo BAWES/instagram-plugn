@@ -4,6 +4,8 @@ namespace agent\controllers;
 use Yii;
 use yii\web\Controller;
 use agent\models\LoginForm;
+use agent\models\PasswordResetRequestForm;
+use agent\models\ResetPasswordForm;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\Agent;
