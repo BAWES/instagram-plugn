@@ -73,28 +73,26 @@ class SiteController extends Controller
     }
 
     public function actionRegistration() {
-        $model = new \employer\models\Employer();
+        $model = new \agent\models\Agent();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->employer_logo = UploadedFile::getInstance($model, 'employer_logo');
-
-            if ($model->validate()) {
-                if ($model->employer_logo) {
-                    //file upload is valid - Upload file to amazon S3
-                    $model->uploadLogo();
-                }
-
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($model->validate())
+            {
                 $model->signup();
+
                 return $this->redirect(['thanks']);
-            } else {
-                foreach ($model->errors as $error => $errorText) {
+            } else
+            {
+                foreach ($model->errors as $error => $errorText)
+                {
                     Yii::$app->getSession()->setFlash('error', $errorText);
                 }
             }
         }
 
         return $this->render('register', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
