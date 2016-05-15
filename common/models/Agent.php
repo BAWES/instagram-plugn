@@ -28,6 +28,11 @@ use yii\db\ActiveRecord;
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
+    //Values for `agent_status`
+    const STATUS_DELETED = 0;
+    const STATUS_BANNED = 5;
+    const STATUS_ACTIVE = 10;
+
     //Email verification values for `agent_email_verified`
     const EMAIL_VERIFIED = 1;
     const EMAIL_NOT_VERIFIED = 0;
