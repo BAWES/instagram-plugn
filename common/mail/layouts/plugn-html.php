@@ -879,7 +879,7 @@ use yii\helpers\Url;
                                                     <table class="twelve columns">
                                                         <tr>
                                                             <td class="six sub-columns">
-                                                                <a href="http://plugn.io"><img src="<?= $message->embed(Url::to("@web/img/email/studenthub-logo.png", true)); ?>" alt=""></a>
+                                                                <a href="http://plugn.io"><img src="<?= $message->embed(Url::to("@web/images/email/studenthub-logo.png", true)); ?>" alt=""></a>
                                                             </td>
                                                             <td class="six sub-columns last" style="text-align:right; vertical-align:middle;">
                                                                 <!--<a href="#" class="white-link">Empowering Students with Technology</a>-->
@@ -923,11 +923,11 @@ use yii\helpers\Url;
                                                         <td>
                                                             <table class="wrapper social-icons">
                                                                 <tr>
-                                                                    <td><a href="https://instagram.com/studenthubco/"><img src="<?= $message->embed(Url::to("@web/img/email/icon-instagram.png", true)); ?>" alt="instagram"/></a></td>
-                                                                    <td><a href="https://www.facebook.com/studenthub.co"><img src="<?= $message->embed(Url::to("@web/img/email/icon-facebook.png", true)); ?>" alt="facebook"/></a></td>
-                                                                    <td><a href="http://twitter.com/studenthubco"><img src="<?= $message->embed(Url::to("@web/img/email/icon-twitter.png", true)); ?>" alt="twitter"/></a></td>
-                                                                    <td><a href="https://www.linkedin.com/company/10018543"><img src="<?= $message->embed(Url::to("@web/img/email/icon-linkedin.png", true)); ?>" alt="linkedin"/></a></td>
-                                                                    <td><a href="https://www.youtube.com/channel/UCf0zeKTi2IawY3KF0L1aWKw"><img src="<?= $message->embed(Url::to("@web/img/email/icon-youtube.png", true)); ?>" alt="youtube"/></a></td>
+                                                                    <td><a href="https://instagram.com/studenthubco/"><img src="<?= $message->embed(Url::to("@web/images/email/icon-instagram.png", true)); ?>" alt="instagram"/></a></td>
+                                                                    <td><a href="https://www.facebook.com/studenthub.co"><img src="<?= $message->embed(Url::to("@web/images/email/icon-facebook.png", true)); ?>" alt="facebook"/></a></td>
+                                                                    <td><a href="http://twitter.com/studenthubco"><img src="<?= $message->embed(Url::to("@web/images/email/icon-twitter.png", true)); ?>" alt="twitter"/></a></td>
+                                                                    <td><a href="https://www.linkedin.com/company/10018543"><img src="<?= $message->embed(Url::to("@web/images/email/icon-linkedin.png", true)); ?>" alt="linkedin"/></a></td>
+                                                                    <td><a href="https://www.youtube.com/channel/UCf0zeKTi2IawY3KF0L1aWKw"><img src="<?= $message->embed(Url::to("@web/images/email/icon-youtube.png", true)); ?>" alt="youtube"/></a></td>
                                                                 </tr>
                                                         </td>
                                                         <td class="expander"></td>
@@ -944,13 +944,13 @@ use yii\helpers\Url;
                                                     <tr>
                                                         <td>
                                                             <p>
-                                                                <em>Copyright 2015 StudentHub, All rights reserved.</em><br>
+                                                                <em>Copyright 2015 Plugn, All rights reserved.</em><br>
                                                                 <em>A BAWES Built Awesome Product.</em><br>
                                                             </p>
                                                             <p>
                                                                 <strong>Contact us at:</strong><br>
-                                                                        contact@studenthub.co<br>
-                                                                            <a href="http://studenthub.co">studenthub.co</a><br/>
+                                                                        contact@plugn.io<br>
+                                                                            <a href="http://plugn.io">plugn.io</a><br/>
                                                             </p>
                                                         </td>
                                                         <td class="expander"></td>
