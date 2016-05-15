@@ -5,20 +5,15 @@ $this->params['breadcrumbs'][] = Yii::t('register', 'Email Verified');
 
 ?>
 <div class="panel">
-    <div class="panel-heading">
-        <div class="panel-title">
-            <h4><?= Yii::t('register', 'Email Verified'); ?></h4>
-        </div>
-    </div>
 
     <div class="panel-body">
 
-        <h3><?= Yii::t('register', 'Thanks for verifying your email') ?></h3>
-        
+        <h2><?= Yii::t('register', 'Thanks for verifying your email') ?></h2>
+
         <p>
-            <?= Yii::t('register', 'You may now fully access <b>StudentHub</b>') ?>
+            <?= Yii::t('register', 'You may now fully access <b>Plugn</b>') ?>
         </p>
-        
-        <a href="<?= yii\helpers\Url::to(["job/create"]) ?>" class="btn btn-primary"><?= Yii::t('register', 'Post your first Job opening') ?></a>
+
+        <a href="<?= yii\helpers\Url::to(["dashboard/index"]) ?>" class="btn btn-primary"><?= Yii::t('register', 'Start managing Instagram accounts') ?></a>
     </div>
 </div>

@@ -43,8 +43,8 @@ AppAsset::register($this);
     } else {
         //$menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
         $menuItems[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-            'url' => ['/user/security/logout'],
+            'label' => 'Logout (' . Yii::$app->user->identity->agent_name . ')',
+            'url' => ['/site/logout'],
             'linkOptions' => ['data-method' => 'post']
         ];
     }

@@ -102,9 +102,9 @@ class SiteController extends Controller
         $agent = Agent::findOne(['agent_auth_key' => $code, 'agent_id' => (int) $verify]);
         if ($agent) {
             //If not verified
-            if ($agent->agent_email_verification == Agent::EMAIL_NOT_VERIFIED) {
+            if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
                 //Verify this agents  email
-                $agent->agent_email_verification = Agent::EMAIL_VERIFIED;
+                $agent->agent_email_verified = Agent::EMAIL_VERIFIED;
                 $agent->save(false);
 
                 //Log him in
