@@ -66,14 +66,14 @@ class SiteController extends Controller
     }
 
     /**
-     * Employer Registration Thank You Page
+     * Agent Registration Thank You Page
      */
     public function actionThanks(){
         return $this->render('thanks');
     }
 
     public function actionRegistration() {
-        $model = new \agent\models\Agent();
+        $model = new Agent();
 
         if ($model->load(Yii::$app->request->post()))
         {
@@ -99,21 +99,21 @@ class SiteController extends Controller
     /**
      * Email verification by clicking on link in email which includes the code that will verify
      * @param string $code Verification key that will verify your account
-     * @param int $verify Employer ID to verify
+     * @param int $verify Agent ID to verify
      * @throws NotFoundHttpException if the code is invalid
      */
     public function actionEmailVerify($code, $verify) {
         //Code is his auth key, check if code is valid
-        $employer = Employer::findOne(['employer_auth_key' => $code, 'employer_id' => (int) $verify]);
-        if ($employer) {
+        $agent = Agent::findOne(['agent_auth_key' => $code, 'agent_id' => (int) $verify]);
+        if ($agent) {
             //If not verified
-            if ($employer->employer_email_verification == Employer::EMAIL_NOT_VERIFIED) {
-                //Verify this employers  email
-                $employer->employer_email_verification = Employer::EMAIL_VERIFIED;
-                $employer->save(false);
+            if ($agent->agent_email_verification == Agent::EMAIL_NOT_VERIFIED) {
+                //Verify this agents  email
+                $agent->agent_email_verification = Agent::EMAIL_VERIFIED;
+                $agent->save(false);
 
                 //Log him in
-                Yii::$app->user->login($employer, 0);
+                Yii::$app->user->login($agent, 0);
             }
 
             //Render thanks for verifying + Button to go to his portal
@@ -150,13 +150,13 @@ class SiteController extends Controller
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            $employer = Employer::findOne([
-                        'employer_email' => $model->email,
+            $agent = Agent::findOne([
+                        'agent_email' => $model->email,
             ]);
 
-            if ($employer) {
+            if ($agent) {
                 //Check if this user sent an email in past few minutes (to limit email spam)
-                $emailLimitDatetime = new \DateTime($employer->employer_limit_email);
+                $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
                 date_add($emailLimitDatetime, date_interval_create_from_date_string('4 minutes'));
                 $currentDatetime = new \DateTime();
 
@@ -171,12 +171,12 @@ class SiteController extends Controller
                     ]);
 
                     Yii::$app->getSession()->setFlash('warning', $warningMessage);
-                } else if ($model->sendEmail($employer)) {
-                    Yii::$app->getSession()->setFlash('success', Yii::t('employer', 'Password reset link sent, please check your email for further instructions.'));
+                } else if ($model->sendEmail($agent)) {
+                    Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'Password reset link sent, please check your email for further instructions.'));
 
                     return $this->redirect(['login']);
                 } else {
-                    Yii::$app->getSession()->setFlash('error', Yii::t('employer', 'Sorry, we are unable to reset password for email provided.'));
+                    Yii::$app->getSession()->setFlash('error', Yii::t('agent', 'Sorry, we are unable to reset password for email provided.'));
                 }
             }
         }
@@ -194,7 +194,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('employer', 'New password was saved.'));
+            Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'New password was saved.'));
 
             return $this->redirect(['login']);
         }
@@ -210,14 +210,14 @@ class SiteController extends Controller
      * @param string $email the email of the user
      */
     public function actionResendVerification($id, $email) {
-        $employer = Employer::findOne([
-                    'employer_id' => (int) $id,
-                    'employer_email' => $email,
+        $agent = Agent::findOne([
+                    'agent_id' => (int) $id,
+                    'agent_email' => $email,
         ]);
 
-        if ($employer) {
+        if ($agent) {
             //Check if this user sent an email in past few minutes (to limit email spam)
-            $emailLimitDatetime = new \DateTime($employer->employer_limit_email);
+            $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
             date_add($emailLimitDatetime, date_interval_create_from_date_string('4 minutes'));
             $currentDatetime = new \DateTime();
 
@@ -233,8 +233,8 @@ class SiteController extends Controller
 
                 Yii::$app->getSession()->setFlash('warning', $warningMessage);
 
-            } else if ($employer->employer_email_verification == Employer::EMAIL_NOT_VERIFIED) {
-                $employer->sendVerificationEmail();
+            } else if ($agent->agent_email_verification == Agent::EMAIL_NOT_VERIFIED) {
+                $agent->sendVerificationEmail();
                 Yii::$app->getSession()->setFlash('success', Yii::t('register', 'Please click on the link sent to you by email to verify your account'));
             }
         }
