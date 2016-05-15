@@ -74,20 +74,13 @@ class SiteController extends Controller
 
     public function actionRegistration() {
         $model = new Agent();
+        $model->scenario = "manualSignup";
 
         if ($model->load(Yii::$app->request->post()))
         {
-            if ($model->validate())
+            if ($model->signup())
             {
-                $model->signup();
-
                 return $this->redirect(['thanks']);
-            } else
-            {
-                foreach ($model->errors as $error => $errorText)
-                {
-                    Yii::$app->getSession()->setFlash('error', $errorText);
-                }
             }
         }
 

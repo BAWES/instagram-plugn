@@ -57,8 +57,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <h2>Sign up and start managing accounts today!</h4>
 
-        <?= $form->field($model, 'agent_name')->textInput(['placeholder' => 'First Name']) ?>
-        <?= $form->field($model, 'agent_email')->input('email', ['placeholder' => 'email@company.com']) ?>
+        <?= $form->field($model, 'agent_name')->textInput(['placeholder' => 'Your Full Name']) ?>
+        <?= $form->field($model, 'agent_email')->input('email', ['placeholder' => 'email@gmail.com']) ?>
         <?= $form->field($model, 'agent_password_hash')->passwordInput(['placeholder' => '***']) ?>
 
 

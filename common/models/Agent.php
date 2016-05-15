@@ -47,6 +47,8 @@ class Agent extends ActiveRecord implements IdentityInterface
     {
         return [
             [['agent_email', 'agent_auth_key'], 'required'],
+            [['agent_name', 'agent_password_hash'], 'required', 'on'=>'manualSignup'],
+
             [['agent_email_verified', 'agent_status'], 'integer'],
             [['agent_name', 'agent_email', 'agent_password_hash', 'agent_password_reset_token'], 'string', 'max' => 255],
             [['agent_auth_key'], 'string', 'max' => 32],
@@ -92,7 +94,7 @@ class Agent extends ActiveRecord implements IdentityInterface
             'agent_email' => 'Email',
             'agent_email_verified' => 'Email Verified',
             'agent_auth_key' => 'Auth Key',
-            'agent_password_hash' => 'Password Hash',
+            'agent_password_hash' => 'Password',
             'agent_password_reset_token' => 'Password Reset Token',
             'agent_status' => 'Status',
             'agent_limit_email' => 'Email Verif Limit',
@@ -118,6 +120,7 @@ class Agent extends ActiveRecord implements IdentityInterface
         $this->agent_limit_email = new Expression('NOW()');
         $this->save(false);
 
+        /*
         return Yii::$app->mailer->compose([
                     'html' => 'agent/verificationEmail-html',
                     'text' => 'agent/verificationEmail-text',
@@ -126,40 +129,32 @@ class Agent extends ActiveRecord implements IdentityInterface
                 ])
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
                 ->setTo($this->agent_email)
-                ->setSubject('[StudentHub] Email Verification')
+                ->setSubject('[Plugn] Email Verification')
                 ->send();
+                */
 
     }
 
     /**
      * Signs user up.
-     * @param boolean $validate - whether to validate before Signing up
      * @return static|null the saved model or null if saving fails
      */
-    public function signup($validate = false) {
+    public function signup() {
+        $oldPasswordInput = $this->agent_password_hash;
+
         $this->setPassword($this->agent_password_hash);
         $this->generateAuthKey();
 
-        if ($this->save($validate)) {
+        if ($this->save()) {
             $this->sendVerificationEmail();
-
-            /**
-             * Send email here to Admins notifying that a new agent has signed up
-             */
-            Yii::$app->mailer->compose([
-                    'html' => "agent/new-agent-html",
-                        ], [
-                    'agent' => $this,
-                ])
-                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
-                ->setTo([\Yii::$app->params['supportEmail']])
-                ->setSubject('[StudentHub] New Agent - '.$this->agent_email)
-                ->send();
 
             //Log agent signup
             Yii::info("[New Agent Signup] ".$this->agent_email, __METHOD__);
 
             return $this;
+        }else{
+            //Reset password to hide encrypted value
+            $this->agent_password_hash = $oldPasswordInput;
         }
 
         return null;
