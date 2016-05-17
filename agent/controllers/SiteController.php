@@ -3,6 +3,7 @@ namespace agent\controllers;
 
 use Yii;
 use yii\web\Controller;
+use agent\components\AuthHandler;
 use agent\models\LoginForm;
 use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
@@ -52,10 +53,19 @@ class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 
     public function actionIndex()
