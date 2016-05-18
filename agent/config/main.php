@@ -22,8 +22,8 @@ return [
             'clients' => [
                 'google' => [
                     'class' => 'yii\authclient\clients\GoogleOAuth',
-                    'clientId' => '882152609344-u1m9k02uphbfgclofsdnc0fio9ad4nng.apps.googleusercontent.com',
-                    'clientSecret' => 'DfeSIaHHtXTXnFJAxgZ_4aWK',
+                    'clientId' => '882152609344-ahm24v4mttplse2ahf35ffe4g0r6noso.apps.googleusercontent.com',
+                    'clientSecret' => 'AtpqFh9Wmo4dE_sxBMeKaRaL',
                 ],
             ],
         ],
