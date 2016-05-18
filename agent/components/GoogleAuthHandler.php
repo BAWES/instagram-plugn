@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /**
  * AuthHandler handles successful authentification via Yii auth component
  */
-class AuthHandler
+class GoogleAuthHandler
 {
     /**
      * @var ClientInterface
@@ -29,10 +29,13 @@ class AuthHandler
         $id = ArrayHelper::getValue($attributes, 'id');
         $nickname = ArrayHelper::getValue($attributes, 'login');
 
+        //Nickname and Email Attrs are broken, don't work
+        print_r($attributes); die();
+
         /** @var AgentAuth $auth */
         $auth = AgentAuth::find()->where([
-            'source' => $this->client->getId(),
-            'source_id' => $id,
+            'auth_source' => $this->client->getId(),
+            'auth_source_id' => $id,
         ])->one();
 
         if (Yii::$app->user->isGuest) {
@@ -62,8 +65,8 @@ class AuthHandler
                     if ($agent->save()) {
                         $auth = new AgentAuth([
                             'agent_id' => $agent->id,
-                            'source' => $this->client->getId(),
-                            'source_id' => (string)$id,
+                            'auth_source' => $this->client->getId(),
+                            'auth_source_id' => (string)$id,
                         ]);
                         if ($auth->save()) {
                             $transaction->commit();

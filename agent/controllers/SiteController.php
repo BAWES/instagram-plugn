@@ -3,7 +3,7 @@ namespace agent\controllers;
 
 use Yii;
 use yii\web\Controller;
-use agent\components\AuthHandler;
+use agent\components\GoogleAuthHandler;
 use agent\models\LoginForm;
 use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
@@ -65,7 +65,8 @@ class SiteController extends Controller
 
     public function onAuthSuccess($client)
     {
-        (new AuthHandler($client))->handle();
+        //Handle Google Authentication
+        (new GoogleAuthHandler($client))->handle();
     }
 
     public function actionIndex()
