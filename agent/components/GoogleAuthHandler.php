@@ -25,12 +25,9 @@ class GoogleAuthHandler
     public function handle()
     {
         $attributes = $this->client->getUserAttributes();
-        $email = ArrayHelper::getValue($attributes, 'email');
+        $email = ArrayHelper::getValue($attributes, 'emails')[0]['value'];
         $id = ArrayHelper::getValue($attributes, 'id');
-        $nickname = ArrayHelper::getValue($attributes, 'login');
-
-        //Nickname and Email Attrs are broken, don't work
-        print_r($attributes); die();
+        $nickname = ArrayHelper::getValue($attributes, 'displayName');
 
         /** @var AgentAuth $auth */
         $auth = AgentAuth::find()->where([
@@ -45,11 +42,45 @@ class GoogleAuthHandler
 
                 Yii::$app->user->login($agent, Yii::$app->params['user.rememberMeDuration']);
             } else { // signup
-                if ($email !== null && Agent::find()->where(['agent_email' => $email])->exists()) {
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', "Agent with the same email as in {client} account already exists but isn't linked to it. Login using email first to link it.", ['client' => $this->client->getTitle()]),
-                    ]);
+                $existingAgent = Agent::find()->where(['agent_email' => $email])->one();
+                if ($existingAgent) {
+                    //There's already an agent with this email, update his details
+                    //And create an auth record for him and log him in
+
+                    $existingAgent->agent_name = $nickname;
+                    $existingAgent->agent_email_verified = Agent::EMAIL_VERIFIED;
+                    $existingAgent->generatePasswordResetToken();
+
+                    $transaction = Agent::getDb()->beginTransaction();
+
+                    if ($existingAgent->save()) {
+                        $auth = new AgentAuth([
+                            'agent_id' => $existingAgent->id,
+                            'auth_source' => $this->client->getId(),
+                            'auth_source_id' => (string)$id,
+                        ]);
+                        if ($auth->save()) {
+                            $transaction->commit();
+                            Yii::$app->user->login($existingAgent, Yii::$app->params['user.rememberMeDuration']);
+                        } else {
+                            Yii::$app->getSession()->setFlash('error', [
+                                Yii::t('app', 'Unable to save {client} account: {errors}', [
+                                    'client' => $this->client->getTitle(),
+                                    'errors' => json_encode($auth->getErrors()),
+                                ]),
+                            ]);
+                        }
+                    } else {
+                        Yii::$app->getSession()->setFlash('error', [
+                            Yii::t('app', 'Unable to save agent: {errors}', [
+                                'client' => $this->client->getTitle(),
+                                'errors' => json_encode($existingAgent->getErrors()),
+                            ]),
+                        ]);
+                    }
+
                 } else {
+                    //Agent Doesn't have an account, create one for him
                     $password = Yii::$app->security->generateRandomString(6);
                     $agent = new Agent([
                         'agent_name' => $nickname,
