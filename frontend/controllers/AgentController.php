@@ -46,7 +46,7 @@ class AgentController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => AgentAssignment::find(),
+            'query' => Yii::$app->user->identity->getAgentAssignments(),
         ]);
 
         return $this->render('index', [
@@ -74,6 +74,7 @@ class AgentController extends Controller
     public function actionCreate()
     {
         $model = new AgentAssignment();
+        $model->user_id = Yii::$app->user->identity->user_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->assignment_id]);
@@ -106,7 +107,7 @@ class AgentController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AgentAssignment::findOne($id)) !== null) {
+        if (($model = AgentAssignment::findOne(['agent_id' => $id, 'user_id' => Yii::$app->user->identity->user_id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
