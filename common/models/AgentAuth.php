@@ -7,8 +7,8 @@ use Yii;
 /**
  * This is the model class for table "agent_auth".
  *
- * @property string $auth_id
- * @property string $agent_id
+ * @property integer $auth_id
+ * @property integer $agent_id
  * @property string $auth_source
  * @property string $auth_source_id
  *

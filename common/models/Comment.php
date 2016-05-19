@@ -7,8 +7,8 @@ use Yii;
 /**
  * This is the model class for table "comment".
  *
- * @property string $comment_id
- * @property string $media_id
+ * @property integer $comment_id
+ * @property integer $media_id
  * @property string $comment_instagram_id
  * @property string $comment_text
  * @property string $comment_by_username

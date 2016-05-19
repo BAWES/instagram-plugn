@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "media".
  *
- * @property string $media_id
+ * @property integer $media_id
  * @property integer $user_id
  * @property string $media_instagram_id
  * @property string $media_type

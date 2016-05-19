@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "agent".
  *
- * @property string $agent_id
+ * @property integer $agent_id
  * @property string $agent_name
  * @property string $agent_email
  * @property integer $agent_email_verified
