@@ -31,6 +31,11 @@ return [
                     'clientSecret' => 'WtbV3SzecgLY8VnGjwtsgaL',
                     //Manage Consent via: https://account.live.com/consent/Manage
                 ],
+                'slack' => [ //https://api.slack.com/apps
+                    'class' => 'agent\components\SlackAuthClient',
+                    'clientId' => '16834512471.44308026372',
+                    'clientSecret' => '9d4fddc6b7199387e118a6c5a41031a1',
+                ],
             ],
         ],
         'session' => [

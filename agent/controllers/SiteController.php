@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use agent\components\GoogleAuthHandler;
 use agent\components\LiveAuthHandler;
+use agent\components\SlackAuthHandler;
 use agent\models\LoginForm;
 use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
@@ -65,13 +66,18 @@ class SiteController extends Controller
     }
 
     public function onAuthSuccess($client)
-    {    
+    {
         if($client instanceof yii\authclient\clients\Live){
             //Handle Microsoft Live Authentication
             (new LiveAuthHandler($client))->handle();
         }elseif($client instanceof yii\authclient\clients\GoogleOAuth){
             //Handle Google Authentication
             (new GoogleAuthHandler($client))->handle();
+        }elseif($client instanceof \agent\components\SlackAuthClient){
+            //Handle Slack Authentication
+            //die(print_r($client,true));
+
+            (new SlackAuthHandler($client))->handle();
         }
     }
 

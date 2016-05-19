@@ -8,7 +8,7 @@ $config = [
             'rules' => [
                 '/' => 'site/index',
                 'login' => 'site/login',
-                'auth/<authclient:(google|live)>' => 'site/auth',
+                'auth/<authclient:(google|live|slack)>' => 'site/auth',
             ],
         ],
         'request' => [
