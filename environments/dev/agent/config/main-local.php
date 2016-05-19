@@ -7,6 +7,8 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '/' => 'site/index',
+                'login' => 'site/login',
+                'auth/<authclient:(google|live)>' => 'site/auth',
             ],
         ],
         'request' => [

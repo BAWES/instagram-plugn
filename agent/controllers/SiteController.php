@@ -4,6 +4,7 @@ namespace agent\controllers;
 use Yii;
 use yii\web\Controller;
 use agent\components\GoogleAuthHandler;
+use agent\components\LiveAuthHandler;
 use agent\models\LoginForm;
 use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
@@ -64,9 +65,14 @@ class SiteController extends Controller
     }
 
     public function onAuthSuccess($client)
-    {
-        //Handle Google Authentication
-        (new GoogleAuthHandler($client))->handle();
+    {    
+        if($client instanceof yii\authclient\clients\Live){
+            //Handle Microsoft Live Authentication
+            (new LiveAuthHandler($client))->handle();
+        }elseif($client instanceof yii\authclient\clients\GoogleOAuth){
+            //Handle Google Authentication
+            (new GoogleAuthHandler($client))->handle();
+        }
     }
 
     public function actionIndex()
