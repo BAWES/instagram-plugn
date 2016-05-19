@@ -110,6 +110,20 @@ class Agent extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        parent::afterSave($insert, $changedAttributes);
+
+        //New Agent Signup, Link him to accounts hes assigned to.
+        if($insert){
+            //Update All AgentAssignments where his email is mentioned to use his Agent ID
+            AgentAssignment::updateAll([
+                'agent_id' => $this->agent_id
+                ],[
+                'assignment_agent_email' => $this->agent_email
+            ]);
+        }
+    }
+
     /**
      * Get all Instagram accounts this agent is assigned to manage
      * @return \yii\db\ActiveQuery

@@ -12,7 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $assignment_id
  * @property integer $user_id
  * @property integer $agent_id
- * @property string $agent_email
+ * @property string $assignment_agent_email
  * @property string $assignment_created_at
  * @property string $assignment_updated_at
  *
@@ -35,8 +35,9 @@ class AgentAssignment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['agent_email'], 'string', 'max' => 255],
-            [['agent_email'], 'email'],
+            [['assignment_agent_email'], 'required'],
+            [['assignment_agent_email'], 'string', 'max' => 255],
+            [['assignment_agent_email'], 'email'],
         ];
     }
 
@@ -61,10 +62,24 @@ class AgentAssignment extends \yii\db\ActiveRecord
             'assignment_id' => 'Assignment ID',
             'user_id' => 'User ID',
             'agent_id' => 'Agent ID',
-            'agent_email' => 'Agent Email',
+            'assignment_agent_email' => 'Agent Email',
             'assignment_created_at' => 'Assignment Created At',
             'assignment_updated_at' => 'Assignment Updated At',
         ];
+    }
+
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                //If agent with this email exists, set agent_id to his id
+                $agent = Agent::findOne(['agent_email'=>$this->assignment_agent_email]);
+                if($agent){
+                    $this->agent_id = $agent->agent_id;
+                }
+            }
+
+            return true;
+        }
     }
 
     /**

@@ -20,7 +20,7 @@ class m160519_085517_create_agent_assignment extends Migration
             'assignment_id' => $this->primaryKey()->unsigned(),
             'user_id' => $this->integer()->unsigned()->notNull(),
             'agent_id' => $this->bigInteger()->unsigned(),
-            'agent_email' => $this->string()->notNull(),
+            'assignment_agent_email' => $this->string()->notNull(),
             'assignment_created_at' => $this->datetime()->notNull(),
             'assignment_updated_at' => $this->datetime()->notNull(),
         ]);
