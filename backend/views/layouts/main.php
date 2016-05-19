@@ -40,10 +40,16 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Instagram Users', 'url' => ['/instagram-user/index']];
+        $menuItems[] = [
+            'label' => 'Accounts',
+            'items' => [
+                ['label' => 'IG Users', 'url' => ['/instagram-user/index']],
+                ['label' => 'IG Agents', 'url' => ['/agent/index']],
+                ['label' => 'Admins', 'url' => ['/admin/index']],
+            ]
+        ];
         $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
         $menuItems[] = ['label' => 'Comments', 'url' => ['/comment/index']];
-        $menuItems[] = ['label' => 'Admin', 'url' => ['/admin/index']];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->admin_name . ')',
             'url' => ['/site/logout'],

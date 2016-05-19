@@ -13,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="admin-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('Create Admin', ['create'], ['class' => 'btn btn-success']) ?>
@@ -23,13 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            // ['class' => 'yii\grid\SerialColumn'],
 
-            'admin_id',
+            // 'admin_id',
             'admin_name',
             'admin_email:email',
-            'admin_auth_key',
-            'admin_password_hash',
+            // 'admin_auth_key',
+            // 'admin_password_hash',
             // 'admin_password_reset_token',
             // 'admin_datetime',
 
