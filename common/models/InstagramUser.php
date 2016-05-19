@@ -27,6 +27,10 @@ use yii\web\IdentityInterface;
  * @property integer $user_following_count
  * @property integer $user_follower_count
  * @property string $user_ig_access_token
+ *
+ * @property AgentAssignment[] $agentAssignments
+ * @property Media[] $media
+ * @property Record[] $records
  */
 class InstagramUser extends ActiveRecord implements IdentityInterface
 {
@@ -101,6 +105,16 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get Agent Assignment Records
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgentAssignments()
+    {
+        return $this->hasMany(AgentAssignment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * Get Media Posted on Instagram by this user
      * @return \yii\db\ActiveQuery
      */
     public function getMedia()
@@ -116,14 +130,6 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getRecords()
     {
         return $this->hasMany(Record::className(), ['user_id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProjects()
-    {
-        return $this->hasMany(Project::className(), ['user_id' => 'user_id']);
     }
 
     /**

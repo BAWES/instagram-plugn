@@ -24,6 +24,8 @@ use yii\db\ActiveRecord;
  * @property string $agent_created_at
  * @property string $agent_updated_at
  *
+ * @property InstagramUser[] $accountsManaged
+ * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
  */
 class Agent extends ActiveRecord implements IdentityInterface
@@ -109,6 +111,26 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get all Instagram accounts this agent is assigned to manage
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountsManaged()
+    {
+        return $this->hasMany(InstagramUser::className(), ['user_id' => 'user_id'])
+                ->via('agentAssignments');
+    }
+
+    /**
+     * All assignment records made for this agent
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgentAssignments()
+    {
+        return $this->hasMany(AgentAssignment::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * All Auth records made for this agent
      * @return \yii\db\ActiveQuery
      */
     public function getAgentAuths()
