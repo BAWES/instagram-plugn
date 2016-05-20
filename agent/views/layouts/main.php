@@ -34,14 +34,13 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
+    $menuItems = [];
     if (Yii::$app->user->isGuest) {
+        $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
         $menuItems[] = ['label' => 'Sign up', 'url' => ['/site/registration']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        //$menuItems[] = ['label' => 'Users', 'url' => ['/user/index']];
+        $menuItems[] = ['label' => 'Dashboard', 'url' => ['/dashboard/index']];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->agent_name . ')',
             'url' => ['/site/logout'],
@@ -60,7 +59,25 @@ AppAsset::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
-        <?= $content ?>
+
+        <div class='row'>
+            <?php if(Yii::$app->user->isGuest){ echo $content; }else{ ?>
+                <div class='col-md-3'>
+                    <h3>Your Accounts</h3>
+
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#">Account A</a></li>
+                        <li><a href="#">Account B</a></li>
+                        <li><a href="#">Account C</a></li>
+                        <li><a href="#">Account D</a></li>
+                    </ul>
+
+                </div>
+                <div class='col-md-9'>
+                    <?= $content ?>
+                </div>
+            <?php } ?>
+        </div>
     </div>
 </div>
 
