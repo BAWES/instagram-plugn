@@ -5,6 +5,7 @@ namespace agent\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
+use common\models\InstagramUser;
 
 class DashboardController extends \yii\web\Controller {
 
@@ -39,7 +40,22 @@ class DashboardController extends \yii\web\Controller {
     /**
      * Renders Dashboard
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
+        //Getting a list of accounts this agent manages will be part of a component that gets bootstrapped
+        // any action/view must always have access to the list
+
+        /*
+        $cacheDependency = Yii::createObject([
+            'class' => 'yii\caching\DbDependency',
+            'sql' => 'SELECT COUNT(*) FROM agent_assignment WHERE agent_id='.Yii::$app->user->identity->agent_id,
+        ]);*/
+
+        $cacheDuration = 60; //seconds before its deleted from cache
+
+        $accountsManaged = InstagramUser::getDb()->cache(function($db) {
+            return Yii::$app->user->identity->accountsManaged;
+        }, $cacheDuration, null);
 
         return $this->render('index',[]);
     }
