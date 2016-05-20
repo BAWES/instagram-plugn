@@ -3,9 +3,9 @@ namespace agent\controllers;
 
 use Yii;
 use yii\web\Controller;
-use agent\components\GoogleAuthHandler;
-use agent\components\LiveAuthHandler;
-use agent\components\SlackAuthHandler;
+use agent\components\authhandlers\GoogleAuthHandler;
+use agent\components\authhandlers\LiveAuthHandler;
+use agent\components\authhandlers\SlackAuthHandler;
 use agent\models\LoginForm;
 use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;

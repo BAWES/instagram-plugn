@@ -1,5 +1,5 @@
 <?php
-namespace agent\components;
+namespace agent\components\authhandlers;
 
 use common\models\Agent;
 use common\models\AgentAuth;

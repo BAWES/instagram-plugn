@@ -1,5 +1,5 @@
 <?php
-namespace agent\components;
+namespace agent\components\authhandlers;
 
 use common\models\Agent;
 use common\models\AgentAuth;
@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /**
  * AuthHandler handles successful authentification via Yii auth component
  */
-class LiveAuthHandler
+class GoogleAuthHandler
 {
     /**
      * @var ClientInterface
@@ -25,10 +25,9 @@ class LiveAuthHandler
     public function handle()
     {
         $attributes = $this->client->getUserAttributes();
-
-        $email = ArrayHelper::getValue($attributes, 'emails.account');
+        $email = ArrayHelper::getValue($attributes, 'emails')[0]['value'];
         $id = ArrayHelper::getValue($attributes, 'id');
-        $nickname = ArrayHelper::getValue($attributes, 'name');
+        $nickname = ArrayHelper::getValue($attributes, 'displayName');
 
         /** @var AgentAuth $auth */
         $auth = AgentAuth::find()->where([
