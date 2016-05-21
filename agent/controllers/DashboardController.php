@@ -54,9 +54,11 @@ class DashboardController extends \yii\web\Controller {
     public function actionManage($accountName)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountName);
-        
 
-        return $this->render('index',[]);
+
+        return $this->render('manage',[
+            'account' => $instagramAccount
+        ]);
     }
 
 
