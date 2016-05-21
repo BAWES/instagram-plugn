@@ -76,7 +76,7 @@ AppAsset::register($this);
                                     </a>
                                 </li>
                             <?php
-                        }}
+                        }}else echo "You're currently not assigned to any accounts";
                         ?>
                     </ul>
 

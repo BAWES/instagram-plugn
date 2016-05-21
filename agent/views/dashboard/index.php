@@ -6,8 +6,4 @@ $this->title = 'Dashboard';
 ?>
 
 
-<h1>Content here</h1>
-<?php foreach($managedAccounts as $account){
-    echo $account->user_name."<br/>";
-}
-?>
+  <h3>Select an account from the left to start managing its comments</h3>

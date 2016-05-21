@@ -42,12 +42,9 @@ class DashboardController extends \yii\web\Controller {
      */
     public function actionIndex()
     {
-        //Getting a list of accounts this agent manages
-        $accountManager = Yii::$app->accountManager;
 
-        $managedAccounts = $accountManager->managedAccounts;
 
-        return $this->render('index',['managedAccounts' => $managedAccounts]);
+        return $this->render('index',[]);
     }
 
     /**
