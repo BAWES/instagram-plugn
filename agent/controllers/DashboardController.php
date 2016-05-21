@@ -42,21 +42,12 @@ class DashboardController extends \yii\web\Controller {
      */
     public function actionIndex()
     {
-        //Getting a list of accounts this agent manages will be part of a component that gets bootstrapped
-        // any action/view must always have access to the list
-        $cacheDependency = Yii::createObject([
-            'class' => 'yii\caching\DbDependency',
-            'reusable' => true,
-            'sql' => 'SELECT COUNT(*) FROM agent_assignment WHERE agent_id='.Yii::$app->user->identity->agent_id,
-        ]);
+        //Getting a list of accounts this agent manages
+        $accountManager = Yii::$app->accountManager;
 
-        $cacheDuration = 60*15; //15 minutes then delete from cache
+        $managedAccounts = $accountManager->managedAccounts;
 
-        $accountsManaged = InstagramUser::getDb()->cache(function($db) {
-            return Yii::$app->user->identity->accountsManaged;
-        }, $cacheDuration, $cacheDependency);
-
-        return $this->render('index',[]);
+        return $this->render('index',['managedAccounts' => $managedAccounts]);
     }
 
     /**

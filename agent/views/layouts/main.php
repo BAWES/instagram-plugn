@@ -66,10 +66,18 @@ AppAsset::register($this);
                     <h3>Your Accounts</h3>
 
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a href="#">Account A</a></li>
-                        <li><a href="#">Account B</a></li>
-                        <li><a href="#">Account C</a></li>
-                        <li><a href="#">Account D</a></li>
+                        <?php
+                        if($managedAccounts = Yii::$app->accountManager->managedAccounts){
+                            foreach($managedAccounts as $account){?>
+                                <li>
+                                    <a href="#<?= $account->user_id ?>">
+                                        <?= Html::img($account->user_profile_pic, ['width'=>30, 'height'=>30]) ?>
+                                        <?= $account->user_name ?>
+                                    </a>
+                                </li>
+                            <?php
+                        }}
+                        ?>
                     </ul>
 
                 </div>
