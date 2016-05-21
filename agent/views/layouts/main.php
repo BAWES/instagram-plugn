@@ -5,6 +5,7 @@
 
 use backend\assets\AppAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -69,8 +70,8 @@ AppAsset::register($this);
                         <?php
                         if($managedAccounts = Yii::$app->accountManager->managedAccounts){
                             foreach($managedAccounts as $account){?>
-                                <li>
-                                    <a href="#<?= $account->user_id ?>">
+                                <li <?= $this->title==$account->user_name?" class='active'":"" ?>>
+                                    <a href="<?= Url::to(['dashboard/manage' ,'accountName' => $account->user_name]) ?>">
                                         <?= Html::img($account->user_profile_pic, ['width'=>30, 'height'=>30]) ?>
                                         <?= $account->user_name ?>
                                     </a>

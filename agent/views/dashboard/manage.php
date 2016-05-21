@@ -5,7 +5,7 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Manage '.$account->user_name;
+$this->title = $account->user_name;
 ?>
 
 
