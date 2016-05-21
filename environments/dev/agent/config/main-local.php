@@ -9,6 +9,7 @@ $config = [
                 '/' => 'site/index',
                 'login' => 'site/login',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
+                '<accountName:[0-9a-zA-Z\-&]+>/manage' => 'dashboard/manage',
             ],
         ],
         'request' => [

@@ -48,19 +48,15 @@ class DashboardController extends \yii\web\Controller {
     }
 
     /**
-     * Finds the Instagram Account model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return InstagramUser the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Manage an Instagram Account
+     * @param string $accountName the account name we're looking to manage
      */
-    protected function findModel($id)
+    public function actionManage($accountName)
     {
-        if (($model = InstagramUser::findOne(['user_id' => $id, 'user_id' => Yii::$app->user->identity->user_id])) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountName);
+        
+
+        return $this->render('index',[]);
     }
 
 

@@ -5,14 +5,16 @@ namespace agent\components;
 use Yii;
 use yii\base\Object;
 use yii\base\InvalidParamException;
+use yii\web\NotFoundHttpException;
 use common\models\InstagramUser;
 
 /**
- * AccountManager is a component that holds a list of Accounts this user manages
+ * AccountManager is a component that holds a list of Accounts this agent manages
  * The purpose of this component is to reduce the stress incurred on the database via Agents
  * Example Usage:
  * - Get list of accounts this agent manages
  * - Check if agent is authorised to make actions on behalf of an account maybe?
+ *
  */
 class AccountManager extends Object
 {
@@ -30,6 +32,11 @@ class AccountManager extends Object
      */
     public function __construct($config = [])
     {
+        //This component must only be usable if agent is logged in
+        if(Yii::$app->user->isGuest){
+            die("ILLEGAL USAGE OF ACCOUNT MANAGER, THROW IN JAIL");
+        }
+
         //Getting a list of accounts this agent manages
         $cacheDependency = Yii::createObject([
             'class' => 'yii\caching\DbDependency',
@@ -46,14 +53,6 @@ class AccountManager extends Object
         parent::__construct($config);
     }
 
-    public function init()
-    {
-        parent::init();
-
-        // ... initialization after configuration is applied
-
-    }
-
     /**
      * Returns the accounts managed by this agent
      *
@@ -61,5 +60,20 @@ class AccountManager extends Object
      */
     public function getManagedAccounts(){
         return $this->_managedAccounts;
+    }
+
+    /**
+     * Gets the account that the agent wants to manage
+     *
+     * @param string $accountName username of the account
+     * @return \common\models\InstagramUser  The user account
+     * @throws \yii\web\NotFoundHttpException if the account isnt one this agent manages
+     */
+    public function getManagedAccount($accountName){
+        foreach($this->managedAccounts as $account){
+            if($account->user_name == $accountName) return $account;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
