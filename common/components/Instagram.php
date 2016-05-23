@@ -166,6 +166,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 //Add it to our database
                 $comment = new Comment();
                 $comment->media_id = $media->media_id;
+                $comment->user_id = $user->user_id;
                 $comment->comment_instagram_id = $commentInstagramId;
                 $comment->comment_text = ArrayHelper::getValue($instagramComment, 'text');
                 $comment->comment_by_username = ArrayHelper::getValue($instagramComment, 'from.username');
