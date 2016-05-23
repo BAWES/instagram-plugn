@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $comment_id
  * @property integer $media_id
+ * @property integer $user_id
  * @property string $comment_instagram_id
  * @property string $comment_text
  * @property string $comment_by_username
@@ -42,13 +43,14 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['media_id', 'comment_instagram_id', 'comment_datetime'], 'required'],
-            [['media_id', 'comment_deleted'], 'integer'],
+            [['media_id', 'user_id', 'comment_instagram_id', 'comment_datetime'], 'required'],
+            [['media_id', 'user_id', 'comment_deleted'], 'integer'],
             [['comment_text', 'comment_deleted_reason'], 'string'],
             [['comment_datetime'], 'safe'],
             [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string'],
             [['comment_instagram_id'], 'unique'],
             //[['media_id'], 'exist', 'skipOnError' => true, 'targetClass' => Media::className(), 'targetAttribute' => ['media_id' => 'media_id']],
+            //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
     }
 
@@ -60,6 +62,7 @@ class Comment extends \yii\db\ActiveRecord
         return [
             'comment_id' => 'Comment ID',
             'media_id' => 'Media ID',
+            'user_id' => 'User ID',
             'comment_instagram_id' => 'Comment Instagram ID',
             'comment_text' => 'Comment Text',
             'comment_by_username' => 'Comment By Username',
@@ -70,6 +73,14 @@ class Comment extends \yii\db\ActiveRecord
             'comment_deleted_reason' => 'Comment Deleted Reason',
             'comment_datetime' => 'Comment Datetime',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
     }
 
     /**
