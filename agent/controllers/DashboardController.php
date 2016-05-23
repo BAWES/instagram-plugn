@@ -48,15 +48,29 @@ class DashboardController extends \yii\web\Controller {
     }
 
     /**
-     * Manage an Instagram Account
+     * Manage an Instagram Account in Conversation View
      * @param string $accountName the account name we're looking to manage
      */
-    public function actionManage($accountName)
+    public function actionConversations($accountName)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountName);
 
 
-        return $this->render('manage',[
+        return $this->render('conversations',[
+            'account' => $instagramAccount
+        ]);
+    }
+
+    /**
+     * Manage an Instagram Account in Media View
+     * @param string $accountName the account name we're looking to manage
+     */
+    public function actionMedia($accountName)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountName);
+
+
+        return $this->render('media',[
             'account' => $instagramAccount
         ]);
     }

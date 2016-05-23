@@ -71,7 +71,7 @@ AppAsset::register($this);
                         if($managedAccounts = Yii::$app->accountManager->managedAccounts){
                             foreach($managedAccounts as $account){?>
                                 <li <?= $this->title==$account->user_name?" class='active'":"" ?>>
-                                    <a href="<?= Url::to(['dashboard/manage' ,'accountName' => $account->user_name]) ?>">
+                                    <a href="<?= Url::to(['dashboard/conversations' ,'accountName' => $account->user_name]) ?>">
                                         <?= Html::img($account->user_profile_pic, ['width'=>30, 'height'=>30]) ?>
                                         <?= $account->user_name ?>
                                     </a>

@@ -4,6 +4,7 @@
 /* @var $account \common\models\InstagramUser */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = $account->user_name;
 ?>
@@ -28,8 +29,13 @@ $this->title = $account->user_name;
     </div>
 </div>
 
+<ul class="nav nav-tabs" style='margin-top:1.5em;'>
+  <li role="presentation"><a href="<?= Url::to(['dashboard/conversations' ,'accountName' => $account->user_name]) ?>">Conversation View</a></li>
+  <li role="presentation" class="active"><a href="<?= Url::to(['dashboard/media' ,'accountName' => $account->user_name]) ?>">Media View</a></li>
+</ul>
 
 <br/><br/>
+This is where account will be managed in media view.<br/>
 Comment management tickets go here, consider using any of your existing implementations: GridView or the one in Frontend panel
 
 <ul>
