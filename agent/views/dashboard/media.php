@@ -30,8 +30,8 @@ $this->title = $account->user_name;
 </div>
 
 <ul class="nav nav-tabs" style='margin-top:1.5em;'>
-  <li role="presentation"><a href="<?= Url::to(['dashboard/conversations' ,'accountName' => $account->user_name]) ?>">Conversation View</a></li>
-  <li role="presentation" class="active"><a href="<?= Url::to(['dashboard/media' ,'accountName' => $account->user_name]) ?>">Media View</a></li>
+  <li role="presentation"><a href="<?= Url::to(['dashboard/conversations' ,'accountId' => $account->user_id]) ?>">Conversation View</a></li>
+  <li role="presentation" class="active"><a href="<?= Url::to(['dashboard/media' ,'accountId' => $account->user_id]) ?>">Media View</a></li>
 </ul>
 
 <br/><br/>

@@ -67,13 +67,13 @@ class AccountManager extends Object
     /**
      * Gets the account that the agent wants to manage
      *
-     * @param string $accountName username of the account
+     * @param integer $accountId id number of the account
      * @return \common\models\InstagramUser  The user account
      * @throws \yii\web\NotFoundHttpException if the account isnt one this agent manages
      */
-    public function getManagedAccount($accountName){
+    public function getManagedAccount($accountId){
         foreach($this->managedAccounts as $account){
-            if($account->user_name == $accountName) return $account;
+            if($account->user_id == $accountId) return $account;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');

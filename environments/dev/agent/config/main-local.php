@@ -9,8 +9,8 @@ $config = [
                 '/' => 'site/index',
                 'login' => 'site/login',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
-                '<accountName:[0-9a-zA-Z\-&]+>/conversations' => 'dashboard/conversations',
-                '<accountName:[0-9a-zA-Z\-&]+>/media' => 'dashboard/media',
+                '<accountId:[0-9a-zA-Z\-&]+>/conversations' => 'dashboard/conversations',
+                '<accountId:[0-9a-zA-Z\-&]+>/media' => 'dashboard/media',
             ],
         ],
         'request' => [
