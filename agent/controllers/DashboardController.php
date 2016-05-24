@@ -55,9 +55,13 @@ class DashboardController extends \yii\web\Controller {
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountName);
 
+        $conversations = $instagramAccount->conversations;
+
+        //die(print_r($instagramAccount->getConversations()->createCommand()->sql, true));
 
         return $this->render('conversations',[
-            'account' => $instagramAccount
+            'account' => $instagramAccount,
+            'conversations' => $conversations,
         ]);
     }
 

@@ -114,6 +114,15 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get all comments made on this user account
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
      * Get Media Posted on Instagram by this user
      * @return \yii\db\ActiveQuery
      */
@@ -130,6 +139,34 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getRecords()
     {
         return $this->hasMany(Record::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * Get All Conversations belonging to this account
+     * ie, "Get all comments for this user, group by commenter id,
+     * order by datetime desc. WHERE commenter is not this user"
+     * @return array of conversations from latest to oldest
+     */
+    public function getConversations()
+    {
+        $query = (new \yii\db\Query())
+                ->select('t1.*')
+                ->from(['t1' => 'comment'])
+                ->join('JOIN', [
+                    't2' => (new \yii\db\Query())
+                            ->select(['comment_by_id', 'latest' => 'MAX(comment_datetime)'])
+                            ->from('comment')
+                            ->where(['!=', 'comment_by_id', $this->user_instagram_id])
+                            ->andWhere(['user_id' => $this->user_id])
+                            ->groupBy('comment_by_id')
+                ],
+                    //JOIN ON
+                    't1.comment_by_id = t2.comment_by_id AND t1.comment_datetime = t2.latest'
+                )
+                ->orderBy('t1.comment_datetime DESC')
+                ->all();
+
+        return $query;
     }
 
     /**
