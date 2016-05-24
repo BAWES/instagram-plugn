@@ -62,16 +62,3 @@ $this->title = $account->user_name;
 </a>
 
 <?php } ?>
-
-<?php
-/*
-Conversation with comment_instagram_id
-
-His latest comment: comment_text
-His Photo: comment_by_photo
-His insta ID: comment_by_id
-His Fullname: comment_by_fullname
-Time posted: comment_datetime
-
-*/
- ?>
