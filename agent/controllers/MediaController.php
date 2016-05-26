@@ -34,10 +34,12 @@ class MediaController extends \yii\web\Controller {
     public function actionList($accountId)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+        $media = $instagramAccount->media;
 
 
         return $this->render('list',[
-            'account' => $instagramAccount
+            'account' => $instagramAccount,
+            'media' => $media
         ]);
     }
 

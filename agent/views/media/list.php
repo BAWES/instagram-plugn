@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $account \common\models\InstagramUser */
+/* @var $media common\models\Media */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -45,3 +46,21 @@ Comment management tickets go here, consider using any of your existing implemen
     <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
     <li>A handled post marks all comments under it as handled by that agent</li>
 </ul>
+
+<div class='row'>
+    <?php foreach($media as $mediaItem){ ?>
+        <div class='col-md-3 col-sm-4 col-xs-6' style='margin-bottom:10px;'>
+            <?= Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
+                    ["media/view", 'id' => $mediaItem->media_id]
+                    ) ?>
+            <div class=row>
+                <div class=col-sm-6>
+                    <?= $mediaItem->media_num_comments ?> Comments
+                </div>
+                <div class=col-sm-6>
+                    <?= $mediaItem->media_num_likes ?> Likes
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+</div>
