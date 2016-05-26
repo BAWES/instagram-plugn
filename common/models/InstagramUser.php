@@ -170,6 +170,24 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get conversation between this account and user
+     * @param integer $commenterId the id of the commenter
+     * @param string $commenterUsername the username of the commenter
+     * @return array comments between this account and commenterId
+     */
+    public function getConversationWithUser($commenterId, $commenterUsername)
+    {
+
+        return Yii::$app->db->createCommand("
+            SELECT * FROM comment WHERE (user_id=:accountId AND comment_by_id=:commenterId)
+            OR (user_id=:accountId AND comment_text LIKE '%@".$commenterUsername."%')
+            ORDER BY comment_datetime DESC")
+            ->bindValue(':accountId', $this->user_id)
+            ->bindValue(':commenterId', $commenterId)
+            ->queryAll();
+    }
+
+    /**
      * Disable this users account for invalid access token
      */
     public function disableForInvalidToken(){

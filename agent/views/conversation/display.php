@@ -2,7 +2,8 @@
 
 /* @var $this yii\web\View */
 /* @var $account \common\models\InstagramUser */
-/* @var $conversations \common\models\Comment */
+/* @var $commenterUsername string */
+/* @var $comments \common\models\Comment */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -38,17 +39,15 @@ $this->title = $account->user_name;
 <br/><br/>
 <b>What this page should do</b>
 <ul>
-    <li>Highlight media that has comments we've ignored, show it on top with easy access</li>
+    <li>Mark comments that haven't been "Handled"</li>
     <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
     <li>A handled post marks all comments under it as handled by that agent</li>
 </ul>
 
-<?php foreach($conversations as $comment){ ?>
-<a href='<?= Url::to(['conversation/display',
-                'accountId' => $account->user_id,
-                'commenterId' => $comment['comment_by_id'],
-                ]) ?>'
-                style='color:black;'>
+<h1>Conversation with @<?= $commenterUsername ?> </h1>
+
+<?php foreach($comments as $comment){ ?>
+<div style='color:black;'>
 <div class='row'>
     <div class='col-sm-1 col-xs-2'>
         <div style='width:45px; height:45px;'>
@@ -63,6 +62,6 @@ $this->title = $account->user_name;
         <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
     </div>
 </div>
-</a>
+</div>
 
 <?php } ?>

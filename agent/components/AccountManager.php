@@ -76,6 +76,7 @@ class AccountManager extends Object
             if($account->user_id == $accountId) return $account;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('You do not manage this account.');
     }
+    
 }

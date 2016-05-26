@@ -29,7 +29,7 @@ class ConversationController extends \yii\web\Controller {
 
     /**
      * Manage an Instagram Account in Conversation View
-     * @param string $accountName the account name we're looking to manage
+     * @param integer $accountId the account id we're looking to manage
      */
     public function actionList($accountId)
     {
@@ -37,13 +37,43 @@ class ConversationController extends \yii\web\Controller {
 
         $conversations = $instagramAccount->conversations;
 
-        //die(print_r($instagramAccount->getConversations()->createCommand()->sql, true));
-
         return $this->render('list',[
             'account' => $instagramAccount,
             'conversations' => $conversations,
         ]);
     }
+
+    /**
+     * Display conversation with user who'se userId is provided
+     * @param integer $accountId the instagram account id we're managing
+     * @param integer $commenterId the instagram id of the user we're talking with
+     */
+    public function actionDisplay($accountId, $commenterId)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        $commenterDetails = (new \yii\db\Query())
+                    ->select(['comment_by_id', 'comment_by_username'])
+                    ->from('comment')
+                    ->where([
+                        'user_id' => (int) $accountId,
+                        'comment_by_id' => (int) $commenterId
+                    ])
+                    ->limit(1)
+                    ->one();
+
+        $commenterId = $commenterDetails['comment_by_id'];
+        $commenterUsername = $commenterDetails['comment_by_username'];
+
+        $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
+
+        return $this->render('display',[
+            'account' => $instagramAccount,
+            'commenterUsername' => $commenterUsername,
+            'comments' => $comments,
+        ]);
+    }
+
 
 
 }
