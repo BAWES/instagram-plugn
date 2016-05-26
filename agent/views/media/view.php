@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $account \common\models\InstagramUser */
-/* @var $media common\models\Media */
+/* @var $media \common\models\Media */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -37,30 +37,40 @@ $this->title = $account->user_name;
 </ul>
 
 <br/><br/>
-This is where account will be managed in media view.<br/>
-Comment management tickets go here, consider using any of your existing implementations: GridView or the one in Frontend panel
-
+<b>What this page should do</b>
 <ul>
-    <li>List all media with num comments etc.</li>
-    <li>Highlight media that has comments we've ignored, show it on top with easy access</li>
+    <li>Mark comments that haven't been "Handled"</li>
     <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
     <li>A handled post marks all comments under it as handled by that agent</li>
 </ul>
 
+<h1>Media View</h1>
+
+<div class="row">
+    <div class='col-sm-3'>
+        <?= Html::a(Html::img($media->media_image_thumb), $media->media_link, ['target' => '_blank']) ?>
+        <br/>
+        <?= Html::a("View Post", $media->media_link, ['target' => '_blank']) ?>
+    </div>
+
+    <div class='col-sm-9'>
+        <h4>
+            Posted on <?= Yii::$app->formatter->asDatetime($media->media_created_datetime) ?>
+        </h4>
+
+        <?= Html::encode($media->media_caption) ?>
+    </div>
+</div>
+
 <div class='row'>
-    <?php foreach($media as $mediaItem){ ?>
-        <div class='col-md-3 col-sm-4 col-xs-6' style='margin-bottom:10px;'>
-            <?= Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
-                    ["media/view", 'accountId' => $mediaItem->user_id, 'mediaId' => $mediaItem->media_id]
-                    ) ?>
-            <div class=row>
-                <div class=col-sm-6>
-                    <?= $mediaItem->media_num_comments ?> Comments
-                </div>
-                <div class=col-sm-6>
-                    <?= $mediaItem->media_num_likes ?> Likes
-                </div>
-            </div>
-        </div>
+    <h3>Comments</h3>
+    <?= $media->comments?"":"<h4 style='color:red'>No comments</h4>" ?>
+    <ul>
+    <?php foreach($media->comments as $comment){ ?>
+        <li style="<?= $comment->comment_deleted?"color:red;":"" ?>">
+            <b><?= Yii::$app->formatter->asDatetime($comment->comment_datetime, "medium") ?></b><br/>
+            <i><?= $comment->comment_by_username ?>:</i> <?= $comment->comment_text ?>
+        </li>
     <?php } ?>
+    </ul>
 </div>
