@@ -45,7 +45,7 @@ $this->title = $account->user_name;
 </ul>
 
 <?php foreach($conversations as $comment){ ?>
-<a href='<?= Url::to(['conversation/display',
+<a href='<?= Url::to(['conversation/view',
                 'accountId' => $account->user_id,
                 'commenterId' => $comment['comment_by_id'],
                 ]) ?>'

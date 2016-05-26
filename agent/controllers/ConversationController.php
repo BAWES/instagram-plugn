@@ -44,11 +44,11 @@ class ConversationController extends \yii\web\Controller {
     }
 
     /**
-     * Display conversation with user who'se userId is provided
+     * View conversation with user who'se userId is provided
      * @param integer $accountId the instagram account id we're managing
      * @param integer $commenterId the instagram id of the user we're talking with
      */
-    public function actionDisplay($accountId, $commenterId)
+    public function actionView($accountId, $commenterId)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
@@ -67,7 +67,7 @@ class ConversationController extends \yii\web\Controller {
 
         $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
 
-        return $this->render('display',[
+        return $this->render('view',[
             'account' => $instagramAccount,
             'commenterUsername' => $commenterUsername,
             'comments' => $comments,
