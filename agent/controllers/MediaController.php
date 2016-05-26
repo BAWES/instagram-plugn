@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use common\models\InstagramUser;
 
-class DashboardController extends \yii\web\Controller {
+class MediaController extends \yii\web\Controller {
 
     /**
      * @inheritdoc
@@ -26,12 +26,19 @@ class DashboardController extends \yii\web\Controller {
         ];
     }
 
+
     /**
-     * Renders Dashboard
+     * Manage an Instagram Account in Media View
+     * @param string $accountName the account name we're looking to manage
      */
-    public function actionIndex()
+    public function actionList($accountId)
     {
-        return $this->render('index',[]);
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+
+        return $this->render('list',[
+            'account' => $instagramAccount
+        ]);
     }
 
 
