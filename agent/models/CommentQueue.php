@@ -11,14 +11,25 @@ use yii\db\Expression;
  */
 class CommentQueue extends \common\models\CommentQueue {
 
+    //Username we're responding to, used for validation when responding to user
+    public $respondingToUsername;
+
     /**
      * @inheritdoc
      */
     public function rules() {
         return array_merge(parent::rules(), [
-            ['queue_text', 'required', 'on' => 'newComment'],
-            ['queue_text', 'string'],
-            ['queue_text', 'validateCommentGuidelines', 'on' => 'newComment'],
+            [['queue_text', 'respondingToUsername'], 'required', 'on' => 'newConversationComment'],
+            [['queue_text'], 'trim'],
+
+            // Comment API Rule #1 - The total length of the comment cannot exceed 300 characters.
+            ['queue_text', 'string', 'max' => 300, 'on' => 'newConversationComment'],
+            // Comment API Rule #2 - The comment cannot contain more than 4 hashtags.
+            //['queue_text', 'validateMaxHashtags', 'on' => 'newConversationComment'],
+            // Comment API Rule #3 - The comment cannot contain more than 1 URL.
+            ['queue_text', 'validateMaxUrl', 'on' => 'newConversationComment'],
+            // Comment API Rule #4 - The comment cannot consist of all capital letters.
+            ['queue_text', 'validateNotAllCaps', 'on' => 'newConversationComment'],
         ]);
     }
 
@@ -27,27 +38,43 @@ class CommentQueue extends \common\models\CommentQueue {
      */
     public function scenarios() {
         $scenarios = parent::scenarios();
-        /*
-        $scenarios['updateCompanyInfo'] = ['employer_company_name', 'employer_website', 'city_id', 'industry_id', 'employer_num_employees', 'employer_company_desc'];
-        */
+
+        $scenarios['newConversationComment'] = ['queue_text'];
+
         return $scenarios;
     }
 
     /**
-     * Validates the comment to conform with Instagram Guidelines.
-     * This method serves as the inline validation for password.
+     * Validates the comment, makes sure its not all caps to conform with Instagram's Guidelines.
      *
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validateCommentGuidelines($attribute, $params)
+    public function validateMaxUrl($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getInstaUser();
+            $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\:[0-9]+)?(\/\S*)?/";
+            $urls = array();
+        	if(preg_match_all($reg_exUrl, $this->queue_text, $urls)) {
+        		$numOfUrls = count($urls[0]);
+                if($numOfUrls > 1){
+                    $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 1 URL.'));
+                }
+        	}
+        }
+    }
 
-            //TODO - validation errors based on Instagram Guidelines
-            if (!$user) {
-                $this->addError($attribute, Yii::t('app', 'User not found'));
+    /**
+     * Validates the comment, makes sure its not all caps to conform with Instagram's Guidelines.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateNotAllCaps($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if (mb_strtoupper($this->queue_text, 'utf-8') == $this->queue_text) {
+                $this->addError($attribute, Yii::t('app', 'The comment cannot consist of all capital letters.'));
             }
         }
     }
@@ -61,6 +88,7 @@ class CommentQueue extends \common\models\CommentQueue {
     {
         if ($this->validate()) {
             //blabla
+            die("Supposedly sent comment (passes validation)");
             return true;
         }
 

@@ -53,12 +53,6 @@ class ConversationController extends \yii\web\Controller {
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        //TODO -> Make sure constructor can create a model using Instagram Account
-        $responseForm = new CommentQueue();
-        if ($responseForm->load(Yii::$app->request->post()) && $responseForm->sendComment()) {
-            return $this->refresh();
-        }
-
         $commenterDetails = (new \yii\db\Query())
                     ->select(['comment_by_id', 'comment_by_username'])
                     ->from('comment')
@@ -74,11 +68,28 @@ class ConversationController extends \yii\web\Controller {
 
         $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
 
+
+        /**
+         * Form to Submit Comment Response as Agent
+         * Places the comment in the queue if it passes all validation
+         */
+        //TODO -> Make sure to validate conversation scenario messages, they MUST mention commenter
+        $commentQueueForm = new CommentQueue();
+        $commentQueueForm->scenario = "newConversationComment";
+        $commentQueueForm->respondingToUsername = $commenterUsername;
+        $commentQueueForm->media_id = $comments[0]['media_id']; //respond to last media item we've talked on
+        $commentQueueForm->user_id = $instagramAccount->user_id;
+        $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
+        $commentQueueForm->queue_text = $commentQueueForm->queue_text?$commentQueueForm->queue_text:"@$commenterUsername";
+        if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->sendComment()) {
+            return $this->refresh();
+        }
+
         return $this->render('view',[
             'account' => $instagramAccount,
             'commenterUsername' => $commenterUsername,
             'comments' => $comments,
-            'responseForm' => $responseForm,
+            'commentQueueForm' => $commentQueueForm,
         ]);
     }
 
