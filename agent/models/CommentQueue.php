@@ -22,7 +22,8 @@ class CommentQueue extends \common\models\CommentQueue {
             [['queue_text', 'respondingToUsername'], 'required', 'on' => 'newConversationComment'],
             [['queue_text'], 'trim'],
 
-            //Conversation: Make sure you're mentioning the person you are responding to!
+            //Conversation: Make sure you're mentioning the person you are responding to, and make sure
+            //              that the comment response isn't empty!
             ['queue_text', 'validateMentionUser', 'on' => 'newConversationComment'],
 
             // Comment API Rule #1 - The total length of the comment cannot exceed 300 characters.
@@ -62,6 +63,13 @@ class CommentQueue extends \common\models\CommentQueue {
             if(!$userMentioned){
                 $this->addError($attribute, Yii::t('app', "Don't forget to mention {username}",
                 ['username' => $username]));
+            }else{
+                //User is mentioned, now check is there any content in his reply or is it blank?
+                $replyContent = trim(str_replace($username, "", $this->queue_text));
+                if(empty($replyContent)){
+                    //there is no content in the specified reply
+                    $this->addError($attribute, Yii::t('app', 'Your response seems to be blank.'));
+                }
             }
         }
     }
