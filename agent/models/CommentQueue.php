@@ -7,20 +7,7 @@ use yii\db\Expression;
 
 /**
  * This is the model class for table "comment_queue".
- * It extends from \common\models\CommentQueue but with custom functionality for Employer application module
- *
- * @property integer $queue_id
- * @property string $media_id
- * @property integer $user_id
- * @property string $agent_id
- * @property string $comment_id
- * @property string $queue_text
- * @property string $queue_datetime
- *
- * @property Agent $agent
- * @property Comment $comment
- * @property Media $media
- * @property InstagramUser $user
+ * It extends from \common\models\CommentQueue but with custom functionality
  */
 class CommentQueue extends \common\models\CommentQueue {
 
@@ -42,8 +29,6 @@ class CommentQueue extends \common\models\CommentQueue {
         $scenarios = parent::scenarios();
         /*
         $scenarios['updateCompanyInfo'] = ['employer_company_name', 'employer_website', 'city_id', 'industry_id', 'employer_num_employees', 'employer_company_desc'];
-        $scenarios['updatePersonalInfo'] = ['employer_contact_firstname', 'employer_contact_lastname', 'employer_contact_number'];
-        $scenarios['updateSocialDetails'] = ['employer_social_twitter', 'employer_social_instagram', 'employer_social_facebook'];
         */
         return $scenarios;
     }
