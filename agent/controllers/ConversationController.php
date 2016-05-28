@@ -5,6 +5,7 @@ namespace agent\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
+use agent\models\CommentQueue;
 use common\models\InstagramUser;
 
 class ConversationController extends \yii\web\Controller {
@@ -52,6 +53,12 @@ class ConversationController extends \yii\web\Controller {
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
+        //TODO -> Make sure constructor can create a model using Instagram Account
+        $responseForm = new CommentQueue();
+        if ($responseForm->load(Yii::$app->request->post()) && $responseForm->sendComment()) {
+            return $this->refresh();
+        }
+
         $commenterDetails = (new \yii\db\Query())
                     ->select(['comment_by_id', 'comment_by_username'])
                     ->from('comment')
@@ -71,6 +78,7 @@ class ConversationController extends \yii\web\Controller {
             'account' => $instagramAccount,
             'commenterUsername' => $commenterUsername,
             'comments' => $comments,
+            'responseForm' => $responseForm,
         ]);
     }
 

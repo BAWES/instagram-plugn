@@ -4,9 +4,11 @@
 /* @var $account \common\models\InstagramUser */
 /* @var $commenterUsername string */
 /* @var $comments \common\models\Comment */
+/* @var $responseForm \agent\models\CommentQueue */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\bootstrap\ActiveForm;
 
 $this->title = $account->user_name;
 ?>
@@ -46,6 +48,16 @@ $this->title = $account->user_name;
 </ul>
 
 <h1>Conversation with @<?= $commenterUsername ?> </h1>
+
+<?php $form = ActiveForm::begin(['id' => 'response-form']); ?>
+    Send a response:<br/>
+    <?= $form->field($responseForm, 'queue_text') ?>
+    <textarea style='width:100%' name='response'>@<?=$commenterUsername?> </textarea>
+    <br/>
+    <?= Html::submitButton('Send', ['class' => 'btn btn-primary', 'name' => 'send-button']) ?>
+<?php ActiveForm::end(); ?>
+
+<br/><br/>
 
 <?php foreach($comments as $comment){ ?>
 <div style='color:black;'>
