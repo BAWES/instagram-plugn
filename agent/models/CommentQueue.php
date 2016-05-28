@@ -25,7 +25,7 @@ class CommentQueue extends \common\models\CommentQueue {
             // Comment API Rule #1 - The total length of the comment cannot exceed 300 characters.
             ['queue_text', 'string', 'max' => 300, 'on' => 'newConversationComment'],
             // Comment API Rule #2 - The comment cannot contain more than 4 hashtags.
-            //['queue_text', 'validateMaxHashtags', 'on' => 'newConversationComment'],
+            ['queue_text', 'validateMaxHashtags', 'on' => 'newConversationComment'],
             // Comment API Rule #3 - The comment cannot contain more than 1 URL.
             ['queue_text', 'validateMaxUrl', 'on' => 'newConversationComment'],
             // Comment API Rule #4 - The comment cannot consist of all capital letters.
@@ -42,6 +42,24 @@ class CommentQueue extends \common\models\CommentQueue {
         $scenarios['newConversationComment'] = ['queue_text'];
 
         return $scenarios;
+    }
+
+    /**
+     * Validates the comment, makes sure its not all caps to conform with Instagram's Guidelines.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateMaxHashtags($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+
+            //How many Hashtags (#) used in comment?
+            $numHashtags = substr_count($this->queue_text, "#");
+            if($numHashtags > 4){
+                $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 4 hashtags.'));
+            }
+        }
     }
 
     /**
