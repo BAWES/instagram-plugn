@@ -73,7 +73,6 @@ class ConversationController extends \yii\web\Controller {
          * Form to Submit Comment Response as Agent
          * Places the comment in the queue if it passes all validation
          */
-        //TODO -> Make sure to validate conversation scenario messages, they MUST mention commenter
         $commentQueueForm = new CommentQueue();
         $commentQueueForm->scenario = "newConversationComment";
         $commentQueueForm->respondingToUsername = $commenterUsername;
@@ -81,7 +80,7 @@ class ConversationController extends \yii\web\Controller {
         $commentQueueForm->user_id = $instagramAccount->user_id;
         $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
         $commentQueueForm->queue_text = $commentQueueForm->queue_text?$commentQueueForm->queue_text:"@$commenterUsername";
-        if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->sendComment()) {
+        if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->save()) {
             return $this->refresh();
         }
 

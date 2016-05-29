@@ -126,20 +126,4 @@ class CommentQueue extends \common\models\CommentQueue {
         }
     }
 
-    /**
-     * Sends the comment to queue / to be posted if it passes validation
-     *
-     * @return boolean whether it was successfully processed or not
-     */
-    public function sendComment()
-    {
-        if ($this->validate()) {
-            //blabla
-            die("Supposedly sent comment (passes validation)");
-            return true;
-        }
-
-        return false;
-    }
-
 }
