@@ -66,11 +66,11 @@ $this->title = $account->user_name;
         </div>
     </div>
     <div class='col-sm-7 col-xs-6'>
-        <b><?= $comment['comment_by_fullname'] ?></b> <i>@<?= $comment['comment_by_username'] ?></i>
+        <b><?= $comment['commentType']=="queue"?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
+        <i>@<?= $comment['comment_by_username'] ?></i>
         <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
     </div>
     <div class='col-sm-4 col-xs-4'>
-        <b>AgentNameHere?</b> <br/>
         <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
 
     </div>

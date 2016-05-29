@@ -188,10 +188,12 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             ->queryAll();
 
         $queuedComments = Yii::$app->db->createCommand("
-            SELECT queue_id as comment_id, agent_id, media_id,
+            SELECT queue_id as comment_id, comment_queue.agent_id, agent.agent_name as agent_name, media_id,
             queue_text as comment_text, :username as comment_by_username, :photo as comment_by_photo,
             :fullname as comment_by_fullname, queue_datetime as comment_datetime, 'queue' as commentType
-            FROM comment_queue WHERE comment_id is NULL AND
+            FROM comment_queue
+            INNER JOIN agent on comment_queue.agent_id = agent.agent_id
+            WHERE comment_id is NULL AND
             (user_id=:accountId AND queue_text LIKE '%@".$commenterUsername."%')
             ORDER BY queue_datetime DESC")
             ->bindValue(':accountId', $this->user_id)
