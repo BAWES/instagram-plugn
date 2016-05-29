@@ -58,8 +58,9 @@ class CommentQueue extends \common\models\CommentQueue {
     {
         if (!$this->hasErrors()) {
             $username = "@".$this->respondingToUsername;
+            
+            $userMentioned = preg_match("/$username\b/", $this->queue_text);
 
-            $userMentioned = substr_count($this->queue_text, $username);
             if(!$userMentioned){
                 $this->addError($attribute, Yii::t('app', "Don't forget to mention {username}",
                 ['username' => $username]));
