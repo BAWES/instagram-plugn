@@ -58,7 +58,7 @@ $this->title = $account->user_name;
 <br/><br/>
 
 <?php foreach($comments as $comment){ ?>
-<div style='color:black;'>
+<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?>'>
 <div class='row'>
     <div class='col-sm-1 col-xs-2'>
         <div style='width:45px; height:45px;'>
@@ -70,7 +70,9 @@ $this->title = $account->user_name;
         <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
     </div>
     <div class='col-sm-4 col-xs-4'>
+        <b>AgentNameHere?</b> <br/>
         <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
+
     </div>
 </div>
 </div>

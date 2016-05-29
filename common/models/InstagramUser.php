@@ -8,6 +8,7 @@ use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * InstagramUser model
@@ -178,13 +179,32 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getConversationWithUser($commenterId, $commenterUsername)
     {
 
-        return Yii::$app->db->createCommand("
-            SELECT * FROM comment WHERE (user_id=:accountId AND comment_by_id=:commenterId)
+        $postedConversation = Yii::$app->db->createCommand("
+            SELECT *, 'posted' as commentType FROM comment WHERE (user_id=:accountId AND comment_by_id=:commenterId)
             OR (user_id=:accountId AND comment_text LIKE '%@".$commenterUsername."%')
             ORDER BY comment_datetime DESC")
             ->bindValue(':accountId', $this->user_id)
             ->bindValue(':commenterId', $commenterId)
             ->queryAll();
+
+        $queuedComments = Yii::$app->db->createCommand("
+            SELECT queue_id as comment_id, agent_id, media_id,
+            queue_text as comment_text, :username as comment_by_username, :photo as comment_by_photo,
+            :fullname as comment_by_fullname, queue_datetime as comment_datetime, 'queue' as commentType
+            FROM comment_queue WHERE comment_id is NULL AND
+            (user_id=:accountId AND queue_text LIKE '%@".$commenterUsername."%')
+            ORDER BY queue_datetime DESC")
+            ->bindValue(':accountId', $this->user_id)
+            ->bindValue(':username', $this->user_name)
+            ->bindValue(':fullname', $this->user_fullname)
+            ->bindValue(':photo', $this->user_profile_pic)
+            ->queryAll();
+
+        $actualConversation = ArrayHelper::merge($queuedComments, $postedConversation);
+
+        //die(print_r($actualConversation, true));
+
+        return $actualConversation;
     }
 
     /**
