@@ -66,7 +66,7 @@ $this->title = $account->user_name;
         </div>
     </div>
     <div class='col-sm-7 col-xs-6'>
-        <b><?= $comment['commentType']=="queue"?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
+        <b><?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
         <i>@<?= $comment['comment_by_username'] ?></i>
         <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
     </div>
