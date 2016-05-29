@@ -30,6 +30,8 @@ use yii\helpers\ArrayHelper;
  * @property string $user_ig_access_token
  *
  * @property AgentAssignment[] $agentAssignments
+ * @property Comment[] $comments
+ * @property CommentQueue[] $commentQueues
  * @property Media[] $media
  * @property Record[] $records
  */
@@ -121,6 +123,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getComments()
     {
         return $this->hasMany(Comment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommentQueues()
+    {
+        return $this->hasMany(CommentQueue::className(), ['user_id' => 'user_id']);
     }
 
     /**

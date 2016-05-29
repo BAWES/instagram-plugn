@@ -10,6 +10,7 @@ use Yii;
  * @property integer $comment_id
  * @property integer $media_id
  * @property integer $user_id
+ * @property integer $agent_id
  * @property string $comment_instagram_id
  * @property string $comment_text
  * @property string $comment_by_username
@@ -20,7 +21,10 @@ use Yii;
  * @property string $comment_deleted_reason
  * @property string $comment_datetime
  *
+ * @property Agent $agent
  * @property Media $media
+ * @property InstagramUser $user
+ * @property CommentQueue[] $commentQueues
  */
 class Comment extends \yii\db\ActiveRecord
 {
@@ -78,9 +82,9 @@ class Comment extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getAgent()
     {
-        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
+        return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
@@ -89,5 +93,21 @@ class Comment extends \yii\db\ActiveRecord
     public function getMedia()
     {
         return $this->hasOne(Media::className(), ['media_id' => 'media_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommentQueues()
+    {
+        return $this->hasMany(CommentQueue::className(), ['comment_id' => 'comment_id']);
     }
 }

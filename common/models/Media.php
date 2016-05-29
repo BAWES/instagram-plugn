@@ -26,6 +26,8 @@ use Yii;
  * @property string $media_location_latitude
  * @property string $media_created_datetime
  *
+ * @property Comment[] $comments
+ * @property CommentQueue[] $commentQueues
  * @property InstagramUser $user
  */
 class Media extends \yii\db\ActiveRecord
@@ -86,6 +88,14 @@ class Media extends \yii\db\ActiveRecord
     public function getComments()
     {
         return $this->hasMany(Comment::className(), ['media_id' => 'media_id'])->orderBy("comment_datetime DESC");
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommentQueues()
+    {
+        return $this->hasMany(CommentQueue::className(), ['media_id' => 'media_id']);
     }
 
     /**
