@@ -28,6 +28,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $user_following_count
  * @property integer $user_follower_count
  * @property string $user_ig_access_token
+ * @property string $user_api_rolling_datetime
+ * @property integer $user_api_requests_this_hour
  *
  * @property AgentAssignment[] $agentAssignments
  * @property Comment[] $comments
@@ -75,10 +77,11 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count'], 'integer'],
+            [['user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count', 'user_api_requests_this_hour'], 'integer'],
             [['user_instagram_id'], 'required'],
             [['user_bio'], 'string'],
             ['user_status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['user_api_rolling_datetime', 'default', 'value' => new Expression('NOW()')],
             ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_INVALID_ACCESS_TOKEN]],
         ];
     }
@@ -104,6 +107,8 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             'user_following_count' => 'User Following Count',
             'user_follower_count' => 'User Follower Count',
             'user_ig_access_token' => 'User Ig Access Token',
+            'user_api_rolling_datetime' => 'User Api Rolling Datetime',
+            'user_api_requests_this_hour' => 'User Api Requests This Hour',
         ];
     }
 
