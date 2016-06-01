@@ -63,10 +63,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        /*
+
         $instagram = Yii::$app->authClientCollection->clients['instagram'];
-        $instagram->testRandom();
-        */
+        $instagram->postQueuedComments();
+
 
         return $this->render('index');
     }

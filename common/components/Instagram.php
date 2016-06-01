@@ -35,6 +35,35 @@ class Instagram extends \kotchuprik\authclient\Instagram
     }
 
     /**
+     * Posts all the comments queued by users, respecting API rate-limits
+     */
+    public function postQueuedComments()
+    {
+
+        $activeUsers = InstagramUser::find()->active()->with('commentQueues');
+        //Loop through active users in batches of 50
+        foreach($activeUsers->each(50) as $user)
+        {
+            //Get Queued Comments for Each User, then Post all Pending Comments
+            $queuedComments = $user->commentQueues;
+            foreach($queuedComments as $pendingComment){
+                //Post the pending comment
+
+                //If sending to get crawled, add to the top "with" commentQueues.media for eager loading
+
+
+                /*
+                --- Respect the rolling-hour API request datetime, use "touch" if an hour has passed + reset num requests
+                    to zero
+                --- Update counter +1 for each request within the same rolling hour
+                --- maximum requests per hour = 60 on live and 30 for sandbox. Catch request limit error so we can adjust
+                    max number
+                */
+            }
+        }
+    }
+
+    /**
      * Gets the latest n number of posts by all users then updates db with their details.
      */
     public function getUsersLatestPosts()
@@ -42,7 +71,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $numPostsToCrawl = Yii::$app->params['instagram.numberOfPastPostsToCrawl']; //Around 20
         $activeUsers = InstagramUser::find()->active();
 
-        //Loop through users in batches of 50
+        //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
 
