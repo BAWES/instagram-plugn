@@ -11,19 +11,16 @@ File name: `plugn.mssql`
 ### 2 - Install Redis and configure for session storage
 
 Procedure to install redis depends on environment you're installing on.
+Redis is currently being used for both Session Storage and Cache. Feel free
+to change your local environment configs to use file storage instead.
 
 ### 3 - Initialize Environment + Install App Migrations
 
 Run the following commands:
 
-`./yii init`
+Initialize your Environment via `./yii init`
 
-`./yii migrate`
+Install DB migrations via `./yii migrate`
 
-### 4 - Install External Migrations
-
-#### User Module
-
-https://github.com/dektrium/yii2-user
-
-`./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations`
+Get the latest dependencies via
+`composer install`
