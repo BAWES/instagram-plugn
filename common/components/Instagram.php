@@ -41,39 +41,35 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function processQueuedComments()
     {
 
-        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.agent', 'commentQueues.media']);
+        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.agent']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
             //Get Queued Comments for Each User, then Post all Pending Comments
             $queuedComments = $user->commentQueues;
-            foreach($queuedComments as $pendingComment){
-                //Post the pending comment
-                $agent = $pendingComment->agent;
-                //$media = $pendingComment->media;
-                $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
-
-                echo "<hr><hr>";
+            foreach($queuedComments as $pendingComment)
+            {
+                echo "<hr><hr> ";
 
                 //Check if user is allowed to make api call (based on Instagram rate limits)
                 if($this->userAllowedToMakeApiCall($user)){
                     echo "User allowed to make api call";
 
+                    $agent = $pendingComment->agent;
+                    $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
+
                     if($postOrDeleteAction == "post"){
                         //Post
-
+                        //coding here
                         //Create two functions, one for posting Instagram comment, another for deleting
                         //--- Update user_api_requests_this_hour +1 for each post/delete request made
                     }elseif($postOrDeleteAction == "delete"){
                         //Delete
                     }
 
+                }else break; //User can't make api calls, exit the loop
 
-                }else echo "Rate limit reached, can't make api call"
-
-                echo "<hr>";
-
-
+                echo "<hr> ";
             }
         }
     }
@@ -87,12 +83,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function userAllowedToMakeApiCall($user)
     {
-        $rollingDatetime = new \DateTime($user->user_api_rolling_datetime);
-        $rollingHourEndsAt = clone $rollingDatetime;
+        $rollingHourEndsAt = new \DateTime();
+        $rollingHourEndsAt->setTimestamp(strtotime($user->user_api_rolling_datetime));
         $rollingHourEndsAt->modify("+1 hour");
 
-        //Check if rolling hour ended by comparing with current time
         $currentDatetime = new \DateTime();
+
+        //Check if rolling hour ended by comparing with current time
         if($currentDatetime > $rollingHourEndsAt){
             //Rolling hour passed, reset his rate limits
             $user->user_api_requests_this_hour = 0;
@@ -100,9 +97,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $user->save(false);
         }
 
-
         //If Hourly Rate limit for the endpoint hasn't passed
-        if($user->user_api_requests_this_hour >= Yii::$app->params['instagram.endpointHourlyRateLimit']){
+        if($user->user_api_requests_this_hour < Yii::$app->params['instagram.endpointHourlyRateLimit']){
             return true;
         }
         return false;
