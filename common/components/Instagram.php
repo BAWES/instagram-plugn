@@ -4,6 +4,7 @@ namespace common\components;
 
 use Yii;
 use yii\base\Exception;
+use yii\db\Expression;
 use yii\authclient\InvalidResponseException;
 use yii\helpers\ArrayHelper;
 use common\models\InstagramUser;
@@ -54,51 +55,57 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
                 echo "<hr><hr>";
 
-                /**
-                 * Instagram API rate limits you to X number of requests per rolling hour
-                 */
-                $rollingDatetime = new \DateTime($user->user_api_rolling_datetime);
-                $rollingHourEndsAt = clone $rollingDatetime;
-                $rollingHourEndsAt->modify("+1 hour");
+                //Check if user is allowed to make api call (based on Instagram rate limits)
+                if($this->userAllowedToMakeApiCall($user)){
+                    echo "User allowed to make api call";
 
-                //Check if rolling hour ended by comparing with current time
-                $currentDatetime = new \DateTime();
-                if($currentDatetime > $rollingHourEndsAt){
-                    //Rolling hour passed
+                    if($postOrDeleteAction == "post"){
+                        //Post
 
-                    //TODO - Possibly Refactor Rate Limit Checks into its own function that returns boolean
-                    //      - Boolean states whether user can handle more api requests or not
-
-                    //reset user_api_requests_this_hour to 0 or 1 [including current request] and user_api_rolling_datetime to [NOW()]
-                    //$user->user_api_requests_this_hour
+                        //Create two functions, one for posting Instagram comment, another for deleting
+                        //--- Update user_api_requests_this_hour +1 for each post/delete request made
+                    }elseif($postOrDeleteAction == "delete"){
+                        //Delete
+                    }
 
 
-                }else{
-                    //still rolling
-
-
-                }
-
-
-                ////If ended, reset api counter to 0 or 1 [including current request] and touch rolling datetime
-
-                ////if not ended, check if limit reached. If not reached proceed with call and append counter
-
-
+                }else echo "Rate limit reached, can't make api call"
 
                 echo "<hr>";
-                //
 
 
-                /*
-                --- Respect the rolling-hour API request datetime, use "touch" if an hour has passed + reset num requests
-                    to zero
-                --- Update counter +1 for each request within the same rolling hour
-                --- maximum requests per hour = 60 on live and 30 for sandbox. Catch request limit error so we can adjust
-                    max number
-                */
             }
         }
+    }
+
+    /**
+     * Checks whether the user is allowed to make any POST/DELETE api requests
+     * Also manages user Instagram API rate limits
+     * Limit: 30 Requests/Hour on Sandbox. 60 Requests/Hour on Production.
+     * @param \common\models\InstagramUser $user
+     * @return boolean whether the user can make api calls [due to rate limits]
+     */
+    public function userAllowedToMakeApiCall($user)
+    {
+        $rollingDatetime = new \DateTime($user->user_api_rolling_datetime);
+        $rollingHourEndsAt = clone $rollingDatetime;
+        $rollingHourEndsAt->modify("+1 hour");
+
+        //Check if rolling hour ended by comparing with current time
+        $currentDatetime = new \DateTime();
+        if($currentDatetime > $rollingHourEndsAt){
+            //Rolling hour passed, reset his rate limits
+            $user->user_api_requests_this_hour = 0;
+            $user->user_api_rolling_datetime = new Expression('NOW()');
+            $user->save(false);
+        }
+
+
+        //If Hourly Rate limit for the endpoint hasn't passed
+        if($user->user_api_requests_this_hour >= Yii::$app->params['instagram.endpointHourlyRateLimit']){
+            return true;
+        }
+        return false;
     }
 
     /**
