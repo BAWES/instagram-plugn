@@ -135,7 +135,8 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function getCommentQueues()
     {
-        return $this->hasMany(CommentQueue::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(CommentQueue::className(), ['user_id' => 'user_id'])
+                    ->orderBy("queue_datetime ASC");
     }
 
     /**
