@@ -35,12 +35,12 @@ class Instagram extends \kotchuprik\authclient\Instagram
     }
 
     /**
-     * Posts all the comments queued by users, respecting API rate-limits
+     * Posts OR Deletes all the comments queued by users, respecting API rate-limits
      */
-    public function postQueuedComments()
+    public function processQueuedComments()
     {
 
-        $activeUsers = InstagramUser::find()->active()->with('commentQueues');
+        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.agent', 'commentQueues.media']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
@@ -48,8 +48,46 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $queuedComments = $user->commentQueues;
             foreach($queuedComments as $pendingComment){
                 //Post the pending comment
+                $agent = $pendingComment->agent;
+                //$media = $pendingComment->media;
+                $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
 
-                //If sending to get crawled, add to the top "with" commentQueues.media for eager loading
+                echo "<hr><hr>";
+
+                /**
+                 * Instagram API rate limits you to X number of requests per rolling hour
+                 */
+                $rollingDatetime = new \DateTime($user->user_api_rolling_datetime);
+                $rollingHourEndsAt = clone $rollingDatetime;
+                $rollingHourEndsAt->modify("+1 hour");
+
+                //Check if rolling hour ended by comparing with current time
+                $currentDatetime = new \DateTime();
+                if($currentDatetime > $rollingHourEndsAt){
+                    //Rolling hour passed
+
+                    //TODO - Possibly Refactor Rate Limit Checks into its own function that returns boolean
+                    //      - Boolean states whether user can handle more api requests or not
+
+                    //reset user_api_requests_this_hour to 0 or 1 [including current request] and user_api_rolling_datetime to [NOW()]
+                    //$user->user_api_requests_this_hour
+
+
+                }else{
+                    //still rolling
+
+
+                }
+
+
+                ////If ended, reset api counter to 0 or 1 [including current request] and touch rolling datetime
+
+                ////if not ended, check if limit reached. If not reached proceed with call and append counter
+
+
+
+                echo "<hr>";
+                //
 
 
                 /*
