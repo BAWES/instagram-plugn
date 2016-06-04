@@ -66,7 +66,7 @@ class SiteController extends Controller
 
         $instagram = Yii::$app->authClientCollection->clients['instagram'];
         $instagram->processQueuedComments();
-        //Coding here / Comment the above later and refactor into CRON after testing performance
+        //Coding heere / Comment the above later and refactor into CRON after testing performance
 
 
         return $this->render('index');

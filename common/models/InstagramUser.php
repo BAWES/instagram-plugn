@@ -229,11 +229,20 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Increment the number of api calls made this hour
+     */
+    public function incrementNumApiCallsThisHour(){
+        $this->updateCounters(['user_api_requests_this_hour' => 1]);
+    }
+
+    /**
      * Disable this users account for invalid access token
      */
     public function disableForInvalidToken(){
         $this->user_status = self::STATUS_INVALID_ACCESS_TOKEN;
-        $this->save();
+        $this->save(false);
+
+        Yii::error("[Account Disabled] Instagram account @".$this->user_name." disabled for Invalid Access Token", __METHOD__);
     }
 
     /**

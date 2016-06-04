@@ -41,7 +41,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function processQueuedComments()
     {
 
-        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.agent']);
+        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
@@ -49,30 +49,75 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $queuedComments = $user->commentQueues;
             foreach($queuedComments as $pendingComment)
             {
-                echo "<hr><hr> ";
-
                 //Check if user is allowed to make api call (based on Instagram rate limits)
                 if($this->userAllowedToMakeApiCall($user)){
-                    echo "User allowed to make api call";
-
-                    $agent = $pendingComment->agent;
                     $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
-
+                    $media = $pendingComment->media;
                     if($postOrDeleteAction == "post"){
-                        //Post
-                        //coding here
-                        //Create two functions, one for posting Instagram comment, another for deleting
-                        //--- Update user_api_requests_this_hour +1 for each post/delete request made
+                        //Post the comment
+                        $this->postComment($user, $media, $pendingComment);
+
                     }elseif($postOrDeleteAction == "delete"){
                         //Delete
+
+                        //Create two functions, one for posting Instagram comment, another for deleting
+                        //--- Update user_api_requests_this_hour +1 for each post/delete request made
                     }
 
                 }else break; //User can't make api calls, exit the loop
-
-                echo "<hr> ";
             }
         }
     }
+
+    /**
+     * Posts a comment to Instagram
+     * @param \common\models\InstagramUser $user
+     * @param \common\models\Media $media
+     * @param \common\models\CommentQueue $pendingComment
+     */
+    public function postComment($user, $media, $pendingComment)
+    {
+        $mediaInstagramId = $media->media_instagram_id;
+
+        $response = $this->apiWithUser($user,
+            "media/$mediaInstagramId/comments",
+            'POST',
+            [
+                'text' => $pendingComment->queue_text,
+            ]);
+
+        //Increment Number of API Calls made by user this hour
+        $user->incrementNumApiCallsThisHour();
+
+        $responseCode = ArrayHelper::getValue($response, 'meta.code');
+        if($responseCode == 200){ //Successful comment
+
+            //Add the posted comment to our database
+            $comment = new Comment();
+            $comment->media_id = $media->media_id;
+            $comment->user_id = $user->user_id;
+            $comment->agent_id = $pendingComment->agent_id;
+            $comment->comment_instagram_id = ArrayHelper::getValue($response, 'data.id');
+            $comment->comment_text = ArrayHelper::getValue($response, 'data.text');
+            $comment->comment_by_username = ArrayHelper::getValue($response, 'data.from.username');
+            $comment->comment_by_photo = ArrayHelper::getValue($response, 'data.from.profile_picture');
+            $comment->comment_by_id = ArrayHelper::getValue($response, 'data.from.id');
+            $comment->comment_by_fullname = ArrayHelper::getValue($response, 'data.from.full_name');
+
+            $unixTime = ArrayHelper::getValue($response, 'data.created_time');
+            $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
+
+            if(!$comment->save()){
+                Yii::error("[Fatal Error] Unable to save successfully posted comment ".print_r($comment->errors, true), __METHOD__);
+            }
+
+            //Delete the Queued Comment as it has been posted successfully
+            $pendingComment->delete();
+
+        }else Yii::error("[Fatal Error] Issue posting a comment to Instagram", __METHOD__);
+
+    }
+
 
     /**
      * Checks whether the user is allowed to make any POST/DELETE api requests
@@ -226,13 +271,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
             //Check if this comment doesn't already exist in our database
             if(!isset($oldCommentsArray[$commentInstagramId]))
             {
-                //TODO Make sure if this comment is made by current medias user , then the
-                //source of this comment is through Instagram and not through Plugn App.
-                //This we can only develop once we program history of users who responded to comments
-                //This will help track the blame for each comment
-                //Note: This might not be needed once we develop the commenting feature
-
-
                 //Add it to our database
                 $comment = new Comment();
                 $comment->media_id = $media->media_id;
@@ -371,11 +409,14 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $errorType = ArrayHelper::getValue($metaResponse, 'meta.error_type', "Not set");
             $errorMessage = ArrayHelper::getValue($metaResponse, 'meta.error_message', "Not set");
 
+            Yii::error("[Fatal Error] $errorCode Error - $errorType: $errorMessage", __METHOD__);
+
             /**
              * Disable User Account with Invalid Access Token
              */
-            Yii::error("[Fatal Error] Disabling user for invalid response. $errorCode Error - $errorType: $errorMessage", __METHOD__);
-            $user->disableForInvalidToken();
+            if($errorCode == 400 && $errorType == "OAuthAccessTokenException"){
+                $user->disableForInvalidToken();
+            }
 
             return false;
         }

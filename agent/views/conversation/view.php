@@ -58,7 +58,7 @@ $this->title = $account->user_name;
 <br/><br/>
 
 <?php foreach($comments as $comment){ ?>
-<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?>'>
+<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?> <?= isset($comment['comment_deleted'])&&$comment['comment_deleted']?"background:pink;":"" ?>'>
 <div class='row'>
     <div class='col-sm-1 col-xs-2'>
         <div style='width:45px; height:45px;'>
