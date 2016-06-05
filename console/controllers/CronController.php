@@ -60,9 +60,10 @@ class CronController extends \yii\console\Controller {
      * Method called by cron every minute
      */
     public function actionEveryMinute() {
-        //Get latest 20 posts from every user and crawl comments if needed.
-        //This should be called once a minute
+        //Get latest posts and crawl comments
         $this->instagram->getUsersLatestPosts();
+        //Process Queued Comments
+        $this->instagram->processQueuedComments();
 
         return self::EXIT_CODE_NORMAL;
     }
