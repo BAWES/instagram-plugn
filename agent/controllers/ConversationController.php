@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
 use common\models\InstagramUser;
+use common\models\Comment;
 
 class ConversationController extends \yii\web\Controller {
 
@@ -48,16 +49,18 @@ class ConversationController extends \yii\web\Controller {
      * View conversation with user who'se userId is provided
      * @param integer $accountId the instagram account id we're managing
      * @param integer $commenterId the instagram id of the user we're talking with
+     * @param integer $deleteComment comment id to delete
      */
-    public function actionView($accountId, $commenterId)
+    public function actionView($accountId, $commenterId, $deleteComment = false)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
+        //Get Commenter Details and conversation for display
         $commenterDetails = (new \yii\db\Query())
                     ->select(['comment_by_id', 'comment_by_username'])
                     ->from('comment')
                     ->where([
-                        'user_id' => (int) $accountId,
+                        'user_id' => $instagramAccount->user_id,
                         'comment_by_id' => (int) $commenterId
                     ])
                     ->limit(1)
@@ -67,6 +70,36 @@ class ConversationController extends \yii\web\Controller {
         $commenterUsername = $commenterDetails['comment_by_username'];
 
         $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
+
+
+        /**
+         * Delete Comment Functionality
+         */
+        if($deleteComment)
+        {
+            //Get Comment that user wishes to delete (to ensure he owns this comment)
+            $commentToDelete = Comment::find()->where([
+                'user_id' => $instagramAccount->user_id,
+                'comment_id' => (int) $deleteComment,
+                'comment_deleted' => Comment::DELETED_FALSE,
+                ])->one();
+
+            if($commentToDelete){
+                //Queue the comment for deletion
+                $deleteQueue = new CommentQueue();
+                $deleteQueue->media_id = $commentToDelete->media_id;
+                $deleteQueue->user_id = $instagramAccount->user_id;
+                $deleteQueue->agent_id = Yii::$app->user->identity->agent_id;
+                $deleteQueue->comment_id = $commentToDelete->comment_id;
+                $deleteQueue->save(false);
+
+                //Mark comment as queued for deletion
+                $commentToDelete->comment_deleted = Comment::DELETED_QUEUED_FOR_DELETION;
+                $commentToDelete->save(false);
+            }
+
+            return $this->redirect(['conversation/view', 'accountId' => $instagramAccount->user_id, 'commenterId' => $commenterId]);
+        }
 
 
         /**
@@ -86,6 +119,7 @@ class ConversationController extends \yii\web\Controller {
 
         return $this->render('view',[
             'account' => $instagramAccount,
+            'commenterId' => $commenterId,
             'commenterUsername' => $commenterUsername,
             'comments' => $comments,
             'commentQueueForm' => $commentQueueForm,

@@ -58,7 +58,7 @@ class CommentQueue extends \common\models\CommentQueue {
     {
         if (!$this->hasErrors()) {
             $username = "@".$this->respondingToUsername;
-            
+
             $userMentioned = preg_match("/$username\b/", $this->queue_text);
 
             if(!$userMentioned){

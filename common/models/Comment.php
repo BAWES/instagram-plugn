@@ -28,6 +28,7 @@ use Yii;
  */
 class Comment extends \yii\db\ActiveRecord
 {
+    const DELETED_QUEUED_FOR_DELETION = 2;
     const DELETED_TRUE = 1;
     const DELETED_FALSE = 0;
 

@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $account \common\models\InstagramUser */
+/* @var $commenterId integer */
 /* @var $commenterUsername string */
 /* @var $comments \common\models\Comment */
 /* @var $commentQueueForm \agent\models\CommentQueue */
@@ -9,6 +10,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
+use common\models\Comment;
 
 $this->title = $account->user_name;
 ?>
@@ -58,7 +60,23 @@ $this->title = $account->user_name;
 <br/><br/>
 
 <?php foreach($comments as $comment){ ?>
-<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?> <?= isset($comment['comment_deleted'])&&$comment['comment_deleted']?"background:pink;":"" ?>'>
+<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?>
+
+    <?php
+    if(isset($comment['comment_deleted']))
+    {
+        switch($comment['comment_deleted'])
+        {
+            case Comment::DELETED_TRUE:
+                echo "background:red;";
+                break;
+            case Comment::DELETED_QUEUED_FOR_DELETION:
+                echo "background:pink;";
+                break;
+        }
+    }
+    ?>
+    '>
 <div class='row'>
     <div class='col-sm-1 col-xs-2'>
         <div style='width:45px; height:45px;'>
@@ -69,6 +87,10 @@ $this->title = $account->user_name;
         <b><?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
         <i>@<?= $comment['comment_by_username'] ?></i>
         <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
+        <a href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'deleteComment' => $comment['comment_id']]) ?>'
+        style='color:red; font-size:0.8em;' data-confirm="Are you sure you wish to delete this comment?">
+            Delete
+        </a>
     </div>
     <div class='col-sm-4 col-xs-4'>
         <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>

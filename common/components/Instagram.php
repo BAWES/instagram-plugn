@@ -41,7 +41,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function processQueuedComments()
     {
 
-        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media']);
+        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media', 'commentQueues.comment']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
@@ -59,6 +59,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
                     }elseif($postOrDeleteAction == "delete"){
                         //Delete
+                        $commentToDelete = $pendingComment->comment;
                         //--codehere
                         //Create two functions, one for posting Instagram comment, another for deleting
                         //--- Update user_api_requests_this_hour +1 for each post/delete request made
