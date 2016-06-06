@@ -19,7 +19,9 @@ class CommentQueue extends \common\models\CommentQueue {
      */
     public function rules() {
         return array_merge(parent::rules(), [
-            [['queue_text', 'respondingToUsername'], 'required', 'on' => 'newConversationComment'],
+            [['queue_text'], 'required', 'on' => ['newMediaComment', 'newConversationComment']],
+            [['respondingToUsername'], 'required', 'on' => 'newConversationComment'],
+
             [['queue_text'], 'trim'],
 
             //Conversation: Make sure you're mentioning the person you are responding to, and make sure
@@ -27,13 +29,13 @@ class CommentQueue extends \common\models\CommentQueue {
             ['queue_text', 'validateMentionUser', 'on' => 'newConversationComment'],
 
             // Comment API Rule #1 - The total length of the comment cannot exceed 300 characters.
-            ['queue_text', 'string', 'max' => 300, 'on' => 'newConversationComment'],
+            ['queue_text', 'string', 'max' => 300, 'on' => ['newMediaComment', 'newConversationComment']],
             // Comment API Rule #2 - The comment cannot contain more than 4 hashtags.
-            ['queue_text', 'validateMaxHashtags', 'on' => 'newConversationComment'],
+            ['queue_text', 'validateMaxHashtags', 'on' => ['newMediaComment', 'newConversationComment']],
             // Comment API Rule #3 - The comment cannot contain more than 1 URL.
-            ['queue_text', 'validateMaxUrl', 'on' => 'newConversationComment'],
+            ['queue_text', 'validateMaxUrl', 'on' => ['newMediaComment', 'newConversationComment']],
             // Comment API Rule #4 - The comment cannot consist of all capital letters.
-            ['queue_text', 'validateNotAllCaps', 'on' => 'newConversationComment'],
+            ['queue_text', 'validateNotAllCaps', 'on' => ['newMediaComment', 'newConversationComment']],
         ]);
     }
 
@@ -44,6 +46,7 @@ class CommentQueue extends \common\models\CommentQueue {
         $scenarios = parent::scenarios();
 
         $scenarios['newConversationComment'] = ['queue_text'];
+        $scenarios['newMediaComment'] = ['queue_text'];
 
         return $scenarios;
     }

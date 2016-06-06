@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "media".
@@ -80,6 +81,46 @@ class Media extends \yii\db\ActiveRecord
             'media_location_latitude' => 'Media Location Latitude',
             'media_created_datetime' => 'Media Created Datetime',
         ];
+    }
+
+    /**
+     * Get comments along with the ones queued for this media
+     * @return array live comments along with the queued comments merged
+     */
+    public function getCommentsWithQueued()
+    {
+
+        $postedConversation = Yii::$app->db->createCommand("
+            SELECT comment.*, agent.agent_name as agent_name, 'posted' as commentType
+            FROM comment
+            LEFT JOIN agent on comment.agent_id = agent.agent_id
+            WHERE (user_id=:accountId AND media_id=:mediaId)
+            ORDER BY comment_datetime DESC")
+            ->bindValue(':accountId', $this->user_id)
+            ->bindValue(':mediaId', $this->media_id)
+            ->queryAll();
+
+        $queuedComments = Yii::$app->db->createCommand("
+            SELECT queue_id as comment_id, comment_queue.agent_id, agent.agent_name as agent_name, media_id,
+            queue_text as comment_text, :username as comment_by_username, :photo as comment_by_photo,
+            :fullname as comment_by_fullname, queue_datetime as comment_datetime, 'queue' as commentType
+            FROM comment_queue
+            INNER JOIN agent on comment_queue.agent_id = agent.agent_id
+            WHERE comment_id is NULL AND
+            (user_id=:accountId AND media_id=:mediaId)
+            ORDER BY queue_datetime DESC")
+            ->bindValue(':accountId', $this->user->user_id)
+            ->bindValue(':mediaId', $this->media_id)
+            ->bindValue(':username', $this->user->user_name)
+            ->bindValue(':fullname', $this->user->user_fullname)
+            ->bindValue(':photo', $this->user->user_profile_pic)
+            ->queryAll();
+
+        $allCommentsWithQueued = ArrayHelper::merge($queuedComments, $postedConversation);
+
+        //die(print_r($allCommentsWithQueued, true));
+
+        return $allCommentsWithQueued;
     }
 
     /**
