@@ -32,9 +32,6 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
-
-
-
     }
 
     /**
@@ -48,20 +45,20 @@ class CronController extends \yii\console\Controller {
     }
 
     /**
-     * Method called every 30 minutes
+     * Method called by cron every minute
      */
-    public function actionEvery10Min() {
+    public function actionEveryMinute() {
         //Check if user uploaded any new media
+        //Get latest posts and crawl comments
+        $this->instagram->getUsersLatestPosts();
 
         return self::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Method called by cron every minute
+     * Method called every 15 seconds
      */
-    public function actionEveryMinute() {
-        //Get latest posts and crawl comments
-        $this->instagram->getUsersLatestPosts();
+    public function actionEvery15Seconds() {
         //Process Queued Comments
         $this->instagram->processQueuedComments();
 

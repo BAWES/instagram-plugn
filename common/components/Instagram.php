@@ -40,25 +40,37 @@ class Instagram extends \kotchuprik\authclient\Instagram
      */
     public function processQueuedComments()
     {
-
         $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media', 'commentQueues.comment', 'commentQueues.agent']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
+            //Users are limited to one post and one delete comment operation per process (~15 seconds)
+            $userAlreadyPostedComment = false;
+            $userAlreadyDeletedComment = false;
+
             //Get Queued Comments for Each User, then Post all Pending Comments
             $queuedComments = $user->commentQueues;
             foreach($queuedComments as $pendingComment)
             {
+                $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
+
+                if($postOrDeleteAction == "post" && $userAlreadyPostedComment){
+                    continue; //User already posted one comment, continue the loop
+                }
+                if($postOrDeleteAction == "delete" && $userAlreadyDeletedComment){
+                    continue; //User already deleted one comment, continue the loop
+                }
+
                 //Check if user is allowed to make api call (based on Instagram rate limits)
                 if($this->userAllowedToMakeApiCall($user)){
-                    $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
-
                     if($postOrDeleteAction == "post"){
                         //Post the comment
                         $this->postComment($user, $pendingComment);
+                        $userAlreadyPostedComment = true;
                     }elseif($postOrDeleteAction == "delete"){
                         //Delete the comment
                         $this->deleteComment($user, $pendingComment);
+                        $userAlreadyDeletedComment = true;
                     }
 
                 }else break; //User can't make api calls, exit the loop
