@@ -41,7 +41,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
     public function processQueuedComments()
     {
 
-        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media', 'commentQueues.comment']);
+        $activeUsers = InstagramUser::find()->active()->with(['commentQueues.media', 'commentQueues.comment', 'commentQueues.agent']);
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
@@ -52,17 +52,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 //Check if user is allowed to make api call (based on Instagram rate limits)
                 if($this->userAllowedToMakeApiCall($user)){
                     $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
-                    $media = $pendingComment->media;
+
                     if($postOrDeleteAction == "post"){
                         //Post the comment
-                        $this->postComment($user, $media, $pendingComment);
-
+                        $this->postComment($user, $pendingComment);
                     }elseif($postOrDeleteAction == "delete"){
-                        //Delete
-                        $commentToDelete = $pendingComment->comment;
-                        //--codehere
-                        //Create two functions, one for posting Instagram comment, another for deleting
-                        //--- Update user_api_requests_this_hour +1 for each post/delete request made
+                        //Delete the comment
+                        $this->deleteComment($user, $pendingComment);
                     }
 
                 }else break; //User can't make api calls, exit the loop
@@ -71,13 +67,49 @@ class Instagram extends \kotchuprik\authclient\Instagram
     }
 
     /**
-     * Posts a comment to Instagram
+     * Deletes a comment from Instagram
      * @param \common\models\InstagramUser $user
-     * @param \common\models\Media $media
      * @param \common\models\CommentQueue $pendingComment
      */
-    public function postComment($user, $media, $pendingComment)
+    public function deleteComment($user, $pendingComment)
     {
+        $media = $pendingComment->media;
+        $mediaInstagramId = $media->media_instagram_id;
+
+        $commentToDelete = $pendingComment->comment;
+        $commentId = $commentToDelete->comment_instagram_id;
+
+        $response = $this->apiWithUser($user,
+            "media/$mediaInstagramId/comments/$commentId",
+            'DELETE',
+            []);
+
+
+        //Increment Number of API Calls made by user this hour
+        $user->incrementNumApiCallsThisHour();
+
+        $responseCode = ArrayHelper::getValue($response, 'meta.code');
+        if($responseCode == 200){ //Successfully deleted comment
+
+            //Mark Comment as Deleted
+            $commentToDelete->comment_deleted = Comment::DELETED_TRUE;
+            $commentToDelete->comment_deleted_reason = "Deleted by ".$pendingComment->agent->agent_name;
+            $commentToDelete->save(false);
+
+            //Delete the Queued Comment Action as it has been deleted successfully
+            $pendingComment->delete();
+        }else Yii::error("[Fatal Error] Issue deleting a comment from Instagram", __METHOD__);
+
+    }
+
+    /**
+     * Posts a comment to Instagram
+     * @param \common\models\InstagramUser $user
+     * @param \common\models\CommentQueue $pendingComment
+     */
+    public function postComment($user, $pendingComment)
+    {
+        $media = $pendingComment->media;
         $mediaInstagramId = $media->media_instagram_id;
 
         $response = $this->apiWithUser($user,

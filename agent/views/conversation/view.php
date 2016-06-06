@@ -63,14 +63,17 @@ $this->title = $account->user_name;
 <div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?>
 
     <?php
+    $deleteReason = "";
     if(isset($comment['comment_deleted']))
     {
         switch($comment['comment_deleted'])
         {
             case Comment::DELETED_TRUE:
+                $deleteReason = $comment['comment_deleted_reason'];
                 echo "background:red;";
                 break;
             case Comment::DELETED_QUEUED_FOR_DELETION:
+                $deleteReason = "Currently Queued for Deletion";
                 echo "background:pink;";
                 break;
         }
@@ -87,10 +90,13 @@ $this->title = $account->user_name;
         <b><?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
         <i>@<?= $comment['comment_by_username'] ?></i>
         <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
+        <span style='color:white;'> <?= $deleteReason ?> </span>
+        <?php if(!$deleteReason && $comment['commentType']!="queue"){ ?>
         <a href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'deleteComment' => $comment['comment_id']]) ?>'
         style='color:red; font-size:0.8em;' data-confirm="Are you sure you wish to delete this comment?">
             Delete
         </a>
+        <?php } ?>
     </div>
     <div class='col-sm-4 col-xs-4'>
         <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
