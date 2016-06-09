@@ -77,7 +77,22 @@ $this->title = $account->user_name;
 <?= $media->comments?"":"<h4 style='color:red'>No comments</h4>" ?>
 
 <?php foreach($comments as $comment){ ?>
-<div style='<?= $comment['commentType']=="queue"?"background:lightyellow":"" ?>
+<div style='<?= $comment['commentType']=="queue"?"background:lightyellow;":"" ?>
+
+    <?php
+    //Whether the comment has been handled or not
+    if(isset($comment['comment_handled'])){
+        switch($comment['comment_handled'])
+        {
+            case Comment::HANDLED_TRUE:
+                echo "border-left:3px solid green;";
+                break;
+            case Comment::HANDLED_FALSE:
+                echo "border-left:3px solid red;";
+                break;
+        }
+    }
+    ?>
 
     <?php
     $deleteReason = "";
