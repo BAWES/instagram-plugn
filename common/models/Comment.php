@@ -17,6 +17,7 @@ use Yii;
  * @property string $comment_by_photo
  * @property string $comment_by_id
  * @property string $comment_by_fullname
+ * @property integer $comment_handled
  * @property integer $comment_deleted
  * @property string $comment_deleted_reason
  * @property string $comment_datetime
@@ -49,7 +50,7 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             [['media_id', 'user_id', 'comment_instagram_id', 'comment_datetime'], 'required'],
-            [['media_id', 'user_id', 'comment_deleted'], 'integer'],
+            [['media_id', 'user_id', 'comment_handled', 'comment_deleted'], 'integer'],
             [['comment_text', 'comment_deleted_reason'], 'string'],
             [['comment_datetime'], 'safe'],
             [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string'],
@@ -74,6 +75,7 @@ class Comment extends \yii\db\ActiveRecord
             'comment_by_photo' => 'Comment By Photo',
             'comment_by_id' => 'Comment By ID',
             'comment_by_fullname' => 'Comment By Fullname',
+            'comment_handled' => 'Comment Handled',
             'comment_deleted' => 'Comment Deleted',
             'comment_deleted_reason' => 'Comment Deleted Reason',
             'comment_datetime' => 'Comment Datetime',
