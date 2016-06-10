@@ -37,12 +37,6 @@ $this->title = $account->user_name;
 </ul>
 
 <br/><br/>
-<b>What this page should do</b>
-<ul>
-    <li>Highlight media that has comments we've ignored, show it on top with easy access</li>
-    <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
-    <li>A handled post marks all comments under it as handled by that agent</li>
-</ul>
 
 <?php foreach($conversations as $comment){ ?>
 <a href='<?= Url::to(['conversation/view',

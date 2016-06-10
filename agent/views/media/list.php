@@ -37,15 +37,6 @@ $this->title = $account->user_name;
 </ul>
 
 <br/><br/>
-This is where account will be managed in media view.<br/>
-Comment management tickets go here, consider using any of your existing implementations: GridView or the one in Frontend panel
-
-<ul>
-    <li>List all media with num comments etc.</li>
-    <li>Highlight media that has comments we've ignored, show it on top with easy access</li>
-    <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
-    <li>A handled post marks all comments under it as handled by that agent</li>
-</ul>
 
 <div class='row'>
     <?php foreach($media as $mediaItem){ ?>
