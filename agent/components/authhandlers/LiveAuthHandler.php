@@ -82,14 +82,13 @@ class LiveAuthHandler
 
                 } else {
                     //Agent Doesn't have an account, create one for him
-                    $password = Yii::$app->security->generateRandomString(6);
                     $agent = new Agent([
                         'agent_name' => $nickname,
                         'agent_email' => $email,
-                        'agent_password_hash' => $password,
                         'agent_email_verified' => Agent::EMAIL_VERIFIED,
                         'agent_limit_email' => new Expression('NOW()')
                     ]);
+                    $agent->setPassword(Yii::$app->security->generateRandomString(6));
                     $agent->generateAuthKey();
                     $agent->generatePasswordResetToken();
 
