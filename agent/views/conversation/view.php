@@ -41,15 +41,14 @@ $this->title = $account->user_name;
   <li role="presentation"><a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">Stats</a></li>
 </ul>
 
-<br/><br/>
-<b>What this page should do</b>
-<ul>
-    <li>Mark comments that haven't been "Handled"</li>
-    <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
-    <li>A handled post marks all comments under it as handled by that agent</li>
-</ul>
-
+<br/>
+<a class='btn btn-primary'
+    href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'handleComments' => true]) ?>'>
+    Mark Conversation as Handled
+</a>
 <h1>Conversation with @<?= $commenterUsername ?> </h1>
+
+
 
 <?php $form = ActiveForm::begin(['id' => 'response-form']); ?>
     Send a response:<br/>

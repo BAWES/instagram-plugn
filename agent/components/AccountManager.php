@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Object;
 use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
-use common\models\InstagramUser;
+use agent\models\InstagramUser;
 
 /**
  * AccountManager is a component that holds a list of Accounts this agent manages
@@ -20,7 +20,7 @@ class AccountManager extends Object
 {
     //Accounts this Agent manages
     /**
-     * @var \common\models\InstagramUser
+     * @var \agent\models\InstagramUser
      */
     private $_managedAccounts = false;
 
@@ -58,7 +58,7 @@ class AccountManager extends Object
     /**
      * Returns the accounts managed by this agent
      *
-     * @return \common\models\InstagramUser    Records of accounts managed by this agent
+     * @return \agent\models\InstagramUser    Records of accounts managed by this agent
      */
     public function getManagedAccounts(){
         return $this->_managedAccounts;
@@ -68,7 +68,7 @@ class AccountManager extends Object
      * Gets the account that the agent wants to manage
      *
      * @param integer $accountId id number of the account
-     * @return \common\models\InstagramUser  The user account
+     * @return \agent\models\InstagramUser  The user account
      * @throws \yii\web\NotFoundHttpException if the account isnt one this agent manages
      */
     public function getManagedAccount($accountId){
@@ -78,5 +78,5 @@ class AccountManager extends Object
 
         throw new NotFoundHttpException('You do not manage this account.');
     }
-    
+
 }

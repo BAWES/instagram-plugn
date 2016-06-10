@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
-use common\models\InstagramUser;
+use agent\models\InstagramUser;
 use common\models\Comment;
 
 class ConversationController extends \yii\web\Controller {
@@ -50,8 +50,9 @@ class ConversationController extends \yii\web\Controller {
      * @param integer $accountId the instagram account id we're managing
      * @param integer $commenterId the instagram id of the user we're talking with
      * @param integer $deleteComment comment id to delete
+     * @param boolean $handleComments whether to handle all conversation comments or not
      */
-    public function actionView($accountId, $commenterId, $deleteComment = false)
+    public function actionView($accountId, $commenterId, $deleteComment = false, $handleComments = false)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
@@ -69,8 +70,15 @@ class ConversationController extends \yii\web\Controller {
         $commenterId = $commenterDetails['comment_by_id'];
         $commenterUsername = $commenterDetails['comment_by_username'];
 
-        $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
-
+        /**
+         * Mark Handled Functionality
+         */
+        if($handleComments){
+            $handled = $instagramAccount->handleConversationComments($commenterId, $commenterUsername);
+            if($handled){
+                return $this->redirect(['conversation/view', 'accountId' => $instagramAccount->user_id, 'commenterId' => $commenterId]);
+            }
+        }
 
         /**
          * Delete Comment Functionality
@@ -101,6 +109,8 @@ class ConversationController extends \yii\web\Controller {
             return $this->redirect(['conversation/view', 'accountId' => $instagramAccount->user_id, 'commenterId' => $commenterId]);
         }
 
+        //Get Comments/Converstion for Display to End User
+        $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
 
         /**
          * Form to Submit Comment Response as Agent

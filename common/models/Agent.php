@@ -130,7 +130,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      */
     public function getAccountsManaged()
     {
-        return $this->hasMany(InstagramUser::className(), ['user_id' => 'user_id'])
+        return $this->hasMany(\agent\models\InstagramUser::className(), ['user_id' => 'user_id'])
                 ->via('agentAssignments');
     }
 
