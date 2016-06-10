@@ -6,9 +6,9 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
-use common\models\InstagramUser;
+use agent\models\InstagramUser;
 use common\models\Comment;
-use common\models\Media;
+use agent\models\Media;
 
 class MediaController extends \yii\web\Controller {
 
@@ -51,9 +51,10 @@ class MediaController extends \yii\web\Controller {
      * @param integer $accountId the instagram account id we're managing
      * @param integer $mediaId the media id we're interested in
      * @param integer $deleteComment comment id to delete
+     * @param boolean $handleComments whether to handle all media comments or not
      * @throws \yii\web\NotFoundHttpException if no media found
      */
-    public function actionView($accountId, $mediaId, $deleteComment = false)
+    public function actionView($accountId, $mediaId, $deleteComment = false, $handleComments = false)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
@@ -64,6 +65,14 @@ class MediaController extends \yii\web\Controller {
 
         if(!$media){
             throw new NotFoundHttpException('Media not found.');
+        }
+
+        /**
+         * Mark Handled Functionality
+         */
+        if($handleComments){
+            $media->handleMediaComments();
+            return $this->redirect(['media/view', 'accountId' => $instagramAccount->user_id, 'mediaId' => $media->media_id]);
         }
 
         /**

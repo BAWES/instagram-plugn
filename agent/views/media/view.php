@@ -40,13 +40,7 @@ $this->title = $account->user_name;
   <li role="presentation"><a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">Stats</a></li>
 </ul>
 
-<br/><br/>
-<b>What this page should do</b>
-<ul>
-    <li>Mark comments that haven't been "Handled"</li>
-    <li>Once users are done responding to comments on a post, they mark it as "Handled"</li>
-    <li>A handled post marks all comments under it as handled by that agent</li>
-</ul>
+<br/>
 
 <div class="row">
     <div class='col-sm-3'>
@@ -63,6 +57,12 @@ $this->title = $account->user_name;
         <?= Html::encode($media->media_caption) ?>
     </div>
 </div>
+
+<br/>
+<a class='btn btn-primary'
+    href='<?= Url::to(['media/view', 'accountId' => $account->user_id, 'mediaId' => $media->media_id, 'handleComments' => true]) ?>'>
+    Mark All Comments as Handled
+</a>
 
 <div class='row'>
     <h3>Comments</h3>
