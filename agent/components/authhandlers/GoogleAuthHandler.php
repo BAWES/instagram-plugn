@@ -6,6 +6,7 @@ use common\models\AgentAuth;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 
 /**
  * AuthHandler handles successful authentification via Yii auth component
@@ -87,6 +88,7 @@ class GoogleAuthHandler
                         'agent_email' => $email,
                         'agent_password_hash' => $password,
                         'agent_email_verified' => Agent::EMAIL_VERIFIED,
+                        'agent_limit_email' => new Expression('NOW()')
                     ]);
                     $agent->generateAuthKey();
                     $agent->generatePasswordResetToken();
