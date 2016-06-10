@@ -166,12 +166,15 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function getConversations()
     {
+        //Unhandled Count will contain the number of messages within conversation that haven't
+        //been handled (which arent from us)
+
         $query = (new \yii\db\Query())
-                ->select('t1.*')
+                ->select(['t1.*', 't2.unhandledCount'])
                 ->from(['t1' => 'comment'])
                 ->join('JOIN', [
                     't2' => (new \yii\db\Query())
-                            ->select(['comment_by_id', 'latest' => 'MAX(comment_datetime)'])
+                            ->select(['comment_by_id', 'latest' => 'MAX(comment_datetime)', 'unhandledCount' => 'count(*)'])
                             ->from('comment')
                             ->where(['!=', 'comment_by_id', $this->user_instagram_id])
                             ->andWhere(['user_id' => $this->user_id])
@@ -182,6 +185,11 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 )
                 ->orderBy('t1.comment_datetime DESC')
                 ->all();
+                //->createCommand->rawSql; die($query);
+
+                //TODO: Split unhandled count into another join or subquery
+                //It currently gets all comments related to user (whether handled or not doesnt matter)
+                //Subquery should limit only to those which are unhandled to show (number)
 
         return $query;
     }
