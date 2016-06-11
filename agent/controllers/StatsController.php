@@ -42,5 +42,21 @@ class StatsController extends \yii\web\Controller {
         ]);
     }
 
+    /**
+     * Display all agents activities with this account
+     * @param integer $accountId the account id we're looking to manage
+     */
+    public function actionActivity($accountId)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        $activities = $instagramAccount->getActivities()->with('agent')->all();
+
+        return $this->render('activity',[
+            'account' => $instagramAccount,
+            'activities' => $activities,
+        ]);
+    }
+
 
 }
