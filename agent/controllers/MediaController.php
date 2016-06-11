@@ -7,8 +7,8 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
 use agent\models\InstagramUser;
-use common\models\Comment;
 use agent\models\Media;
+use common\models\Comment;
 
 class MediaController extends \yii\web\Controller {
 
@@ -37,7 +37,8 @@ class MediaController extends \yii\web\Controller {
     public function actionList($accountId)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
-        $media = $instagramAccount->media;
+
+        $media = $instagramAccount->getMedia()->with('unhandledComments')->all();
 
 
         return $this->render('list',[

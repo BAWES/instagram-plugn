@@ -36,22 +36,52 @@ $this->title = $account->user_name;
   <li role="presentation"><a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">Stats</a></li>
 </ul>
 
-<br/><br/>
+<?php
+$unhandledMedia = $handledMedia = "";
 
-<div class='row'>
-    <?php foreach($media as $mediaItem){ ?>
-        <div class='col-md-3 col-sm-4 col-xs-6' style='margin-bottom:10px;'>
-            <?= Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
-                    ["media/view", 'accountId' => $mediaItem->user_id, 'mediaId' => $mediaItem->media_id]
-                    ) ?>
-            <div class=row>
-                <div class=col-sm-6>
-                    <?= $mediaItem->media_num_comments ?> Comments
-                </div>
-                <div class=col-sm-6>
-                    <?= $mediaItem->media_num_likes ?> Likes
-                </div>
+foreach($media as $mediaItem){
+    $unhandledCommentsCount = count($mediaItem->unhandledComments);
+
+    $mediaContentItem = "
+    <div class='col-md-3 col-sm-4 col-xs-6' style='margin-bottom:10px;'>";
+
+    if($unhandledCommentsCount > 0){
+        $mediaContentItem .= "
+            <div style='background:pink; text-align: center; font-weight:bold;'>
+                $unhandledCommentsCount unhandled
+            </div>";
+    }
+
+    $mediaContentItem .=
+        Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
+                ['media/view', 'accountId' => $mediaItem->user_id, 'mediaId' => $mediaItem->media_id]
+                ).
+        "<div class=row>
+            <div class=col-sm-6>
+                ".$mediaItem->media_num_comments." Comments
+            </div>
+            <div class=col-sm-6>
+                ".$mediaItem->media_num_likes." Likes
             </div>
         </div>
-    <?php } ?>
+    </div>
+    ";
+
+    if($unhandledCommentsCount > 0){
+
+
+        $unhandledMedia .= $mediaContentItem;
+    }else $handledMedia .= $mediaContentItem;
+}
+
+?>
+<?php if($unhandledMedia){ ?>
+<div class='row'>
+    <h3>Media with Unhandled Messages</h3>
+    <?= $unhandledMedia ?>
+</div>
+<?php } ?>
+<div class='row'>
+    <h3>Your Media</h3>
+    <?= $handledMedia ?>
 </div>

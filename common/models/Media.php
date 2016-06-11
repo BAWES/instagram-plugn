@@ -124,6 +124,17 @@ class Media extends \yii\db\ActiveRecord
     }
 
     /**
+     * Get a list of unhandled comments
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUnhandledComments()
+    {
+        return $this->getComments()->where([
+            'comment_handled' => Comment::HANDLED_FALSE,
+        ]);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getComments()
