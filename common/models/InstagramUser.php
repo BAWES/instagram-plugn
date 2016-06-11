@@ -155,7 +155,8 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function getRecords()
     {
-        return $this->hasMany(Record::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(Record::className(), ['user_id' => 'user_id'])
+                    ->orderBy("record_date DESC");
     }
 
     /**
