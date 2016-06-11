@@ -31,6 +31,7 @@ use yii\helpers\ArrayHelper;
  * @property string $user_api_rolling_datetime
  * @property integer $user_api_requests_this_hour
  *
+ * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
@@ -119,6 +120,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getAgentAssignments()
     {
         return $this->hasMany(AgentAssignment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActivities()
+    {
+        return $this->hasMany(Activity::className(), ['user_id' => 'user_id']);
     }
 
     /**

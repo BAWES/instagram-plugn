@@ -24,6 +24,7 @@ use yii\db\ActiveRecord;
  * @property string $agent_created_at
  * @property string $agent_updated_at
  *
+ * @property Activity[] $activities
  * @property InstagramUser[] $accountsManaged
  * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
@@ -150,6 +151,15 @@ class Agent extends ActiveRecord implements IdentityInterface
     public function getAgentAuths()
     {
         return $this->hasMany(AgentAuth::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * Activity log of this agent, what has he done?
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActivities()
+    {
+        return $this->hasMany(Activity::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
