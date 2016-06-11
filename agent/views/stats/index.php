@@ -33,7 +33,8 @@ $this->title = $account->user_name;
 <ul class="nav nav-tabs" style='margin-top:1.5em;'>
   <li role="presentation"><a href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">Conversation View</a></li>
   <li role="presentation"><a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">Media View</a></li>
-  <li role="presentation" class="active"><a href="<?= Url::to(['stats/index' ,'accountId' => $account->user_id]) ?>">Stats</a></li>
+  <li role="presentation" class="active"><a href="<?= Url::to(['stats/index' ,'accountId' => $account->user_id]) ?>">Statistics</a></li>
+  <li role="presentation"><a href="<?= Url::to(['stats/activity' ,'accountId' => $account->user_id]) ?>">Agent Activity</a></li>
 </ul>
 
 
