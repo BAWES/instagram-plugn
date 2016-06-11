@@ -6,8 +6,8 @@ use Yii;
 use common\models\Comment;
 
 /**
- * This is the model class for table "Instagram_User".
- * It extends from \common\models\InstagramUser but with custom functionality for Agent application module
+ * This is the model class for table "Media".
+ * It extends from \common\models\Media but with custom functionality for Agent application module
  *
  */
 class Media extends \common\models\Media {
@@ -29,6 +29,9 @@ class Media extends \common\models\Media {
             ")
             ->bindValue(':mediaId', $this->media_id)
             ->execute();
+
+        //Log that agent made change
+        Activity::log($this->user_id, "Marked all comments on media #".$this->media_id." as handled");
 
         return true;
     }

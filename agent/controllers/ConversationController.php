@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
 use agent\models\InstagramUser;
+use agent\models\Activity;
 use common\models\Comment;
 
 class ConversationController extends \yii\web\Controller {
@@ -104,6 +105,9 @@ class ConversationController extends \yii\web\Controller {
                 //Mark comment as queued for deletion
                 $commentToDelete->comment_deleted = Comment::DELETED_QUEUED_FOR_DELETION;
                 $commentToDelete->save(false);
+
+                //Log that agent made change
+                Activity::log($instagramAccount->user_id, "Deleted comment from conversation with @$commenterUsername (".$commentToDelete->comment_text.")");
             }
 
             return $this->redirect(['conversation/view', 'accountId' => $instagramAccount->user_id, 'commenterId' => $commenterId]);
@@ -124,6 +128,9 @@ class ConversationController extends \yii\web\Controller {
         $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
         $commentQueueForm->queue_text = $commentQueueForm->queue_text?$commentQueueForm->queue_text:"@$commenterUsername";
         if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->save()) {
+            //Log that agent made change
+            Activity::log($instagramAccount->user_id, "Posted comment on conversation with @$commenterUsername: ".$commentQueueForm->queue_text);
+
             return $this->refresh();
         }
 

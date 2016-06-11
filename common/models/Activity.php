@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "activity".
@@ -32,12 +34,11 @@ class Activity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'agent_id', 'activity_detail', 'activity_datetime'], 'required'],
+            [['user_id', 'agent_id', 'activity_detail'], 'required'],
             [['user_id', 'agent_id'], 'integer'],
             [['activity_detail'], 'string'],
-            [['activity_datetime'], 'safe'],
-            [['agent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agent::className(), 'targetAttribute' => ['agent_id' => 'agent_id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
+            //[['agent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agent::className(), 'targetAttribute' => ['agent_id' => 'agent_id']],
+            //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
     }
 
@@ -52,6 +53,17 @@ class Activity extends \yii\db\ActiveRecord
             'agent_id' => 'Agent ID',
             'activity_detail' => 'Activity Detail',
             'activity_datetime' => 'Activity Datetime',
+        ];
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'activity_datetime',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 

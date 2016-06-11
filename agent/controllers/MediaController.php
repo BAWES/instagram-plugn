@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use agent\models\CommentQueue;
 use agent\models\InstagramUser;
 use agent\models\Media;
+use agent\models\Activity;
 use common\models\Comment;
 
 class MediaController extends \yii\web\Controller {
@@ -100,6 +101,9 @@ class MediaController extends \yii\web\Controller {
                 //Mark comment as queued for deletion
                 $commentToDelete->comment_deleted = Comment::DELETED_QUEUED_FOR_DELETION;
                 $commentToDelete->save(false);
+
+                //Log that agent made change
+                Activity::log($instagramAccount->user_id, "Deleted comment from media #".$commentToDelete->media_id." (".$commentToDelete->comment_text.")");
             }
 
             return $this->redirect(['media/view', 'accountId' => $instagramAccount->user_id, 'mediaId' => $media->media_id]);
@@ -114,8 +118,10 @@ class MediaController extends \yii\web\Controller {
         $commentQueueForm->media_id = $media->media_id;
         $commentQueueForm->user_id = $instagramAccount->user_id;
         $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
-        $commentQueueForm->queue_text = $commentQueueForm->queue_text;
         if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->save()) {
+            //Log that agent made change
+            Activity::log($instagramAccount->user_id, "Posted on media #".$media->media_id.": ".$commentQueueForm->queue_text);
+
             return $this->refresh();
         }
 

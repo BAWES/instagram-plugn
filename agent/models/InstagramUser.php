@@ -32,6 +32,9 @@ class InstagramUser extends \common\models\InstagramUser {
             ->bindValue(':commenterId', $commenterId)
             ->execute();
 
+        //Log that agent made change
+        Activity::log($this->user_id, "Marked the conversation with @$commenterUsername as handled");
+
         return true;
     }
 
