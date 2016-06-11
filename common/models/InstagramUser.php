@@ -170,11 +170,11 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         //been handled (which arent from us)
 
         $query = (new \yii\db\Query())
-                ->select(['t1.*', 't2.unhandledCount'])
+                ->select(['t1.*', 't3.unhandledCount'])
                 ->from(['t1' => 'comment'])
-                ->join('JOIN', [
+                ->join('JOIN', [ //First join is to reveal contents of the latest comment from each conversation
                     't2' => (new \yii\db\Query())
-                            ->select(['comment_by_id', 'latest' => 'MAX(comment_datetime)', 'unhandledCount' => 'count(*)'])
+                            ->select(['comment_by_id', 'latest' => 'MAX(comment_datetime)'])
                             ->from('comment')
                             ->where(['!=', 'comment_by_id', $this->user_instagram_id])
                             ->andWhere(['user_id' => $this->user_id])
@@ -183,13 +183,23 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                     //JOIN ON
                     't1.comment_by_id = t2.comment_by_id AND t1.comment_datetime = t2.latest'
                 )
+                ->join('LEFT JOIN', [ //Second join is to get number of Unhandled messages within each conversation
+                    't3' => (new \yii\db\Query())
+                            ->select(['comment_by_id', 'unhandledCount' => 'count(*)'])
+                            ->from('comment')
+                            ->where(['!=', 'comment_by_id', $this->user_instagram_id])
+                            ->andWhere([
+                                'user_id' => $this->user_id,
+                                'comment_handled' => Comment::HANDLED_FALSE,
+                            ])
+                            ->groupBy('comment_by_id')
+                ],
+                    //JOIN ON
+                    't1.comment_by_id = t3.comment_by_id'
+                )
                 ->orderBy('t1.comment_datetime DESC')
                 ->all();
-                //->createCommand->rawSql; die($query);
-
-                //TODO: Split unhandled count into another join or subquery
-                //It currently gets all comments related to user (whether handled or not doesnt matter)
-                //Subquery should limit only to those which are unhandled to show (number)
+                //->createCommand()->rawSql; die($query);
 
         return $query;
     }

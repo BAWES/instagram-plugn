@@ -38,26 +38,31 @@ $this->title = $account->user_name;
 
 <br/><br/>
 
-<?php foreach($conversations as $comment){ ?>
-<a href='<?= Url::to(['conversation/view',
-                'accountId' => $account->user_id,
-                'commenterId' => $comment['comment_by_id'],
-                ]) ?>'
-                style='color:black;'>
-<div class='row'>
-    <div class='col-sm-1 col-xs-2'>
-        <div style='width:45px; height:45px;'>
-            <?= Html::img($comment['comment_by_photo'], ['style' => 'width:45px']) ?>
+<?php foreach($conversations as $comment){
+    $numberOfUnhandledMessages = isset($comment['unhandledCount'])?$comment['unhandledCount']:0;
+    ?>
+    <a href='<?= Url::to(['conversation/view',
+                    'accountId' => $account->user_id,
+                    'commenterId' => $comment['comment_by_id'],
+                    ]) ?>'
+                    style='color:black;'>
+
+        <div class='row' style='<?= $numberOfUnhandledMessages?"background:lightyellow":"" ?>'>
+            <div class='col-sm-1 col-xs-2'>
+                <div style='width:45px; height:45px;'>
+                    <?= Html::img($comment['comment_by_photo'], ['style' => 'width:45px']) ?>
+                </div>
+            </div>
+            <div class='col-sm-7 col-xs-6'>
+                <b><?= $comment['comment_by_fullname'] ?></b> <i>@<?= $comment['comment_by_username'] ?></i>
+                <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
+            </div>
+            <div class='col-sm-4 col-xs-4'>
+                <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
+                <br/>
+                <b><?= $numberOfUnhandledMessages? "$numberOfUnhandledMessages messages":"" ?></b>
+            </div>
         </div>
-    </div>
-    <div class='col-sm-7 col-xs-6'>
-        <b><?= $comment['comment_by_fullname'] ?></b> <i>@<?= $comment['comment_by_username'] ?></i>
-        <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
-    </div>
-    <div class='col-sm-4 col-xs-4'>
-        <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
-    </div>
-</div>
-</a>
+    </a>
 
 <?php } ?>
