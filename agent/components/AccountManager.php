@@ -7,6 +7,7 @@ use yii\base\Object;
 use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
 use agent\models\InstagramUser;
+use common\models\Comment;
 
 /**
  * AccountManager is a component that holds a list of Accounts this agent manages
@@ -18,7 +19,7 @@ use agent\models\InstagramUser;
  */
 class AccountManager extends Object
 {
-    //Accounts this Agent manages
+    // Accounts this Agent manages
     /**
      * @var \agent\models\InstagramUser
      */
@@ -32,12 +33,12 @@ class AccountManager extends Object
      */
     public function __construct($config = [])
     {
-        //This component must only be usable if agent is logged in
+        // This component must only be usable if agent is logged in
         if(Yii::$app->user->isGuest){
             die("ILLEGAL USAGE OF ACCOUNT MANAGER, THROW IN JAIL");
         }
 
-        //Getting a list of accounts this agent manages
+        // Getting a list of accounts this agent manages
         $cacheDependency = Yii::createObject([
             'class' => 'yii\caching\DbDependency',
             'reusable' => true,
@@ -52,7 +53,38 @@ class AccountManager extends Object
             return Yii::$app->user->identity->accountsManaged;
         }, $cacheDuration, $cacheDependency);
 
+        // Populate accounts with unhandled comment count
+        $this->populateAccountsWithUnhandledCount();
+
         parent::__construct($config);
+    }
+
+    /**
+     * Populates Agent Instagram Accounts with number of Unhandled Comments within each account
+     */
+    private function populateAccountsWithUnhandledCount(){
+        $accounts = array();
+        $accountIds = array();
+
+        // Get list of account ids we wish to check for number of unhandled
+        foreach($this->managedAccounts as $account){
+            $accountIds[] = $account->user_id;
+            $accounts[$account->user_id] = $account;
+        }
+
+        // Query for total number of unhandled grouped by account user id
+        $unhandledTotalQuery = Comment::find()
+                        ->select(['user_id', 'totalUnhandled' => 'COUNT(*)'])
+                        ->where(['in', 'user_id', $accountIds])
+                        ->andWhere(['comment_handled' => Comment::HANDLED_FALSE])
+                        ->groupBy('user_id')
+                        ->createCommand()
+                        ->queryAll();
+
+        // Assign the output to each cached Instagram_User model
+        foreach($unhandledTotalQuery as $unhandledSummary){
+            $accounts[$unhandledSummary['user_id']]->unhandledCount = $unhandledSummary['totalUnhandled'];
+        }
     }
 
     /**

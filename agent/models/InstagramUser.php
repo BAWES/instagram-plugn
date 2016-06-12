@@ -12,6 +12,8 @@ use common\models\Comment;
  */
 class InstagramUser extends \common\models\InstagramUser {
 
+    public $unhandledCount = 0;
+
     /**
      * Mark comments provided as handled by this agent
      * @param array $comments list of comment Ids

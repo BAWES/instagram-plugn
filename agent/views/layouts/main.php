@@ -74,6 +74,9 @@ AppAsset::register($this);
                                     <a href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">
                                         <?= Html::img($account->user_profile_pic, ['width'=>30, 'height'=>30]) ?>
                                         <?= $account->user_name ?>
+                                        <span class="badge">
+                                            <?= $account->unhandledCount ?>
+                                        </span>
                                     </a>
                                 </li>
                             <?php
