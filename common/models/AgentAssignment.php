@@ -62,7 +62,7 @@ class AgentAssignment extends \yii\db\ActiveRecord
             'assignment_id' => 'Assignment ID',
             'user_id' => 'User ID',
             'agent_id' => 'Agent ID',
-            'assignment_agent_email' => 'Agent Email',
+            'assignment_agent_email' => 'Email',
             'assignment_created_at' => 'Assignment Created At',
             'assignment_updated_at' => 'Assignment Updated At',
         ];

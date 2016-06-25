@@ -49,22 +49,21 @@ class AgentController extends Controller
             'query' => Yii::$app->user->identity->getAgentAssignments(),
         ]);
 
+        $model = new AgentAssignment();
+        $model->user_id = Yii::$app->user->identity->user_id;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //Set Flash Here + Display using the nice animated popup dialogs from template
+        }else{
+            //Set Flash here for error dialog with validation issues
+        }
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
-    /**
-     * Displays a single AgentAssignment model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
     /**
      * Creates a new AgentAssignment model.

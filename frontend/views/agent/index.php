@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -45,17 +46,26 @@ $this->params['breadcrumbs'][] = $this->title;
 				<h2>Agents</h2>
 				<p class="lead color-blue-grey-lighter">Agents have access to manage your account<br/> Add yourself as an agent</p>
 
-				<form action='pn-ig-agents.html'>
+				<?php $form = ActiveForm::begin(['errorCssClass' => 'form-group-error']); ?>
+
 					<div class='row'>
 						<div class='col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8'>
 
-							<input type="email" class="form-control" placeholder="Your email address">
+                            <?= $form->field($model, 'assignment_agent_email', ['template' => '{input}'])
+                            ->input('email', [
+                                'maxlength' => true,
+                                'placeholder' => 'Your email address',
+                                'class' => 'form-control'
+                                ])->label(false) ?>
+
+                                <?= Html::submitButton('Save', ['class' => 'btn btn-primary', 'style'=>'margin-top:0']) ?>
 
 						</div>
 					</div>
 
-					<input type='submit' class="btn btn-primary" value='Save'>
-				</form>
+
+
+				<?php ActiveForm::end(); ?>
 
 			</div>
 		</div>
