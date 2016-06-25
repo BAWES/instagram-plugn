@@ -51,7 +51,6 @@ TemplateAsset::register($this);
             <div class="site-header-content">
                 <div class="site-header-content-in">
                     <div class="site-header-shown">
-
                         <?php /*
                         <div class="dropdown dropdown-lang">
                             <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -113,25 +112,25 @@ TemplateAsset::register($this);
             </div>
         </div>
         <ul class="side-menu-list">
-            <li class="blue opened">
+            <li class="blue <?= Yii::$app->controller->id=="agent"?"opened":"" ?>">
                 <a href="<?= Url::to(['agent/index']) ?>">
                     <i class="font-icon font-icon-users"></i>
                     <span class="lbl">Agents</span>
                 </a>
             </li>
-            <li class="pink-red">
+            <li class="pink-red <?= Yii::$app->controller->id=="activity"?"opened":"" ?>">
                 <a href="<?= Url::to(['activity/index']) ?>">
                     <i class="font-icon font-icon-zigzag"></i>
                     <span class="lbl">Activity</span>
                 </a>
             </li>
-            <li class="aquamarine">
+            <li class="aquamarine <?= Yii::$app->controller->id=="billing"?"opened":"" ?>">
                 <a href="<?= Url::to(['billing/index']) ?>">
                     <i class="font-icon font-icon-build"></i>
                     <span class="lbl">Billing</span>
                 </a>
             </li>
-            <li class="blue-sky">
+            <li class="blue-sky <?= Yii::$app->controller->id=="help"?"opened":"" ?>">
                 <a href="<?= Url::to(['help/index']) ?>">
                     <i class="font-icon font-icon-question"></i>
                     <span class="lbl">Help</span>
