@@ -32,3 +32,32 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+
+<div class="container-fluid">
+	<div class="box-typical box-typical-full-height">
+		<div class="add-customers-screen tbl">
+			<div class="add-customers-screen-in">
+
+				<div class="add-customers-screen-user">
+					<i class="font-icon font-icon-users"></i>
+				</div>
+
+				<h2>Agents</h2>
+				<p class="lead color-blue-grey-lighter">Agents have access to manage your account<br/> Add yourself as an agent</p>
+
+				<form action='pn-ig-agents.html'>
+					<div class='row'>
+						<div class='col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8'>
+
+							<input type="email" class="form-control" placeholder="Your email address">
+
+						</div>
+					</div>
+
+					<input type='submit' class="btn btn-primary" value='Save'>
+				</form>
+
+			</div>
+		</div>
+	</div><!--.box-typical-->
+</div><!--.container-fluid-->
