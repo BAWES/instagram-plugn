@@ -81,7 +81,7 @@ TemplateAsset::register($this);
 
                         <div class="dropdown user-menu">
                             <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="<?= Url::to('@web/img/avatar-2-64.png') ?>" alt="">
+                                <img src="<?= Yii::$app->user->identity->user_profile_pic ?>" alt="">
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
                                 <?php /*
@@ -108,8 +108,8 @@ TemplateAsset::register($this);
     <nav class="side-menu">
         <div class="side-menu-avatar">
             <div class="avatar-preview avatar-preview-100">
-                <img src="<?= Url::to('@web/img/instagram-account/account2.jpg') ?>" alt="">
-                <span style='color:#343434; font-weight:600'>@bawestech</span>
+                <img src="<?= Yii::$app->user->identity->user_profile_pic ?>" alt="">
+                <span style='color:#343434; font-weight:600'>@<?= Yii::$app->user->identity->user_name ?></span>
             </div>
         </div>
         <ul class="side-menu-list">
