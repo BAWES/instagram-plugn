@@ -51,8 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class='row'>
 						<div class='col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8'>
 
-                            <?= $form->field($model, 'assignment_agent_email', ['template' => '{input}'])
-                            ->input('email', [
+                            <?= $form->field($model, 'assignment_agent_email', [
+                                'template' => '<div class="form-control-wrapper form-control-icon-left">{input}<i class="font-icon font-icon-mail"></i></div>',
+
+                            ])->input('email', [
                                 'maxlength' => true,
                                 'placeholder' => 'Your email address',
                                 'class' => 'form-control'
