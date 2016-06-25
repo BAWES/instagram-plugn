@@ -114,25 +114,25 @@ TemplateAsset::register($this);
         </div>
         <ul class="side-menu-list">
             <li class="blue opened">
-                <a href="pn-ig-layout.html">
+                <a href="<?= Url::to(['agent/index']) ?>">
                     <i class="font-icon font-icon-users"></i>
                     <span class="lbl">Agents</span>
                 </a>
             </li>
             <li class="pink-red">
-                <a href="pn-ig-activity.html">
+                <a href="<?= Url::to(['activity/index']) ?>">
                     <i class="font-icon font-icon-zigzag"></i>
                     <span class="lbl">Activity</span>
                 </a>
             </li>
             <li class="aquamarine">
-                <a href="pn-ig-billing.html">
+                <a href="<?= Url::to(['billing/index']) ?>">
                     <i class="font-icon font-icon-build"></i>
                     <span class="lbl">Billing</span>
                 </a>
             </li>
             <li class="blue-sky">
-                <a href="pn-ig-help.html">
+                <a href="<?= Url::to(['help/index']) ?>">
                     <i class="font-icon font-icon-question"></i>
                     <span class="lbl">Help</span>
                 </a>
