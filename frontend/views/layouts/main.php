@@ -52,6 +52,7 @@ TemplateAsset::register($this);
                 <div class="site-header-content-in">
                     <div class="site-header-shown">
 
+                        <?php /*
                         <div class="dropdown dropdown-lang">
                             <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="flag-icon flag-icon-us"></span>
@@ -75,16 +76,21 @@ TemplateAsset::register($this);
                                 </div>
                             </div>
                         </div>
+                        */
+                        ?>
 
                         <div class="dropdown user-menu">
                             <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="<?= Url::to('@web/img/avatar-2-64.png') ?>" alt="">
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
+                                <?php /*
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-user"></span>Profile</a>
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-cog"></span>Settings</a>
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-question-sign"></span>Help</a>
                                 <div class="dropdown-divider"></div>
+                                */
+                                ?>
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
                             </div>
                         </div>
