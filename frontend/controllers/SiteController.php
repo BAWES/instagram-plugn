@@ -63,14 +63,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
-        $instagram = Yii::$app->authClientCollection->clients['instagram'];
-        //$instagram->processQueuedComments();
-        //$instagram->getUsersLatestPosts();
-        //Coding here / Comment the above later and refactor into CRON after testing performance
-
-
-        return $this->render('index');
+        return $this->redirect(['agent/index']);
     }
 
     /**
@@ -96,10 +89,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render('login', [
-            //'model' => $model,
-        ]);
-
+        return $this->redirect(['site/auth', 'authclient' => 'instagram']);
     }
 
     /**
@@ -111,17 +101,8 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect("http://plugn.io");
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 
 }

@@ -91,7 +91,9 @@ TemplateAsset::register($this);
                                 <div class="dropdown-divider"></div>
                                 */
                                 ?>
-                                <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
+                                <a class="dropdown-item" href="<?= Url::to(['site/logout']) ?>" data-method= 'post'>
+                                    <span class="font-icon glyphicon glyphicon-log-out"></span>Logout
+                                </a>
                             </div>
                         </div>
 
