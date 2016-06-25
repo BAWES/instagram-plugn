@@ -1,16 +1,25 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Agent Assignments';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Get Help';
 ?>
-<div class="agent-assignment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-a
-</div>
+<div class="container-fluid">
+	<div class="box-typical box-typical-full-height">
+		<div class="add-customers-screen tbl">
+			<div class="add-customers-screen-in">
+
+				<div class="add-customers-screen-user">
+					<i class="font-icon font-icon-zigzag"></i>
+				</div>
+
+				<h2>Account Activity</h2>
+				<p class="lead color-blue-grey-lighter">All activities done by your assigned agents will be listed here for for future reference</p>
+
+			</div>
+		</div>
+	</div><!--.box-typical-->
+</div><!--.container-fluid-->

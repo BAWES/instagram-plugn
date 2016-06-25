@@ -1,16 +1,26 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Agent Assignments';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Get Help';
 ?>
-<div class="agent-assignment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-a
-</div>
+<div class="container-fluid">
+	<div class="box-typical box-typical-full-height">
+		<div class="add-customers-screen tbl">
+			<div class="add-customers-screen-in">
+
+				<div class="add-customers-screen-user">
+					<i class="font-icon font-icon-build"></i>
+				</div>
+
+				<h2>Billing</h2>
+				<p class="lead color-blue-grey-lighter">
+					Plugn is free to use during our beta period
+                </p>
+			</div>
+		</div>
+	</div><!--.box-typical-->
+</div><!--.container-fluid-->
