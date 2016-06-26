@@ -26,10 +26,16 @@ class TemplateAsset extends AssetBundle
         'js/lib/tether/tether.min.js',
         'js/lib/bootstrap/bootstrap.min.js',
         'js/plugins.js',
-        'js/app.js'
+        'js/app.js',
+
+        //Override data-confirm functionality
+        'js/yii_overrides.js',
     ];
 
     public $depends = [
         'yii\web\YiiAsset',
+
+        //Sweet Alert to override Yii2 data-confirm dialog
+        'frontend\assets\SweetAlertAsset',
     ];
 }
