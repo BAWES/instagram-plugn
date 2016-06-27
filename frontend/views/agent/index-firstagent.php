@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Agent Assignments';
+$this->title = 'Add yourself as an Agent';
 ?>
 
 <div class="container-fluid">

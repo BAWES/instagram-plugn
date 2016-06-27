@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Agent Assignments';
+$this->title = 'Manage your Agent Assignments';
 ?>
 <header class="page-content-header">
 	<div class="container-fluid">

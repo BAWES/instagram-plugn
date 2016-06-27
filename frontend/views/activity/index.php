@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
-$this->title = 'Get Help';
+$this->title = 'Activity';
 ?>
 
 <div class="container-fluid">
