@@ -163,6 +163,7 @@ TemplateAsset::register($this);
 
     <div class="page-content">
 
+		<?= Alert::widget() ?>
         <?= $content ?>
 
 

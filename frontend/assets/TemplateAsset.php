@@ -22,7 +22,7 @@ class TemplateAsset extends AssetBundle
 
     //JS will be added before closing </body> tag
     public $js = [
-        'js/lib/jquery/jquery.min.js',
+        //'js/lib/jquery/jquery.min.js',
         'js/lib/tether/tether.min.js',
         'js/lib/bootstrap/bootstrap.min.js',
         'js/plugins.js',

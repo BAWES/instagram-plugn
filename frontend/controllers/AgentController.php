@@ -52,10 +52,18 @@ class AgentController extends Controller
         $model = new AgentAssignment();
         $model->user_id = Yii::$app->user->identity->user_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //Set Flash Here + Display using the nice animated popup dialogs from template
-        }else{
-            //Set Flash here for error dialog with validation issues
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()){
+                //Set Flash Here + Display using the nice animated popup dialogs from template
+                //do this now!
+                Yii::$app->getSession()->setFlash('success', "[Good job!] You\'ve successfully added ".$model->assignment_agent_email." as an agent");
+            }else{
+                //Set Flash here for error dialog with validation issues
+                if($model->hasErrors()){
+                    $error = \yii\helpers\Html::encode($model->errors['assignment_agent_email'][0]);
+                    Yii::$app->getSession()->setFlash('error', "[Unable to Add Agent] ".$error. " Please try again");
+                }
+            }
         }
 
         return $this->render('index', [
