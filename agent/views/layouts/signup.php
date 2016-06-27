@@ -42,12 +42,10 @@ TemplateAsset::register($this);
 	<div class="page-center">
 		<div class="page-center-in">
 			<div class="container-fluid">
-				<div class="sign-box">
 
-					<?= Alert::widget() ?>
-			        <?= $content ?>
+				<?= Alert::widget() ?>
+		        <?= $content ?>
 
-				</div>
 			</div>
 		</div>
 	</div><!--.page-center-->
