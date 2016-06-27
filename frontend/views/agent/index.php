@@ -8,15 +8,22 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Agent Assignments';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="agent-assignment-index">
+<header class="page-content-header">
+	<div class="container-fluid">
+		<div class="tbl">
+			<div class="tbl-row">
+				<div class="tbl-cell">
+					<h3><i class="font-icon font-icon-users"></i> Agents <small class="text-muted">who have access to manage your account</small></h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Agent Assignment', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+<div class="container-fluid">
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -26,50 +33,41 @@ $this->params['breadcrumbs'][] = $this->title;
             //'user_id',
             //'agent_id',
             'assignment_agent_email:email',
-            'assignment_created_at',
+            'assignment_created_at:date',
             // 'assignment_updated_at',
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}{delete}'],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{delete}'],
         ],
     ]); ?>
-</div>
 
-<div class="container-fluid">
-	<div class="box-typical box-typical-full-height">
+
+    <div class="box-typical box-typical-padding" style='margin-top:1em;'>
 		<div class="add-customers-screen tbl">
 			<div class="add-customers-screen-in">
 
-				<div class="add-customers-screen-user">
-					<i class="font-icon font-icon-users"></i>
-				</div>
-
-				<h2>Agents</h2>
-				<p class="lead color-blue-grey-lighter">Agents have access to manage your account<br/> Add yourself as an agent</p>
+				<h3>Invite Additional Agents</h3>
 
 				<?php $form = ActiveForm::begin(['errorCssClass' => 'form-group-error']); ?>
-
 					<div class='row'>
 						<div class='col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8'>
 
                             <?= $form->field($model, 'assignment_agent_email', [
-                                'template' => '<div class="form-control-wrapper form-control-icon-left">{input}<i class="font-icon font-icon-mail"></i></div>',
+                                'template' => '<div class="form-control-wrapper form-control-icon-left">{input}<i class="font-icon font-icon-mail"></i></div>{error}',
 
                             ])->input('email', [
                                 'maxlength' => true,
-                                'placeholder' => 'Your email address',
+                                'placeholder' => "Agent's email address",
                                 'class' => 'form-control'
                                 ])->label(false) ?>
-
-                                <?= Html::submitButton('Save', ['class' => 'btn btn-primary', 'style'=>'margin-top:0']) ?>
 
 						</div>
 					</div>
 
-
-
+					<?= Html::submitButton('Send Invite', ['class' => 'btn btn-primary', 'style'=>'margin-top:0']) ?>
 				<?php ActiveForm::end(); ?>
 
 			</div>
 		</div>
 	</div><!--.box-typical-->
-</div><!--.container-fluid-->
+
+</div>
