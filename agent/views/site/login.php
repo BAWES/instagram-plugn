@@ -10,41 +10,63 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
+
+$googleAuthUrl = Url::to(['site/auth', 'authclient' => 'google']);
+$liveAuthUrl = Url::to(['site/auth', 'authclient' => 'live']);
+$slackAuthUrl = Url::to(['site/auth', 'authclient' => 'slack']);
+
+$this->registerCss(".help-block{margin-bottom:0}");
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<div style='text-align:center; margin-bottom:5px'>
+    <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px'>
+</div>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+<?php $form = ActiveForm::begin(['id' => 'login-form', 'errorCssClass' => 'form-group-error', 'options' => ['class' => 'sign-box']]); ?>
 
-                <?= $form->field($model, 'email') ?>
+    <a href='<?= $googleAuthUrl ?>' class='btn btn-primary' style="margin-top:0; background-color:#df4a32; border-color:#df4a32">
+        <i class="font-icon font-icon-google-plus"  aria-hidden="true"></i> Log in with Google
+    </a>
+    <a href='<?= $liveAuthUrl ?>' class='btn btn-primary' style="margin-top:0;">
+        <i class="fa fa-windows" aria-hidden="true"></i> Log in with Windows Live
+    </a>
+    <a href='<?= $slackAuthUrl ?>' class='btn btn-secondary' style="margin-top:0;">
+        <i class="fa fa-slack" aria-hidden="true"></i> Log in with Slack
+    </a>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+    <span class="or-wrapper">
+		<span class="or-text">or</span>
+	</span>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+    <?= $form->field($model, 'email', [
+        'template' => '{input}{error}',
+    ])->input('email', [
+        'maxlength' => true,
+        'placeholder' => 'Your Email Address',
+        'class' => 'form-control'
+        ]) ?>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+    <?= $form->field($model, 'password', [
+        'template' => '{input}{error}',
+    ])->passwordInput([
+            'maxlength' => true,
+            'placeholder' => 'Your Password',
+            'class' => 'form-control'
+        ]) ?>
 
-                <div style="color:#999;margin:1.5em 0">
-                    <?= Yii::t("agent", "If you forgot your password you can") ?>
-                    <?= Html::a(Yii::t("employer",'reset it'), ['site/request-password-reset']) ?>
-                    <br/>
-                    <?= Yii::t("agent", "Don't have an account? <a href='{url}'>Register</a>", [
-                        'url' => Url::to(['site/registration']),
-                    ]) ?>
-                </div>
+    <div class="form-group">
+        <div class="checkbox float-left">
+            <input type="checkbox" id="signed-in"/>
+            <label for="signed-in">Keep me signed in</label>
+            <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        </div>
 
-            <?php ActiveForm::end(); ?>
-
-            <?= yii\authclient\widgets\AuthChoice::widget([
-                     'baseAuthUrl' => ['site/auth'],
-                     'popupMode' => false,
-                ]) ?>
+        <div class="float-right reset">
+            <a href="<?= Url::to(['site/request-password-reset']) ?>">Forgot password?</a>
         </div>
     </div>
-</div>
+
+    <button type="submit" class="btn btn-rounded">Sign in</button>
+    <p class="sign-note">Don't have an account? <a href="<?= Url::to(['site/registration']) ?>">Create account</a></p>
+
+<?php ActiveForm::end(); ?>

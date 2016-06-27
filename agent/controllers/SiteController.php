@@ -95,7 +95,7 @@ class SiteController extends Controller
      */
     public function actionThanks(){
         $this->layout = 'signup';
-        
+
         return $this->render('thanks');
     }
 
