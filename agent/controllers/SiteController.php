@@ -94,10 +94,14 @@ class SiteController extends Controller
      * Agent Registration Thank You Page
      */
     public function actionThanks(){
+        $this->layout = 'signup';
+        
         return $this->render('thanks');
     }
 
     public function actionRegistration() {
+        $this->layout = 'signup';
+
         $model = new Agent();
         $model->scenario = "manualSignup";
 
@@ -121,6 +125,8 @@ class SiteController extends Controller
      * @throws NotFoundHttpException if the code is invalid
      */
     public function actionEmailVerify($code, $verify) {
+        $this->layout = 'signup';
+
         //Code is his auth key, check if code is valid
         $agent = Agent::findOne(['agent_auth_key' => $code, 'agent_id' => (int) $verify]);
         if ($agent) {
@@ -147,6 +153,8 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $this->layout = 'signup';
+
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -165,6 +173,8 @@ class SiteController extends Controller
     }
 
     public function actionRequestPasswordReset() {
+        $this->layout = 'signup';
+
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
@@ -205,6 +215,8 @@ class SiteController extends Controller
     }
 
     public function actionResetPassword($token) {
+        $this->layout = 'signup';
+
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidParamException $e) {
@@ -228,6 +240,8 @@ class SiteController extends Controller
      * @param string $email the email of the user
      */
     public function actionResendVerification($id, $email) {
+        $this->layout = 'signup';
+
         $agent = Agent::findOne([
                     'agent_id' => (int) $id,
                     'agent_email' => $email,
