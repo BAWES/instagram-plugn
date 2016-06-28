@@ -55,11 +55,11 @@ $this->registerCss(".help-block{margin-bottom:0}");
         ]) ?>
 
     <div class="form-group">
-        <div class="checkbox float-left">
-            <input type="checkbox" id="signed-in"/>
-            <label for="signed-in">Keep me signed in</label>
-            <?= $form->field($model, 'rememberMe')->checkbox() ?>
-        </div>
+            <?= $form->field($model, 'rememberMe', [
+                'options' => ['class' => 'checkbox float-left']
+            ])->checkbox([
+                'template' => "{input}\n{label}\n{hint}\n{error}"
+            ]) ?>
 
         <div class="float-right reset">
             <a href="<?= Url::to(['site/request-password-reset']) ?>">Forgot password?</a>

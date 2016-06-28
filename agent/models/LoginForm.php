@@ -45,7 +45,7 @@ class LoginForm extends Model
         return [
             'email' => Yii::t('app', 'Email'),
             'password' => Yii::t('app', 'Password'),
-            'rememberMe' => Yii::t('app', 'Remember me'),
+            'rememberMe' => Yii::t('app', 'Keep me signed in'),
         ];
     }
 
