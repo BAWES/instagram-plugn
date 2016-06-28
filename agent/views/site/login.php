@@ -8,7 +8,11 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title = 'Agent Login';
+$this->registerMetaTag([
+      'name' => 'description',
+      'content' => 'Log in to your agent account on Plugn.io'
+]);
 $this->params['breadcrumbs'][] = $this->title;
 
 $googleAuthUrl = Url::to(['site/auth', 'authclient' => 'google']);
@@ -28,7 +32,7 @@ $this->registerCss(".help-block{margin-bottom:0}");
         <i class="font-icon font-icon-google-plus"  aria-hidden="true"></i> Log in with Google
     </a>
     <a href='<?= $liveAuthUrl ?>' class='btn btn-primary' style="margin-top:0;">
-        <i class="fa fa-windows" aria-hidden="true"></i> Log in with Windows Live
+        <i class="fa fa-windows" aria-hidden="true"></i> Log in with Live
     </a>
     <a href='<?= $slackAuthUrl ?>' class='btn btn-secondary' style="margin-top:0;">
         <i class="fa fa-slack" aria-hidden="true"></i> Log in with Slack
