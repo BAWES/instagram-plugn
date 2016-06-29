@@ -24,6 +24,7 @@ $this->registerCss(".help-block{margin-bottom:0}");
 
 <div style='text-align:center; margin-bottom:5px'>
     <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px'>
+    <h4>Agent Login</h4>
 </div>
 
 <?php $form = ActiveForm::begin(['id' => 'login-form', 'errorCssClass' => 'form-group-error', 'options' => ['class' => 'sign-box']]); ?>
@@ -70,7 +71,8 @@ $this->registerCss(".help-block{margin-bottom:0}");
         </div>
     </div>
 
-    <button type="submit" class="btn btn-rounded">Sign in</button>
+    <?= Html::submitButton('Sign in', ['class' => 'btn btn-rounded', 'name' => 'signin-button']) ?>
+
     <p class="sign-note">Don't have an account? <a href="<?= Url::to(['site/registration']) ?>">Create account</a></p>
 
 <?php ActiveForm::end(); ?>
