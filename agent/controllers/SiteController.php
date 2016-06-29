@@ -83,11 +83,8 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        if(!Yii::$app->user->isGuest){
-            return $this->redirect(['dashboard/index']);
-        }
-
-        return $this->render('index');
+        //Redirect to Dasshboard Index
+        return $this->redirect(['dashboard/index']);
     }
 
     /**
@@ -141,7 +138,9 @@ class SiteController extends Controller
             }
 
             //Render thanks for verifying + Button to go to his portal
-            return $this->render('verified');
+            Yii::$app->getSession()->setFlash('success', '[You have verified your email] You may now use Plugn to manage your accounts');
+
+            return $this->redirect(['dashboard/index']);
         } else {
             //inserted code is invalid
             throw new BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
