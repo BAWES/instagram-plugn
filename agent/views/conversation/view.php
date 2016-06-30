@@ -18,34 +18,6 @@ $this->title = $account->user_name;
 $this->params['instagramAccount'] = $account;
 ?>
 
-
-<h2>
-    <?= $account->user_fullname ?> -
-    <?= Html::a("@".$account->user_name, "http://instagram.com/".$account->user_name, ['target' => '_blank']) ?>
-</h2>
-<div class="row">
-    <div class='col-xs-4'>
-        <h4 style='margin-bottom:0; margin-top:0;'>Media</h4>
-        <?= $account->user_media_count ?>
-    </div>
-    <div class='col-xs-4'>
-        <h4 style='margin-bottom:0; margin-top:0;'>Following</h4>
-        <?= $account->user_following_count ?>
-    </div>
-    <div class='col-xs-4'>
-        <h4 style='margin-bottom:0; margin-top:0;'>Followers</h4>
-        <?= $account->user_follower_count ?>
-    </div>
-</div>
-
-<ul class="nav nav-tabs" style='margin-top:1.5em;'>
-  <li role="presentation" class="active"><a href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">Conversation View</a></li>
-  <li role="presentation"><a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">Media View</a></li>
-  <li role="presentation"><a href="<?= Url::to(['stats/index' ,'accountId' => $account->user_id]) ?>">Statistics</a></li>
-  <li role="presentation"><a href="<?= Url::to(['stats/activity' ,'accountId' => $account->user_id]) ?>">Agent Activity</a></li>
-</ul>
-
-<br/>
 <a class='btn btn-primary'
     href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'handleComments' => true]) ?>'>
     Mark Conversation as Handled
