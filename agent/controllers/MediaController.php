@@ -13,6 +13,8 @@ use common\models\Comment;
 
 class MediaController extends \yii\web\Controller {
 
+    public $layout = 'account';
+
     /**
      * @inheritdoc
      */

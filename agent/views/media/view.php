@@ -12,6 +12,9 @@ use yii\bootstrap\ActiveForm;
 use common\models\Comment;
 
 $this->title = $account->user_name;
+
+//Pass Instagram Account to Layout for Rendering
+$this->params['instagramAccount'] = $account;
 ?>
 
 

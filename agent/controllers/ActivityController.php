@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
-class StatsController extends \yii\web\Controller {
+class ActivityController extends \yii\web\Controller {
 
     public $layout = 'account';
 
@@ -29,18 +29,18 @@ class StatsController extends \yii\web\Controller {
 
 
     /**
-     * Display Account Statistics
+     * Display all agents activities with this account
      * @param integer $accountId the account id we're looking to manage
      */
     public function actionIndex($accountId)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        $records = $instagramAccount->records;
+        $activities = $instagramAccount->getActivities()->with('agent')->all();
 
         return $this->render('index',[
             'account' => $instagramAccount,
-            'records' => $records,
+            'activities' => $activities,
         ]);
     }
 

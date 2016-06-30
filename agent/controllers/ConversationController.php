@@ -12,6 +12,8 @@ use common\models\Comment;
 
 class ConversationController extends \yii\web\Controller {
 
+    public $layout = 'account';
+
     /**
      * @inheritdoc
      */

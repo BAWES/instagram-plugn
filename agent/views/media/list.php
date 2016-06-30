@@ -8,6 +8,9 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = $account->user_name;
+
+//Pass Instagram Account to Layout for Rendering
+$this->params['instagramAccount'] = $account;
 ?>
 
 
