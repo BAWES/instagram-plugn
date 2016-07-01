@@ -67,8 +67,6 @@ var lineChart = c3.generate({
 $this->params['instagramAccount'] = $account;
 ?>
 
-<h3>Statistics</h3>
-
 <div id="line-chart" style='margin-top:15px;'></div>
 
 <table id="mytable" class="display table table-bordered" cellspacing="0" width="100%">
