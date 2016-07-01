@@ -8,22 +8,22 @@ use yii\web\AssetBundle;
  * This is the AssetBundle containing the sweet alert files
  * @author Khalid Al-Mutawa <khalid@bawes.net>
  */
-class SweetAlertAsset extends AssetBundle
+class DataTableAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
 
     //CSS will be added before closing </head> tag
     public $css = [
-        'css/lib/bootstrap-sweetalert/sweetalert.css',
+        'css/lib/datatables-net/datatables.min.css',
     ];
 
     //JS will be added before closing </body> tag
     public $js = [
-        'js/lib/bootstrap-sweetalert/sweetalert.min.js',
+        'js/lib/datatables-net/datatables.min.js',
     ];
 
     public $depends = [
-        'yii\web\YiiAsset',
+        'agent\assets\TemplateAsset',
     ];
 }

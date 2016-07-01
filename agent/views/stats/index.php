@@ -6,8 +6,19 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use agent\assets\DataTableAsset;
 
 $this->title = $account->user_name;
+
+//DataTables Register
+DataTableAsset::register($this);
+$this->registerJs("
+$(function() {
+	$('#mytable').DataTable({
+		responsive: true
+	});
+});
+");
 
 //Pass Instagram Account to Layout for Rendering
 $this->params['instagramAccount'] = $account;
