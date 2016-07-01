@@ -70,7 +70,7 @@ class CommentQueue extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'agent_id' => 'Agent ID',
             'comment_id' => 'Comment ID',
-            'queue_text' => 'Queue Text',
+            'queue_text' => 'Comment text',
             'queue_datetime' => 'Queue Datetime',
         ];
     }
