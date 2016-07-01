@@ -79,6 +79,7 @@ class ConversationController extends \yii\web\Controller {
         if($handleComments){
             $handled = $instagramAccount->handleConversationComments($commenterId, $commenterUsername);
             if($handled){
+                Yii::$app->session->setFlash('success', 'Comments have been marked as handled');
                 return $this->redirect(['conversation/view', 'accountId' => $instagramAccount->user_id, 'commenterId' => $commenterId]);
             }
         }
@@ -129,11 +130,20 @@ class ConversationController extends \yii\web\Controller {
         $commentQueueForm->user_id = $instagramAccount->user_id;
         $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
         $commentQueueForm->queue_text = $commentQueueForm->queue_text?$commentQueueForm->queue_text:"@$commenterUsername";
-        if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->save()) {
-            //Log that agent made change
-            Activity::log($instagramAccount->user_id, "Posted comment on conversation with @$commenterUsername: ".$commentQueueForm->queue_text);
+        if ($commentQueueForm->load(Yii::$app->request->post())) {
 
-            return $this->refresh();
+            if($commentQueueForm->save()){
+                //Log that agent made change
+                Activity::log($instagramAccount->user_id, "Posted comment on conversation with @$commenterUsername: ".$commentQueueForm->queue_text);
+
+                return $this->refresh();
+            }else{
+                //Display error message to user
+                if(isset($commentQueueForm->errors['queue_text'][0])){
+                    Yii::$app->session->setFlash('error', "[Unable to post comment] ".$commentQueueForm->errors['queue_text'][0]);
+                }
+            }
+
         }
 
         return $this->render('view',[

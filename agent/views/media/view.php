@@ -126,8 +126,10 @@ $this->params['instagramAccount'] = $account;
 		</div><!--.chat-dialog-area-->
 
 		<div class="chat-area-bottom">
-            <?php $form = ActiveForm::begin(['id' => 'response-form',
-            'options' => [
+            <?php $form = ActiveForm::begin([
+                'id' => 'response-form',
+                'errorCssClass' => 'form-group-error',
+                'options' => [
                     'class' => 'write-message'
                 ]
             ]); ?>

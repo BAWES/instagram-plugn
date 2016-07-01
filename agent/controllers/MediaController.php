@@ -76,6 +76,7 @@ class MediaController extends \yii\web\Controller {
          */
         if($handleComments){
             $media->handleMediaComments();
+            Yii::$app->session->setFlash('success', 'Comments have been marked as handled');
             return $this->redirect(['media/view', 'accountId' => $instagramAccount->user_id, 'mediaId' => $media->media_id]);
         }
 
@@ -120,11 +121,18 @@ class MediaController extends \yii\web\Controller {
         $commentQueueForm->media_id = $media->media_id;
         $commentQueueForm->user_id = $instagramAccount->user_id;
         $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
-        if ($commentQueueForm->load(Yii::$app->request->post()) && $commentQueueForm->save()) {
-            //Log that agent made change
-            Activity::log($instagramAccount->user_id, "Posted on media #".$media->media_id.": ".$commentQueueForm->queue_text);
+        if ($commentQueueForm->load(Yii::$app->request->post())) {
+            if($commentQueueForm->save()){
+                //Log that agent made change
+                Activity::log($instagramAccount->user_id, "Posted on media #".$media->media_id.": ".$commentQueueForm->queue_text);
 
-            return $this->refresh();
+                return $this->refresh();
+            }else{
+                //Display error message to user
+                if(isset($commentQueueForm->errors['queue_text'][0])){
+                    Yii::$app->session->setFlash('error', "[Unable to post comment] ".$commentQueueForm->errors['queue_text'][0]);
+                }
+            }
         }
 
         //Get comments merged with Queued
