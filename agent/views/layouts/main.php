@@ -117,7 +117,7 @@ TemplateAsset::register($this);
 			if($managedAccounts = Yii::$app->accountManager->managedAccounts){
 				foreach($managedAccounts as $account){?>
 					<li <?= $this->title==$account->user_name?" class='opened'":"" ?>>
-						<a href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>" class="label-right">
+						<a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>" class="label-right">
 							<?= Html::img($account->user_profile_pic, ['width'=>32, 'height'=>32, 'style'=>'width:32px; height:32px; margin-bottom:5px']) ?>
 							<span class="lbl">@<?= $account->user_name ?></span>
 							<?php if($account->unhandledCount > 0){ ?>

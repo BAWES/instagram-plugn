@@ -65,13 +65,13 @@ $controllerName = $this->context->id;
 		<div class="tabs-section-nav tabs-section-nav-inline">
 			<ul class="nav" role="tablist">
 				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="conversation"?"active":"" ?>" href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">
-						Conversation View
+					<a class="nav-link <?= $controllerName=="media"?"active":"" ?>" href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">
+						Media View
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="media"?"active":"" ?>" href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">
-						Media View
+					<a class="nav-link <?= $controllerName=="conversation"?"active":"" ?>" href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">
+						Conversation View
 					</a>
 				</li>
 				<li class="nav-item">
