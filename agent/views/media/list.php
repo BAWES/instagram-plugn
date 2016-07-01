@@ -19,49 +19,60 @@ $unhandledMedia = $handledMedia = "";
 
 foreach($media as $mediaItem){
     $unhandledCommentsCount = count($mediaItem->unhandledComments);
+    $mediaUrl = Url::to(['media/view', 'accountId' => $mediaItem->user_id, 'mediaId' => $mediaItem->media_id]);
 
-    $mediaContentItem = "
-    <div class='col-md-3 col-sm-4 col-xs-6' style='margin-bottom:10px;'>";
+    $mediaContentItem = "<div class='col-md-3 col-sm-4 col-xs-6'>"
+                        . "<a href='$mediaUrl'>"
+                        . "<div class='ribbon-block round relative'>"
+                        . Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']);
 
+
+    //Add ribbon showing number of unhandled comments
     if($unhandledCommentsCount > 0){
         $mediaContentItem .= "
-            <div style='background:pink; text-align: center; font-weight:bold;'>
-                $unhandledCommentsCount unhandled
+            <div class='ribbon red right-top'>
+                <i class='fa fa-comment'></i> $unhandledCommentsCount
             </div>";
     }
 
-    $mediaContentItem .=
-        Html::a(Html::img($mediaItem->media_image_thumb, ['style'=>'width:100%']),
-                ['media/view', 'accountId' => $mediaItem->user_id, 'mediaId' => $mediaItem->media_id]
-                ).
-        "<div class=row>
-            <div class=col-sm-6>
-                ".$mediaItem->media_num_comments." Comments
-            </div>
-            <div class=col-sm-6>
-                ".$mediaItem->media_num_likes." Likes
-            </div>
-        </div>
-    </div>
-    ";
 
+    $mediaContentItem .= "<div class='ribbon-km right-bottom'>
+                            <i class='fa fa-heart-o'></i> ".$mediaItem->media_num_likes."
+                        </div>
+                        <div class='ribbon-km left-bottom'>
+                            <i class='fa fa-comments-o'></i> ".$mediaItem->media_num_comments."
+                        </div>
+                    </div>
+                </a>
+            </div>";
+
+    //Determine where it will be listed (handled or unhandled)
     if($unhandledCommentsCount > 0){
-
-
         $unhandledMedia .= $mediaContentItem;
     }else $handledMedia .= $mediaContentItem;
 }
-
 ?>
+
+
 <?php if($unhandledMedia){ ?>
+<!-- Unhandled Media  -->
+<header class="card-header card-header-lg" style="margin-bottom:10px">
+	Unhandled Media
+</header>
+<div class='row'>
 
-    <h3>Media with Unhandled Messages</h3>
     <?= $unhandledMedia ?>
-    <br style='clear:both'/>
 
+</div>
+<!-- Unhandled Media  -->
 <?php } ?>
 
-    <h3>Your Media</h3>
+<!-- Other Media  -->
+<header class="card-header card-header-lg" style="margin-bottom:10px">
+	Media
+</header>
+<div class='row'>
+
     <?= $handledMedia ?>
 
-<br style='clear:both'/>
+</div>
