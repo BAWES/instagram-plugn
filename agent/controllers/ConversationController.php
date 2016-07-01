@@ -61,7 +61,7 @@ class ConversationController extends \yii\web\Controller {
 
         //Get Commenter Details and conversation for display
         $commenterDetails = (new \yii\db\Query())
-                    ->select(['comment_by_id', 'comment_by_username'])
+                    ->select(['comment_by_id', 'comment_by_username', 'comment_by_fullname', 'comment_by_photo'])
                     ->from('comment')
                     ->where([
                         'user_id' => $instagramAccount->user_id,
@@ -72,6 +72,8 @@ class ConversationController extends \yii\web\Controller {
 
         $commenterId = $commenterDetails['comment_by_id'];
         $commenterUsername = $commenterDetails['comment_by_username'];
+        $commenterFullname = $commenterDetails['comment_by_fullname'];
+        $commenterPhoto = $commenterDetails['comment_by_photo'];
 
         /**
          * Mark Handled Functionality
@@ -150,6 +152,8 @@ class ConversationController extends \yii\web\Controller {
             'account' => $instagramAccount,
             'commenterId' => $commenterId,
             'commenterUsername' => $commenterUsername,
+            'commenterFullname' => $commenterFullname,
+            'commenterPhoto' => $commenterPhoto,
             'comments' => $comments,
             'commentQueueForm' => $commentQueueForm,
         ]);

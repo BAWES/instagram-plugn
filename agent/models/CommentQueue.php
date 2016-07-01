@@ -65,14 +65,14 @@ class CommentQueue extends \common\models\CommentQueue {
             $userMentioned = preg_match("/$username\b/", $this->queue_text);
 
             if(!$userMentioned){
-                $this->addError($attribute, Yii::t('app', "Don't forget to mention {username}",
+                $this->addError($attribute, Yii::t('app', "Dont forget to mention {username}",
                 ['username' => $username]));
             }else{
                 //User is mentioned, now check is there any content in his reply or is it blank?
                 $replyContent = trim(str_replace($username, "", $this->queue_text));
                 if(empty($replyContent)){
                     //there is no content in the specified reply
-                    $this->addError($attribute, Yii::t('app', 'Your response seems to be blank.'));
+                    $this->addError($attribute, Yii::t('app', 'Your response seems to be blank'));
                 }
             }
         }
@@ -90,7 +90,7 @@ class CommentQueue extends \common\models\CommentQueue {
             //How many Hashtags (#) used in comment?
             $numHashtags = substr_count($this->queue_text, "#");
             if($numHashtags > 4){
-                $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 4 hashtags.'));
+                $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 4 hashtags'));
             }
         }
     }
@@ -109,7 +109,7 @@ class CommentQueue extends \common\models\CommentQueue {
         	if(preg_match_all($reg_exUrl, $this->queue_text, $urls)) {
         		$numOfUrls = count($urls[0]);
                 if($numOfUrls > 1){
-                    $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 1 URL.'));
+                    $this->addError($attribute, Yii::t('app', 'The comment cannot contain more than 1 URL'));
                 }
         	}
         }
@@ -125,7 +125,7 @@ class CommentQueue extends \common\models\CommentQueue {
     {
         if (!$this->hasErrors()) {
             if (mb_strtoupper($this->queue_text, 'utf-8') == $this->queue_text) {
-                $this->addError($attribute, Yii::t('app', 'The comment cannot consist of all capital letters.'));
+                $this->addError($attribute, Yii::t('app', 'The comment cannot consist of all capital letters'));
             }
         }
     }

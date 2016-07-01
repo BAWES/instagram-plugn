@@ -4,6 +4,8 @@
 /* @var $account \common\models\InstagramUser */
 /* @var $commenterId integer */
 /* @var $commenterUsername string */
+/* @var $commenterFullname string */
+/* @var $commenterPhoto string */
 /* @var $comments \common\models\Comment */
 /* @var $commentQueueForm \agent\models\CommentQueue */
 
@@ -18,81 +20,139 @@ $this->title = $account->user_name;
 $this->params['instagramAccount'] = $account;
 ?>
 
-<a class='btn btn-primary'
-    href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'handleComments' => true]) ?>'>
-    Mark Conversation as Handled
-</a>
+<div class="box-typical chat-container">
+	<section>
+		<div class="chat-area-header">
+			<div class="chat-list-item">
+				<div class="chat-list-media-photo">
+					<?= Html::img($commenterPhoto) ?>
+				</div>
+				<div class="chat-list-item-name">
+					<span class="name"><?= $commenterFullname ?></span>
+				</div>
+				<div class="chat-list-item-txt writing">
+					<a href='http://instagram.com/<?= $commenterUsername ?>' target='_blank'>
+					    @<?= $commenterUsername ?>
+					</a>
+				</div>
+			</div>
+			<div class="chat-area-header-action">
+					<a class="btn btn-primary btn-sm"
+                        href="<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'handleComments' => true]) ?>">
+						Mark Handled
+					</a>
+			</div>
+		</div><!--.chat-area-header-->
 
-<h1>Conversation with @<?= $commenterUsername ?> </h1>
+		<div class="chat-dialog-area scrollable-block">
 
-<?php $form = ActiveForm::begin(['id' => 'response-form']); ?>
-    Send a response:<br/>
-    <?= $form->field($commentQueueForm, 'queue_text') ?>
-    <?= Html::submitButton('Send', ['class' => 'btn btn-primary', 'name' => 'send-button']) ?>
-<?php ActiveForm::end(); ?>
+            <?php if($comments){ ?>
+                <?php foreach($comments as $comment){ ?>
 
-<br/><br/>
+                    <?php
+                    $commentClass = "";
+                    $additionalMessage = "";
 
-<?php foreach($comments as $comment){ ?>
-<div style='<?= $comment['commentType']=="queue"?"background:lightyellow;":"" ?>
+                    //Is it queued to be posted?
+                    if($comment['commentType'] == "queue"){
+                        $commentClass = "queued";
+                        $additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted soon</span>";
+                    }
 
-    <?php
-    //Whether the comment has been handled or not
-    if(isset($comment['comment_handled'])){
-        switch($comment['comment_handled'])
-        {
-            case Comment::HANDLED_TRUE:
-                echo "border-left:3px solid green;";
-                break;
-            case Comment::HANDLED_FALSE:
-                echo "border-left:3px solid red;";
-                break;
-        }
-    }
-    ?>
+                    //Is it an unhandled comment?
+                    if(isset($comment['comment_handled'])){
+                        if($comment['comment_handled'] == Comment::HANDLED_FALSE){
+                            $commentClass = "selected";
+                        }
+                    }
 
-    <?php
-    //Whether the comment has been deleted or not
-    $deleteReason = "";
-    if(isset($comment['comment_deleted']))
-    {
-        switch($comment['comment_deleted'])
-        {
-            case Comment::DELETED_TRUE:
-                $deleteReason = $comment['comment_deleted_reason'];
-                echo "background:red;";
-                break;
-            case Comment::DELETED_QUEUED_FOR_DELETION:
-                $deleteReason = "Currently Queued for Deletion";
-                echo "background:pink;";
-                break;
-        }
-    }
-    ?>
-    '>
-<div class='row'>
-    <div class='col-sm-1 col-xs-2'>
-        <div style='width:45px; height:45px;'>
-            <?= Html::img($comment['comment_by_photo'], ['style' => 'width:45px']) ?>
-        </div>
-    </div>
-    <div class='col-sm-7 col-xs-6'>
-        <b><?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?></b>
-        <i>@<?= $comment['comment_by_username'] ?></i>
-        <br/><span style='color:Grey;'>"<?= $comment['comment_text'] ?>"</span>
-        <span style='color:white;'> <?= $deleteReason ?> </span>
-        <?php if(!$deleteReason && $comment['commentType']!="queue"){ ?>
-        <a href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'deleteComment' => $comment['comment_id']]) ?>'
-        style='color:red; font-size:0.8em;' data-confirm="Are you sure you wish to delete this comment?">
-            Delete
-        </a>
-        <?php } ?>
-    </div>
-    <div class='col-sm-4 col-xs-4'>
-        <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
+                    //Is it deleted or queued for deletion?
+                    if(isset($comment['comment_deleted']))
+                    {
+                        switch($comment['comment_deleted'])
+                        {
+                            case Comment::DELETED_TRUE:
+                                $commentClass = "deleted";
+                                $additionalMessage = "<span class='que'><i class='fa fa-trash'></i> Deleted by ".$comment['agent_name']."<br/>"
+                                                        . $comment['comment_deleted_reason']
+                                                        . "</span>";
+                                break;
 
-    </div>
-</div>
-</div>
+                            case Comment::DELETED_QUEUED_FOR_DELETION:
+                                $commentClass = "deleted";
+                                $additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be deleted</span>";
+                                break;
+                        }
+                    }
+                    ?>
 
-<?php } ?>
+
+                    <div class="comment-row-item <?= $commentClass ?>">
+        				<div class="avatar-preview avatar-preview-32">
+        					<a href="http://instagram.com/<?= $comment['comment_by_username'] ?>" target='_blank'>
+        						<?= Html::img($comment['comment_by_photo']) ?>
+        					</a>
+        				</div>
+        				<div class="tbl comment-row-item-header">
+        					<div class="tbl-row">
+        						<div class="tbl-cell tbl-cell-name">
+                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
+                                    <i>@<?= $comment['comment_by_username'] ?></i>
+                                </div>
+        						<div class="tbl-cell tbl-cell-date">
+                                    <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
+                                </div>
+        					</div>
+        				</div>
+        				<div class="comment-row-item-content">
+        					<p><?= $comment['comment_text'] ?></p>
+
+                            <?= $additionalMessage ?>
+
+
+                            <?php if($commentClass != 'deleted' && $comment['commentType']!="queue"){ ?>
+                                <a href='<?= Url::to(['conversation/view', 'accountId' => $account->user_id, 'commenterId' => $commenterId, 'deleteComment' => $comment['comment_id']]) ?>'
+                                    class="comment-row-item-action del" data-confirm="Are you sure you wish to delete this comment?">
+            						<i class="font-icon font-icon-trash"></i>
+            					</a>
+                            <?php } ?>
+
+        				</div>
+
+        				<?php /*<a href="#" class="comment-row-item-reply">Reply</a> */ ?>
+        			</div>
+
+                <?php } ?>
+            <?php } ?>
+
+
+		</div><!--.chat-dialog-area-->
+
+		<div class="chat-area-bottom">
+            <?php $form = ActiveForm::begin([
+                'id' => 'response-form',
+                'errorCssClass' => 'form-group-error',
+                'options' => [
+                    'class' => 'write-message'
+                ]
+            ]); ?>
+
+				<div class="avatar">
+					<img src="<?= $account->user_profile_pic ?>" alt="">
+				</div>
+
+                <?= $form->field($commentQueueForm, 'queue_text', [
+                    'template' => '{input}{error}',
+                ])->textArea([
+                    'maxlength' => true,
+                    'placeholder' => 'Type a message',
+                    'rows' => 2,
+                    'class' => 'form-control'
+                ]) ?>
+
+                <?= Html::submitButton('Send', ['class' => 'btn btn-rounded float-left', 'name' => 'send-button']) ?>
+			</form>
+            <?php ActiveForm::end(); ?>
+		</div><!--.chat-area-bottom-->
+    </section><!--.chat-area-->
+</div><!--.chat-area-in-->
