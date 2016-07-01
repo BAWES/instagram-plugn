@@ -141,7 +141,7 @@ TemplateAsset::register($this);
             <header class="side-menu-title">Agent Portal</header>
             <ul class="side-menu-list">
                 <li>
-                    <a href="pn-agent-layout.html" target='_blank'>
+                    <a href="<?= Yii::$app->urlManagerAgent->createUrl('site/index') ?>" target='_blank'>
                         <i class="font-icon font-icon-user"></i>
                         Switch to agent portal
                     </a>
