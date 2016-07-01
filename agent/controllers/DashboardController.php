@@ -34,5 +34,13 @@ class DashboardController extends \yii\web\Controller {
         return $this->render('index',[]);
     }
 
+    /**
+     * Displays guide for user on how to add an account
+     */
+    public function actionAddAccount()
+    {
+        return $this->render('addAccount',[]);
+    }
+
 
 }

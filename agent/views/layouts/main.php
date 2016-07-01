@@ -41,7 +41,7 @@ TemplateAsset::register($this);
 
     <header class="site-header">
         <div class="container-fluid">
-            <a href="#" class="site-logo">
+            <a href="<?= Url::home(); ?>" class="site-logo">
                 <img class="hidden-md-down" src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="">
                 <img class="hidden-lg-up" src="<?= Url::to('@web/img/plugn-logo-mob.png') ?>" alt="">
             </a>
@@ -132,7 +132,7 @@ TemplateAsset::register($this);
 			?>
 
 	        <li style='background-color:#EEE;'>
-	            <a href="pn-agent-layout.html">
+	            <a href="<?= Url::to(['dashboard/add-account']) ?>">
 	                <i class="icon fa fa-plus"></i>
 	                <span class="lbl">Add Instagram Account</span>
 	            </a>
