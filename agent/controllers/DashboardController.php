@@ -19,7 +19,7 @@ class DashboardController extends \yii\web\Controller {
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'], //only allow authenticated users to job actions
+                        'roles' => ['@'], //only allow authenticated users to actions
                     ],
                 ],
             ],
@@ -27,11 +27,16 @@ class DashboardController extends \yii\web\Controller {
     }
 
     /**
-     * Renders Dashboard
+     * Default Actions
      */
     public function actionIndex()
     {
-        return $this->render('index',[]);
+        $managedAccounts = Yii::$app->accountManager->managedAccounts;
+
+        if(isset($managedAccounts[0])){
+            return $this->redirect(['media/list' ,'accountId' => $managedAccounts[0]->user_id]);
+        }
+        return $this->redirect(['dashboard/add-account']);
     }
 
     /**

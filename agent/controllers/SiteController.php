@@ -81,19 +81,12 @@ class SiteController extends Controller
         }
     }
 
+    /**
+     * Redirects to add account if user has no managed accounts, otherwise sends to his first acc page
+     */
     public function actionIndex()
     {
-        //Redirect to Dasshboard Index
         return $this->redirect(['dashboard/index']);
-    }
-
-    /**
-     * Agent Registration Thank You Page
-     */
-    public function actionThanks(){
-        $this->layout = 'signup';
-
-        return $this->render('thanks');
     }
 
     public function actionRegistration() {
@@ -106,7 +99,8 @@ class SiteController extends Controller
         {
             if ($model->signup())
             {
-                return $this->redirect(['thanks']);
+                Yii::$app->session->setFlash('success', "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account");
+                return $this->redirect(['index']);
             }
         }
 

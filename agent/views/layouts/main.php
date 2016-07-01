@@ -106,12 +106,6 @@ TemplateAsset::register($this);
     <div class="mobile-menu-left-overlay"></div>
 	<nav class="side-menu side-menu-big-icon">
 	    <ul class="side-menu-list">
-	        <li <?= $this->title=="Dashboard"?" class='opened'":"" ?>>
-	            <a href="<?= Url::to(['dashboard/index']) ?>">
-	                <i class="font-icon font-icon-home"></i>
-	                <span class="lbl">Overview</span>
-	            </a>
-	        </li>
 
 			<?php
 			if($managedAccounts = Yii::$app->accountManager->managedAccounts){
