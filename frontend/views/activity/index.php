@@ -1,25 +1,64 @@
 <?php
 
 use yii\helpers\Html;
+use frontend\assets\DataTableAsset;
 
 /* @var $this yii\web\View */
+
+//DataTables Register
+DataTableAsset::register($this);
+$this->registerJs("
+$(function() {
+	$('#mytable').DataTable({
+		responsive: true
+	});
+});
+");
 
 $this->title = 'Activity';
 ?>
 
-<div class="container-fluid">
-	<div class="box-typical box-typical-full-height">
-		<div class="add-customers-screen tbl">
-			<div class="add-customers-screen-in">
 
-				<div class="add-customers-screen-user">
-					<i class="font-icon font-icon-zigzag"></i>
+<header class="page-content-header">
+	<div class="container-fluid">
+		<div class="tbl">
+			<div class="tbl-row">
+				<div class="tbl-cell">
+					<h3><i class="font-icon font-icon-zigzag"></i> Account Activity <small class="text-muted"> by your assigned agents</small></h3>
 				</div>
-
-				<h2>Account Activity</h2>
-				<p class="lead color-blue-grey-lighter">All activities done by your assigned agents will be listed here for for future reference</p>
-
 			</div>
 		</div>
-	</div><!--.box-typical-->
+	</div>
+</header>
+
+<div class="container-fluid">
+
+	<table id="mytable" class="display table table-bordered" cellspacing="0" width="100%">
+		<thead>
+		<tr>
+			<th>When?</th>
+			<th>Who?</th>
+			<th>What?</th>
+		</tr>
+		</thead>
+	    <?php
+		/*<tfoot>
+		<tr>
+			<th>When?</th>
+			<th>Who?</th>
+			<th>What?</th>
+		</tr>
+		</tfoot>*/
+	    ?>
+		<tbody>
+	        <?php foreach($activities as $activity){ ?>
+	            <tr>
+	                <td><?= Yii::$app->formatter->asRelativeTime($activity->activity_datetime) ?></td>
+	                <td><?= $activity->agent->agent_name ?></td>
+	                <td><?= $activity->activity_detail ?></td>
+	            </tr>
+	        <?php } ?>
+		</tbody>
+	</table>
+
 </div><!--.container-fluid-->

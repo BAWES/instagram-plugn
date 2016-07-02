@@ -38,7 +38,16 @@ class ActivityController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $activities = Yii::$app->user->identity->getActivities()->with('agent')->all();
+        $numActivities = count($activities);
+
+
+        //Change View Displayed based on number of activities this account has
+        $viewToDisplay = $numActivities > 0 ? 'index' : 'index-noactivity';
+
+        return $this->render($viewToDisplay, [
+            'activities' => $activities
+        ]);
     }
 
 }
