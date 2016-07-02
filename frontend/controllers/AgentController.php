@@ -55,7 +55,22 @@ class AgentController extends Controller
                     $error = \yii\helpers\Html::encode($model->errors['assignment_agent_email'][0]);
                     Yii::$app->getSession()->setFlash('error', "[Unable to Add Agent] ".$error);
                 }
-            }else return $this->refresh();
+            }else{
+                //Send Email to Agent notifying him that he got assigned
+                Yii::$app->mailer->compose([
+                            'html' => 'frontend/agentInvite',
+                                ], [
+                            'accountFullName' => Yii::$app->user->identity->user_fullname,
+                            'accountName' => Yii::$app->user->identity->user_name,
+                            'accountPhoto' => Yii::$app->user->identity->user_profile_pic,
+                        ])
+                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                        ->setTo($model->assignment_agent_email)
+                        ->setSubject('You have been invited to manage @'.Yii::$app->user->identity->user_name)
+                        ->send();
+
+                return $this->refresh();
+            }
         }
 
         $dataProvider = new ActiveDataProvider([

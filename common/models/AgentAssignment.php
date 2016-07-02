@@ -88,6 +88,17 @@ class AgentAssignment extends \yii\db\ActiveRecord
     }
 
     /**
+     * After the assignment has been saved
+     * @param type $insert
+     * @param type $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes) {
+        parent::afterSave($insert, $changedAttributes);
+
+
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getAgent()
