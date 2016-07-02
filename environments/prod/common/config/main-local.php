@@ -27,7 +27,6 @@ return [
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
-            'htmlLayout' => 'layouts/plugn-html',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.sendgrid.net',
