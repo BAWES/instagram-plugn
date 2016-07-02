@@ -38,6 +38,11 @@ class AgentAssignment extends \yii\db\ActiveRecord
             [['assignment_agent_email'], 'required'],
             [['assignment_agent_email'], 'string', 'max' => 255],
             [['assignment_agent_email'], 'email'],
+
+            //Only allow one record of each email per account
+            ['assignment_agent_email', 'unique', 'filter' => function($query){
+                $query->andWhere(['user_id' => $this->user_id]);
+            }, 'message' => 'This person has already been added as an agent.'],
         ];
     }
 

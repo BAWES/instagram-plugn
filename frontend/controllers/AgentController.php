@@ -45,10 +45,6 @@ class AgentController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Yii::$app->user->identity->getAgentAssignments(),
-        ]);
-
         $model = new AgentAssignment();
         $model->user_id = Yii::$app->user->identity->user_id;
 
@@ -57,10 +53,14 @@ class AgentController extends Controller
                 //Set Flash here for error dialog with validation issues
                 if($model->hasErrors()){
                     $error = \yii\helpers\Html::encode($model->errors['assignment_agent_email'][0]);
-                    Yii::$app->getSession()->setFlash('error', "[Unable to Add Agent] ".$error. " Please try again");
+                    Yii::$app->getSession()->setFlash('error', "[Unable to Add Agent] ".$error);
                 }
-            }
+            }else return $this->refresh();
         }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Yii::$app->user->identity->getAgentAssignments(),
+        ]);
 
         //Change View Displayed based on number of agents this account has
         $viewToDisplay = $dataProvider->totalCount>0 ? 'index' : 'index-firstagent';
