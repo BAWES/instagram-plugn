@@ -1,6 +1,6 @@
 <?php
 return [
-    'name' => 'PlugTo',
+    'name' => 'Plugn',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'cache' => [
