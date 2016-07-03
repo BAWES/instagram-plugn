@@ -18,11 +18,13 @@ use Yii;
  * @property string $comment_by_id
  * @property string $comment_by_fullname
  * @property integer $comment_handled
+ * @property integer $comment_handled_by
  * @property integer $comment_deleted
  * @property string $comment_deleted_reason
  * @property string $comment_datetime
  *
  * @property Agent $agent
+ * @property Agent $handledByAgent
  * @property Media $media
  * @property InstagramUser $user
  * @property CommentQueue[] $commentQueues
@@ -53,11 +55,13 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             [['media_id', 'user_id', 'comment_instagram_id', 'comment_datetime'], 'required'],
-            [['media_id', 'user_id', 'comment_handled', 'comment_deleted'], 'integer'],
+            [['media_id', 'user_id', 'agent_id', 'comment_handled', 'comment_handled_by', 'comment_deleted'], 'integer'],
             [['comment_text', 'comment_deleted_reason'], 'string'],
             [['comment_datetime'], 'safe'],
             [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string'],
             [['comment_instagram_id'], 'unique'],
+            //[['agent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agent::className(), 'targetAttribute' => ['agent_id' => 'agent_id']],
+            //[['comment_handled_by'], 'exist', 'skipOnError' => true, 'targetClass' => Agent::className(), 'targetAttribute' => ['comment_handled_by' => 'agent_id']],
             //[['media_id'], 'exist', 'skipOnError' => true, 'targetClass' => Media::className(), 'targetAttribute' => ['media_id' => 'media_id']],
             //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => InstagramUser::className(), 'targetAttribute' => ['user_id' => 'user_id']],
         ];
@@ -79,6 +83,7 @@ class Comment extends \yii\db\ActiveRecord
             'comment_by_id' => 'Comment By ID',
             'comment_by_fullname' => 'Comment By Fullname',
             'comment_handled' => 'Comment Handled',
+            'comment_handled_by' => 'Comment Handled By',
             'comment_deleted' => 'Comment Deleted',
             'comment_deleted_reason' => 'Comment Deleted Reason',
             'comment_datetime' => 'Comment Datetime',
@@ -91,6 +96,14 @@ class Comment extends \yii\db\ActiveRecord
     public function getAgent()
     {
         return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHandledByAgent()
+    {
+        return $this->hasOne(Agent::className(), ['agent_id' => 'comment_handled_by']);
     }
 
     /**

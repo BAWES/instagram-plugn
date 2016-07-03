@@ -28,6 +28,8 @@ use yii\db\ActiveRecord;
  * @property InstagramUser[] $accountsManaged
  * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
+ * @property Comment[] $comments
+ * @property Comment[] $handledComments
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
@@ -160,6 +162,22 @@ class Agent extends ActiveRecord implements IdentityInterface
     public function getActivities()
     {
         return $this->hasMany(Activity::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getHandledComments()
+    {
+        return $this->hasMany(Comment::className(), ['comment_handled_by' => 'agent_id']);
     }
 
     /**
