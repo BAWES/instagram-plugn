@@ -29,7 +29,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $user_follower_count
  * @property string $user_ig_access_token
  * @property string $user_api_rolling_datetime
- * @property integer $user_api_requests_this_hour
+ * @property integer $user_api_post_requests_this_hour
+ * @property integer $user_api_delete_requests_this_hour
  *
  * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
@@ -78,7 +79,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count', 'user_api_requests_this_hour'], 'integer'],
+            [['user_status', 'user_instagram_id', 'user_media_count', 'user_following_count', 'user_follower_count', 'user_api_post_requests_this_hour', 'user_api_delete_requests_this_hour'], 'integer'],
             [['user_instagram_id'], 'required'],
             [['user_bio'], 'string'],
             ['user_status', 'default', 'value' => self::STATUS_ACTIVE],
@@ -109,7 +110,8 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             'user_follower_count' => 'User Follower Count',
             'user_ig_access_token' => 'User Ig Access Token',
             'user_api_rolling_datetime' => 'User Api Rolling Datetime',
-            'user_api_requests_this_hour' => 'User Api Requests This Hour',
+            'user_api_post_requests_this_hour' => 'POST Requests This Hour',
+            'user_api_delete_requests_this_hour' => 'Delete Requests This Hour',
         ];
     }
 
@@ -258,10 +260,17 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Increment the number of api calls made this hour
+     * Increment the number of api post calls made this hour
      */
-    public function incrementNumApiCallsThisHour(){
-        $this->updateCounters(['user_api_requests_this_hour' => 1]);
+    public function incrementNumApiPostCallsThisHour(){
+        $this->updateCounters(['user_api_post_requests_this_hour' => 1]);
+    }
+
+    /**
+     * Increment the number of api delete calls made this hour
+     */
+    public function incrementNumApiDeleteCallsThisHour(){
+        $this->updateCounters(['user_api_delete_requests_this_hour' => 1]);
     }
 
     /**

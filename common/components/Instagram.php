@@ -54,26 +54,36 @@ class Instagram extends \kotchuprik\authclient\Instagram
             {
                 $postOrDeleteAction = $pendingComment->comment_id ? "delete" : "post";
 
+                //If User already posted one comment and one deletion, break out of loop
+                if(($postOrDeleteAction == "post" && $userAlreadyPostedComment)
+                    && ($postOrDeleteAction == "delete" && $userAlreadyDeletedComment)){
+                    break;
+                }
+                //If User already posted one comment, continue the loop
                 if($postOrDeleteAction == "post" && $userAlreadyPostedComment){
-                    continue; //User already posted one comment, continue the loop
+                    continue;
                 }
+                //User already deleted one comment, continue the loop
                 if($postOrDeleteAction == "delete" && $userAlreadyDeletedComment){
-                    continue; //User already deleted one comment, continue the loop
+                    continue;
                 }
 
-                //Check if user is allowed to make api call (based on Instagram rate limits)
-                if($this->userAllowedToMakeApiCall($user)){
-                    if($postOrDeleteAction == "post"){
-                        //Post the comment
-                        $this->postComment($user, $pendingComment);
-                        $userAlreadyPostedComment = true;
-                    }elseif($postOrDeleteAction == "delete"){
-                        //Delete the comment
-                        $this->deleteComment($user, $pendingComment);
-                        $userAlreadyDeletedComment = true;
-                    }
+                /**
+                 *  Now that the requests passed the above filters, need to check if user
+                 *  is allowed to make a request of request type and process the action
+                 *  (based on Instagram rate limits)
+                 */
 
-                }else break; //User can't make api calls, exit the loop
+                if($postOrDeleteAction == "post" && $this->userAllowedToMakeApiCall($user, "post")){
+                    //Post the comment
+                    $this->postComment($user, $pendingComment);
+                    $userAlreadyPostedComment = true;
+                }elseif($postOrDeleteAction == "delete" && $this->userAllowedToMakeApiCall($user, "delete")){
+                    //Delete the comment
+                    $this->deleteComment($user, $pendingComment);
+                    $userAlreadyDeletedComment = true;
+                }
+
             }
         }
     }
@@ -98,7 +108,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
 
         //Increment Number of API Calls made by user this hour
-        $user->incrementNumApiCallsThisHour();
+        $user->incrementNumApiDeleteCallsThisHour();
 
         $responseCode = ArrayHelper::getValue($response, 'meta.code');
         if($responseCode == 200){ //Successfully deleted comment
@@ -132,7 +142,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
             ]);
 
         //Increment Number of API Calls made by user this hour
-        $user->incrementNumApiCallsThisHour();
+        $user->incrementNumApiPostCallsThisHour();
 
         $responseCode = ArrayHelper::getValue($response, 'meta.code');
         if($responseCode == 200){ //Successful comment
@@ -170,9 +180,10 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * Also manages user Instagram API rate limits
      * Limit: 30 Requests/Hour on Sandbox. 60 Requests/Hour on Production.
      * @param \common\models\InstagramUser $user
+     * @param string $type the type of API request
      * @return boolean whether the user can make api calls [due to rate limits]
      */
-    public function userAllowedToMakeApiCall($user)
+    public function userAllowedToMakeApiCall($user, $type)
     {
         $rollingHourEndsAt = new \DateTime();
         $rollingHourEndsAt->setTimestamp(strtotime($user->user_api_rolling_datetime));
@@ -183,15 +194,21 @@ class Instagram extends \kotchuprik\authclient\Instagram
         //Check if rolling hour ended by comparing with current time
         if($currentDatetime > $rollingHourEndsAt){
             //Rolling hour passed, reset his rate limits
-            $user->user_api_requests_this_hour = 0;
+            $user->user_api_post_requests_this_hour = 0;
+            $user->user_api_delete_requests_this_hour = 0;
             $user->user_api_rolling_datetime = new Expression('NOW()');
             $user->save(false);
         }
 
-        //If Hourly Rate limit for the endpoint hasn't passed
-        if($user->user_api_requests_this_hour < Yii::$app->params['instagram.endpointHourlyRateLimit']){
+        //POST - If Hourly Rate limit for the endpoint hasn't passed
+        if($type == "post" && ($user->user_api_post_requests_this_hour < Yii::$app->params['instagram.endpointHourlyRateLimit'])){
             return true;
         }
+        //DELETE - If Hourly Rate limit for the endpoint hasn't passed
+        if($type == "delete" && ($user->user_api_delete_requests_this_hour < Yii::$app->params['instagram.endpointHourlyRateLimit'])){
+            return true;
+        }
+        //else user is not allowed to make an API call
         return false;
     }
 
