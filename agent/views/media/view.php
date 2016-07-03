@@ -56,12 +56,17 @@ $this->params['instagramAccount'] = $account;
                         $additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted soon</span>";
                     }
 
-                    //Is it an unhandled comment?
+					//Is it an unhandled comment?
+					$commentHandled = true;
                     if(isset($comment['comment_handled'])){
                         if($comment['comment_handled'] == Comment::HANDLED_FALSE){
                             $commentClass = "selected";
+							$commentHandled = false;
                         }
                     }
+					if($commentHandled){
+						$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+					}
 
                     //Is it deleted or queued for deletion?
                     if(isset($comment['comment_deleted']))

@@ -227,9 +227,10 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
 
         $postedConversation = Yii::$app->db->createCommand("
-            SELECT comment.*, agent.agent_name as agent_name, 'posted' as commentType
+            SELECT comment.*, agentj1.agent_name as agent_name, agentj2.agent_name as handler_name, 'posted' as commentType
             FROM comment
-            LEFT JOIN agent on comment.agent_id = agent.agent_id
+            LEFT JOIN agent as agentj1 on comment.agent_id = agentj1.agent_id
+            LEFT JOIN agent as agentj2 on comment.comment_handled_by = agentj2.agent_id
             WHERE (user_id=:accountId AND comment_by_id=:commenterId)
             OR (user_id=:accountId AND comment_text LIKE '%@".$commenterUsername."%')
             ORDER BY comment_datetime DESC")

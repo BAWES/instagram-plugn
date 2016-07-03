@@ -60,11 +60,16 @@ $this->params['instagramAccount'] = $account;
                     }
 
                     //Is it an unhandled comment?
+					$commentHandled = true;
                     if(isset($comment['comment_handled'])){
                         if($comment['comment_handled'] == Comment::HANDLED_FALSE){
                             $commentClass = "selected";
+							$commentHandled = false;
                         }
                     }
+					if($commentHandled){
+						$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+					}
 
                     //Is it deleted or queued for deletion?
                     if(isset($comment['comment_deleted']))
