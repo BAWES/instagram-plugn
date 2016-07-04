@@ -115,7 +115,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
             //Mark Comment as Deleted
             $commentToDelete->comment_deleted = Comment::DELETED_TRUE;
-            $commentToDelete->comment_deleted_reason = "Deleted by ".$pendingComment->agent->agent_name;
+            $commentToDelete->comment_deleted_by = $pendingComment->agent->agent_id;
             $commentToDelete->save(false);
 
             //Delete the Queued Comment Action as it has been deleted successfully
@@ -370,7 +370,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
             //to avoid repetitive/overwriting issues
             $query = Yii::$app->db->createCommand()->update('comment', [
                 'comment_deleted' => Comment::DELETED_TRUE,
-                'comment_deleted_reason' => Comment::REASON_DELETED_DEFAULT,
             ],[
                 'comment_deleted' => Comment::DELETED_FALSE,
                 'comment_id' => $commentIdsToDelete,

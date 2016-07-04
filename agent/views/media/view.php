@@ -75,9 +75,7 @@ $this->params['instagramAccount'] = $account;
                         {
                             case Comment::DELETED_TRUE:
                                 $commentClass = "deleted";
-                                $additionalMessage = "<span class='que'><i class='fa fa-trash'></i> Deleted by ".$comment['agent_name']."<br/>"
-                                                        . $comment['comment_deleted_reason']
-                                                        . "</span>";
+                                $additionalMessage = "<span class='que'><i class='fa fa-trash'></i> Deleted by ".$comment['deleter_name']."</span>";
                                 break;
 
                             case Comment::DELETED_QUEUED_FOR_DELETION:

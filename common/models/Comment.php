@@ -20,11 +20,13 @@ use Yii;
  * @property integer $comment_handled
  * @property integer $comment_handled_by
  * @property integer $comment_deleted
+ * @property integer $comment_deleted_by
  * @property string $comment_deleted_reason
  * @property string $comment_datetime
  *
  * @property Agent $agent
  * @property Agent $handledByAgent
+ * @property Agent $deletedByAgent
  * @property Media $media
  * @property InstagramUser $user
  * @property CommentQueue[] $commentQueues
@@ -37,8 +39,6 @@ class Comment extends \yii\db\ActiveRecord
 
     const HANDLED_TRUE = 1;
     const HANDLED_FALSE = 0;
-
-    const REASON_DELETED_DEFAULT = "Deleted through Instagram";
 
     /**
      * @inheritdoc
@@ -55,7 +55,7 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             [['media_id', 'user_id', 'comment_instagram_id', 'comment_datetime'], 'required'],
-            [['media_id', 'user_id', 'agent_id', 'comment_handled', 'comment_handled_by', 'comment_deleted'], 'integer'],
+            [['media_id', 'user_id', 'agent_id', 'comment_handled', 'comment_handled_by', 'comment_deleted', 'comment_deleted_by'], 'integer'],
             [['comment_text', 'comment_deleted_reason'], 'string'],
             [['comment_datetime'], 'safe'],
             [['comment_instagram_id', 'comment_by_username', 'comment_by_photo', 'comment_by_id', 'comment_by_fullname'], 'string'],
@@ -104,6 +104,14 @@ class Comment extends \yii\db\ActiveRecord
     public function getHandledByAgent()
     {
         return $this->hasOne(Agent::className(), ['agent_id' => 'comment_handled_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDeletedByAgent()
+    {
+        return $this->hasOne(Agent::className(), ['agent_id' => 'comment_deleted_by']);
     }
 
     /**

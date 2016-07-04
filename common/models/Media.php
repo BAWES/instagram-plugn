@@ -91,10 +91,15 @@ class Media extends \yii\db\ActiveRecord
     {
 
         $postedConversation = Yii::$app->db->createCommand("
-            SELECT comment.*, agentj1.agent_name as agent_name, agentj2.agent_name as handler_name, 'posted' as commentType
+            SELECT comment.*,
+                    agentj1.agent_name as agent_name,
+                    agentj2.agent_name as handler_name,
+                    agentj3.agent_name as deleter_name, 
+                    'posted' as commentType
             FROM comment
             LEFT JOIN agent as agentj1 on comment.agent_id = agentj1.agent_id
             LEFT JOIN agent as agentj2 on comment.comment_handled_by = agentj2.agent_id
+            LEFT JOIN agent as agentj3 on comment.comment_deleted_by = agentj3.agent_id
             WHERE (user_id=:accountId AND media_id=:mediaId)
             ORDER BY comment_datetime DESC")
             ->bindValue(':accountId', $this->user_id)

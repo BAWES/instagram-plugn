@@ -30,6 +30,7 @@ use yii\db\ActiveRecord;
  * @property AgentAuth[] $agentAuths
  * @property Comment[] $comments
  * @property Comment[] $handledComments
+ * @property Comment[] $deletedComments
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
@@ -178,6 +179,14 @@ class Agent extends ActiveRecord implements IdentityInterface
     public function getHandledComments()
     {
         return $this->hasMany(Comment::className(), ['comment_handled_by' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDeletedComments()
+    {
+        return $this->hasMany(Comment::className(), ['comment_deleted_by' => 'agent_id']);
     }
 
     /**
