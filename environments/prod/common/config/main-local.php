@@ -3,12 +3,12 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=plugto',
-            'username' => 'plugger',
-            'password' => '5397359',
+            'dsn' => 'mysql:host=10.131.0.199;dbname=plugn',
+            'username' => 'sqlplug',
+            'password' => 'vano2WmdnN3rAm1O',
             'charset' => 'utf8mb4',
         ],
-        'session' => [ //Use Redis Database for Session Storage
+        /*'session' => [ //Use Redis Database for Session Storage
             'class' => 'yii\redis\Session',
             'redis' => [
                 'hostname' => 'localhost',
@@ -23,22 +23,22 @@ return [
                 'port' => 6379,
                 'database' => 1,
             ]
-        ],
+        ],*/
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.sendgrid.net',
-                'username' => 'usernamehere',
-                'password' => 'password!23',
+                'username' => 'plugn',
+                'password' => 'WeLoveEmailsFromPlugn!123',
                 'port' => '587',
                 'encryption' => 'tls',
-                'plugins' => [
+                /*'plugins' => [
                     [
                         'class' => 'Openbuildings\Swiftmailer\CssInlinerPlugin',
                     ],
-                ],
+                ],*/
             ],
         ],
     ],
