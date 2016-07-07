@@ -8,10 +8,11 @@ return [
             'password' => 'vano2WmdnN3rAm1O',
             'charset' => 'utf8mb4',
         ],
-        /*'session' => [ //Use Redis Database for Session Storage
+        'session' => [ //Use Redis Database for Session Storage
             'class' => 'yii\redis\Session',
             'redis' => [
                 'hostname' => 'localhost',
+                'password' => 'nN3rAm1Ovano2Wmd',
                 'port' => 6379,
                 'database' => 0,
             ]
@@ -20,10 +21,11 @@ return [
             'class' => 'yii\redis\Cache',
             'redis' => [
                 'hostname' => 'localhost',
+                'password' => 'nN3rAm1Ovano2Wmd',
                 'port' => 6379,
                 'database' => 1,
             ]
-        ],*/
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
