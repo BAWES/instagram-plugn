@@ -2,13 +2,21 @@
 
 $config = [
     'components' => [
-        'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '',
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '/' => 'site/index',
+                'auth/<authclient:(instagram)>' => 'site/auth',
+            ],
         ],
         'urlManagerAgent' => [
             'class' => 'yii\web\UrlManager',
             'scriptUrl' => '/~BAWES/plugn/agent/web/index.php',
+        ],
+        'request' => [
+            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'cookieValidationKey' => '',
         ],
     ],
 ];
