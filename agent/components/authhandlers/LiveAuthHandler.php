@@ -6,6 +6,7 @@ use common\models\AgentAuth;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 
 /**
  * AuthHandler handles successful authentification via Yii auth component
