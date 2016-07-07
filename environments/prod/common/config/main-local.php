@@ -11,8 +11,8 @@ return [
         'session' => [ //Use Redis Database for Session Storage
             'class' => 'yii\redis\Session',
             'redis' => [
-                'hostname' => 'localhost',
-                //'password' => 'nN3rAm1Ovano2Wmd',
+                'hostname' => '10.131.8.103',
+                'password' => 'nN3rAm1Ovano2Wmd',
                 'port' => 6379,
                 'database' => 0,
             ]
@@ -20,8 +20,8 @@ return [
         'cache' => [
             'class' => 'yii\redis\Cache',
             'redis' => [
-                'hostname' => 'localhost',
-                //'password' => 'nN3rAm1Ovano2Wmd',
+                'hostname' => '10.131.8.103',
+                'password' => 'nN3rAm1Ovano2Wmd',
                 'port' => 6379,
                 'database' => 1,
             ]
