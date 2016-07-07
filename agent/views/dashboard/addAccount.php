@@ -17,7 +17,14 @@ $instagramHomeUrl = Yii::$app->urlManagerFrontend->createUrl('site/index');
 				</div>
 
 				<h2>Add Instagram Account</h2>
-				<p class="lead color-blue-grey-lighter">Once an account owner adds you as an agent,<br/> you'll be able to manage the accounts comments.</p>
+
+				<p class="lead color-blue-grey-lighter">
+					<?= Yii::$app->user->identity->agent_name ?>, once an account owner adds you as an agent,<br/> you'll be able to manage the accounts comments
+				</p>
+
+				<p class="lead color-blue-grey-lighter">
+					Your agent id: <?= Yii::$app->user->identity->agent_email ?>
+				</p>
 
 				<a href="<?= $instagramHomeUrl ?>" class="btn btn-inline btn-primary ladda-button" data-style="expand-left">
 					<span class="ladda-label">Login with Instagram</span>
