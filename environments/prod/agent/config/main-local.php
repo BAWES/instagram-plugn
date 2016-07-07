@@ -12,7 +12,7 @@ return [
         ],
         'urlManagerFrontend' => [
             'class' => 'yii\web\UrlManager',
-            'scriptUrl' => '/~BAWES/plugto/frontend/web/index.php',
+            'baseUrl' => 'http://instagram.plugn.io',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
