@@ -8,7 +8,7 @@ $config = [
         ],
         'urlManagerAgent' => [
             'class' => 'yii\web\UrlManager',
-            'scriptUrl' => '/~BAWES/plugto/agent/web/index.php',
+            'scriptUrl' => '/~BAWES/plugn/agent/web/index.php',
         ],
     ],
 ];

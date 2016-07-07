@@ -14,6 +14,8 @@ return [
         'urlManagerAgent' => [
             'class' => 'yii\web\UrlManager',
             'baseUrl' => 'http://agent.plugn.io',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
         ],
     ],
 ];

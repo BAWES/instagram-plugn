@@ -13,7 +13,7 @@ $config = [
         ],
         'urlManagerFrontend' => [
             'class' => 'yii\web\UrlManager',
-            'scriptUrl' => '/~BAWES/plugto/frontend/web/index.php',
+            'scriptUrl' => '/~BAWES/plugn/frontend/web/index.php',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
