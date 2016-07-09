@@ -43,8 +43,11 @@ class MediaController extends \yii\web\Controller {
 
         $media = $instagramAccount->getMedia()->with('unhandledComments')->all();
 
+        //Change View Displayed based on number of media this account has
+        $mediaCount = count($media);
+        $viewToDisplay = $mediaCount > 0 ? 'list' : 'list-nomedia';
 
-        return $this->render('list',[
+        return $this->render($viewToDisplay,[
             'account' => $instagramAccount,
             'media' => $media
         ]);

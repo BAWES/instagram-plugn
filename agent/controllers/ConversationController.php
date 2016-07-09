@@ -42,7 +42,11 @@ class ConversationController extends \yii\web\Controller {
 
         $conversations = $instagramAccount->conversations;
 
-        return $this->render('list',[
+        //Change View Displayed based on number of media this account has
+        $conversationCount = count($conversations);
+        $viewToDisplay = $conversationCount > 0 ? 'list' : 'list-nomedia';
+
+        return $this->render($viewToDisplay,[
             'account' => $instagramAccount,
             'conversations' => $conversations,
         ]);
