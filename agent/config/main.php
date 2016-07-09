@@ -36,8 +36,8 @@ return [
                 ],
                 'slack' => [ //https://api.slack.com/apps
                     'class' => 'agent\components\SlackAuthClient',
-                    'clientId' => '16834512471.44308026372',
-                    'clientSecret' => '9d4fddc6b7199387e118a6c5a41031a1',
+                    'clientId' => '47737144055.58303953975',
+                    'clientSecret' => 'ea30c4ae87ed4b866b9771fffc573caf',
                 ],
             ],
         ],
