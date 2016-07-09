@@ -32,9 +32,11 @@ $this->registerCss(".help-block{margin-bottom:0}");
     <a href='<?= $googleAuthUrl ?>' class='btn btn-primary' style="margin-top:0; background-color:#df4a32; border-color:#df4a32">
         <i class="font-icon font-icon-google-plus"  aria-hidden="true"></i> Log in with Google
     </a>
+    <?php if(Yii::$app->params['microsoftLoginEnabled']){ ?>
     <a href='<?= $liveAuthUrl ?>' class='btn btn-primary' style="margin-top:0;">
         <i class="fa fa-windows" aria-hidden="true"></i> Log in with Live
     </a>
+    <?php } ?>
     <a href='<?= $slackAuthUrl ?>' class='btn btn-secondary' style="margin-top:0;">
         <i class="fa fa-slack" aria-hidden="true"></i> Log in with Slack
     </a>
