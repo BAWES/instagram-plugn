@@ -62,7 +62,7 @@ $this->params['instagramAccount'] = $account;
 					if($commentHandled){
 						if($comment['commentType']!="queue"){
 							//Show who handled it if its not a comment one of our agents posted for this account
-							if($comment['user_id'] != $account->user_id){
+							if($comment['comment_by_id'] != $account->user_instagram_id){
 								$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
 							}
 						}else{
