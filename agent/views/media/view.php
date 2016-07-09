@@ -65,7 +65,11 @@ $this->params['instagramAccount'] = $account;
                         }
                     }
 					if($commentHandled){
-						$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+						if($comment['commentType']!="queue"){
+							$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+						}else{
+							$additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted by ".$comment['agent_name']."</span>";
+						}
 					}
 
                     //Is it deleted or queued for deletion?
