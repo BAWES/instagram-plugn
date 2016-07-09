@@ -15,7 +15,8 @@ DataTableAsset::register($this);
 $this->registerJs("
 $(function() {
 	$('#mytable').DataTable({
-		responsive: true
+		responsive: true,
+		ordering: false
 	});
 });
 ");
