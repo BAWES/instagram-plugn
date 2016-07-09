@@ -53,12 +53,6 @@ $this->params['instagramAccount'] = $account;
                     $commentClass = "";
                     $additionalMessage = "";
 
-                    //Is it queued to be posted?
-                    if($comment['commentType'] == "queue"){
-                        $commentClass = "queued";
-                        $additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted soon</span>";
-                    }
-
                     //Is it an unhandled comment?
 					$commentHandled = true;
                     if(isset($comment['comment_handled'])){
@@ -71,6 +65,7 @@ $this->params['instagramAccount'] = $account;
 						if($comment['commentType']!="queue"){
 							$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
 						}else{
+							$commentClass = "queued";
 							$additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted by ".$comment['agent_name']."</span>";
 						}
 					}
