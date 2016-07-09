@@ -63,7 +63,10 @@ $this->params['instagramAccount'] = $account;
                     }
 					if($commentHandled){
 						if($comment['commentType']!="queue"){
-							$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+							//Show who handled it if its not a comment one of our agents posted for this account
+							if($comment['user_id'] != $account->user_id){
+								$additionalMessage = "<span style='font-size:9px'>Handled by ".$comment['handler_name']."</span>";
+							}
 						}else{
 							$commentClass = "queued";
 							$additionalMessage = "<span class='que'><i class='fa fa-circle-o-notch fa-spin'></i> Queued to be posted by ".$comment['agent_name']."</span>";
