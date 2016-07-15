@@ -4,9 +4,6 @@
 
 use yii\helpers\Url;
 
-$accountFullName = "BAWES - Built Awesome";
-$accountName = "bawestech";
-
 $agentPortalUrl = "http://agent.plugn.io";
 ?>
 
