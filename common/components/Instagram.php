@@ -317,6 +317,8 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
+        Yii::info("[Debug Info] ".print_r($output, true), __METHOD__);
+
         $liveCommentsArray = array();
         $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
         /** $oldCommentsArray returns a map of old Instagram IDs mapped to its ID in our database
