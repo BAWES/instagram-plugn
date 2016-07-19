@@ -99,6 +99,9 @@ class SiteController extends Controller
         {
             if ($model->signup())
             {
+                //Log agent signup
+                Yii::info("[New Agent Signup Manual] ".$model->agent_email, __METHOD__);
+
                 Yii::$app->session->setFlash('success', "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account");
                 return $this->redirect(['index']);
             }
