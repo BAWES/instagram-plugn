@@ -226,9 +226,6 @@ class Agent extends ActiveRecord implements IdentityInterface
         if ($this->save()) {
             $this->sendVerificationEmail();
 
-            //Log agent signup
-            Yii::info("[New Agent Signup] ".$this->agent_email, __METHOD__);
-
             return $this;
         }else{
             //Reset password to hide encrypted value

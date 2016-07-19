@@ -103,6 +103,9 @@ class GoogleAuthHandler
                         if ($auth->save()) {
                             $transaction->commit();
                             Yii::$app->user->login($agent, Yii::$app->params['user.rememberMeDuration']);
+
+                            //Log agent signup
+                            Yii::info("[New Agent Signup GoogleAuth] ".$agent->agent_email, __METHOD__);
                         } else {
                             Yii::$app->getSession()->setFlash('error', [
                                 Yii::t('app', 'Unable to save {client} account: {errors}', [
