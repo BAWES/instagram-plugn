@@ -317,26 +317,32 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
-        Yii::info("[Debug Info] ".print_r($output, true), __METHOD__);
+        Yii::info("[IG Comments] ".print_r($output, true), __METHOD__);
 
+        //Array of comments currently live on IG account [deleted ignored]
         $liveCommentsArray = array();
-        $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
+
         /** $oldCommentsArray returns a map of old Instagram IDs mapped to its ID in our database
          * Example Output:
          *    [17856567064059917] => 22
          *    [17856289873059917] => 21
         */
+        $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
+
+
+        Yii::info("[Old Comments in oldCommentsArray] ".print_r($oldCommentsArray, true), __METHOD__);
 
         // Loop through comments returned from Instagram for this media
         foreach($output['data'] as $instagramComment)
         {
-
             $commentInstagramId = ArrayHelper::getValue($instagramComment, 'id');
             $liveCommentsArray[$commentInstagramId] = 1;
 
             //Check if this comment doesn't already exist in our database
             if(!isset($oldCommentsArray[$commentInstagramId]))
             {
+                Yii::info("[Inserting Comment] ".print_r($instagramComment, true), __METHOD__);
+
                 //Add it to our database
                 $comment = new Comment();
                 $comment->media_id = $media->media_id;
@@ -358,7 +364,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                     //Add this new saved comment to oldCommentsArray to know what comments our db has for this post
                     $oldCommentsArray[$comment->comment_instagram_id] = $comment->comment_id;
                 }
-            }
+            }else Yii::info("[Comment already exists in our db] ".print_r($instagramComment, true), __METHOD__);
 
         }
 
