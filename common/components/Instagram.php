@@ -336,8 +336,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
             //Check if this comment doesn't already exist in our database
             if(!isset($oldCommentsArray[$commentInstagramId]))
             {
-                Yii::info("[Inserting Comment] ".print_r($instagramComment, true), __METHOD__);
-
                 //Add it to our database
                 $comment = new Comment();
                 $comment->media_id = $media->media_id;
@@ -356,7 +354,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 {
                     Yii::error("[Fatal Error] Unable to save comment ".print_r($comment->errors, true), __METHOD__);
                 }else{
-                    Yii::info("[Comment successfully saved] ".print_r($instagramComment, true), __METHOD__);
                     //Add this new saved comment to oldCommentsArray to know what comments our db has for this post
                     $oldCommentsArray[$comment->comment_instagram_id] = $comment->comment_id;
                 }
