@@ -15,6 +15,17 @@ $this->title = $account->user_name;
 
 //Pass Instagram Account to Layout for Rendering
 $this->params['instagramAccount'] = $account;
+
+//Auto Scroll to bottom of chat on page load
+$this->registerJs("
+$(document).ready(function(){
+	setTimeout(function(){
+		var lastComment = $('.comment-row-item:last');
+		var api = $('.scrollable-block').data('jsp');
+		api.scrollToElement(lastComment, false);
+	}, 100);
+});
+");
 ?>
 
 <div class="box-typical chat-container">

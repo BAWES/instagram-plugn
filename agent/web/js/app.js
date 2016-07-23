@@ -16,6 +16,7 @@ $(document).ready(function(){
 		$('.side-menu').jScrollPane(jScrollOptions);
 		//$('.side-menu-addl').jScrollPane(jScrollOptions);
 		$('.scrollable-block').jScrollPane(jScrollOptions);
+
 	}
 
 /* ==========================================================================
@@ -835,7 +836,7 @@ $(document).ready(function(){
 
 	$('.control-panel-toggle').on('click', function() {
 		var self = $(this);
-		
+
 		if (self.hasClass('open')) {
 			self.removeClass('open');
 			$('.control-panel').removeClass('open');
