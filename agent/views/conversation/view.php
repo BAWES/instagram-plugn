@@ -23,9 +23,11 @@ $this->params['instagramAccount'] = $account;
 <div class="box-typical chat-container">
 	<section>
 		<div class="chat-area-header">
-			<div class="chat-list-item">
+			<div class="chat-list-item" style='cursor:default'>
 				<div class="chat-list-media-photo">
-					<?= Html::img($commenterPhoto) ?>
+					<a href='http://instagram.com/<?= $commenterUsername ?>' target='_blank'>
+						<?= Html::img($commenterPhoto) ?>
+					</a>
 				</div>
 				<div class="chat-list-item-name">
 					<span class="name"><?= $commenterFullname ?></span>

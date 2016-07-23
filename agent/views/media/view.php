@@ -20,9 +20,11 @@ $this->params['instagramAccount'] = $account;
 <div class="box-typical chat-container">
 	<section>
 		<div class="chat-area-header">
-			<div class="chat-list-item">
+			<div class="chat-list-item" style='cursor:default'>
 				<div class="chat-list-media-photo">
-					<?= Html::img($media->media_image_thumb) ?>
+					<a href='<?= $media->media_link ?>' target='_blank'>
+						<?= Html::img($media->media_image_thumb) ?>
+					</a>
 				</div>
 				<div class="chat-list-item-name">
 					<span class="name">Media posted on <?= Yii::$app->formatter->asDate($media->media_created_datetime) ?></span>
