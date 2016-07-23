@@ -1,6 +1,7 @@
 <?php
 return [
     'name' => 'Plugn',
+    'timeZone' => 'Asia/Kuwait',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'cache' => [
