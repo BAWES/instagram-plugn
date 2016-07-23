@@ -23,7 +23,7 @@ $(document).ready(function(){
 		var lastComment = $('.comment-row-item:last');
 		var api = $('.scrollable-block').data('jsp');
 		api.scrollToElement(lastComment, false);
-	}, 500);
+	}, 1000);
 });
 ");
 ?>
