@@ -15,9 +15,10 @@ $(document).ready(function(){
 		$('.box-typical-body').jScrollPane(jScrollOptions);
 		$('.side-menu').jScrollPane(jScrollOptions);
 		//$('.side-menu-addl').jScrollPane(jScrollOptions);
-		$('.scrollable-block').jScrollPane(jScrollOptions);
+		//$('.scrollable-block').jScrollPane(jScrollOptions);
 
 	}
+	$('.scrollable-block').jScrollPane(jScrollOptions);
 
 /* ==========================================================================
     Header search
