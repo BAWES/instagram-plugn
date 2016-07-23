@@ -19,10 +19,7 @@ $this->params['instagramAccount'] = $account;
 //Auto Scroll to bottom of chat on page load
 $this->registerJs("
 $(document).ready(function(){
-	setTimeout(function(){
-		var api = $('.scrollable-block').data('jsp');
-		api.scrollToBottom();
-	}, 100);
+	$('#commentList').scrollTop($('#commentList')[0].scrollHeight);
 });
 ");
 ?>
@@ -53,7 +50,7 @@ $(document).ready(function(){
 			</div>
 		</div><!--.chat-area-header-->
 
-		<div class="chat-dialog-area scrollable-block">
+		<div id="commentList" class="chat-dialog-area scrollable-block">
 
             <?php if($comments){ ?>
                 <?php foreach($comments as $comment){ ?>

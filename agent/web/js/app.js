@@ -18,7 +18,6 @@ $(document).ready(function(){
 		//$('.scrollable-block').jScrollPane(jScrollOptions);
 
 	}
-	$('.scrollable-block').jScrollPane(jScrollOptions);
 
 /* ==========================================================================
     Header search
