@@ -316,7 +316,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         }
 
 
-        Yii::error("[Account Disabled] Instagram account @".$this->user_name." disabled for Invalid Access Token", __METHOD__);
+        Yii::error("[Account Disabled] Instagram account @".$this->user_name." disabled for Invalid Access Token and its agents have been notified", __METHOD__);
     }
 
     /**
