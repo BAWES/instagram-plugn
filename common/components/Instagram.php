@@ -473,7 +473,11 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $errorType = ArrayHelper::getValue($metaResponse, 'meta.error_type', "Not set");
             $errorMessage = ArrayHelper::getValue($metaResponse, 'meta.error_message', "Not set");
 
+
             Yii::error("[Fatal Error] $errorCode Error - $errorType: $errorMessage", __METHOD__);
+
+            //For discovering new errors as we've been getting: ??? Error - Not set: Not set
+            Yii::error("[Error Contents] ".print_r($e->responseBody, true), __METHOD__);
 
             /**
              * Disable User Account with Invalid Access Token
