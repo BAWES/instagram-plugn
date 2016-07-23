@@ -66,7 +66,7 @@ class AgentController extends Controller
                         ])
                         ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
                         ->setTo($model->assignment_agent_email)
-                        ->setSubject('You have been invited to manage @'.Yii::$app->user->identity->user_name)
+                        ->setSubject("You've been invited to manage @".Yii::$app->user->identity->user_name)
                         ->send();
 
                 return $this->refresh();

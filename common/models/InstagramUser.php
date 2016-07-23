@@ -34,6 +34,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
+ * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
  * @property Media[] $media
@@ -122,6 +123,16 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     public function getAgentAssignments()
     {
         return $this->hasMany(AgentAssignment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * Get Agents assigned to this Instagram user
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgents()
+    {
+        return $this->hasMany(Agent::className(), ['agent_id' => 'agent_id'])
+                    ->via('agentAssignments');
     }
 
     /**
@@ -286,8 +297,23 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         $this->user_status = self::STATUS_INVALID_ACCESS_TOKEN;
         $this->save(false);
 
-        // TODO Send an email to all active agents on this account that they need to
-        // re-login / authorise to enable the account
+        /**
+         * Send an email to all active agents on this account that they need to
+         * re-login / authorise to enable the account
+         */
+        foreach($this->agents as $agent){
+            Yii::$app->mailer->compose([
+                        'html' => 'frontend/tokenExpired',
+                            ], [
+                        'accountFullName' => $this->user_fullname,
+                        'accountName' => $this->user_name,
+                        'accountPhoto' => $this->user_profile_pic,
+                    ])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                    ->setTo($agent->agent_email)
+                    ->setSubject('Problem connecting to your Instagram account @'.$this->user_name)
+                    ->send();
+        }
 
 
         Yii::error("[Account Disabled] Instagram account @".$this->user_name." disabled for Invalid Access Token", __METHOD__);
