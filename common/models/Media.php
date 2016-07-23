@@ -89,19 +89,20 @@ class Media extends \yii\db\ActiveRecord
      */
     public function getCommentsWithQueued()
     {
+        $commentDisplayOrder = "ASC";
 
         $postedConversation = Yii::$app->db->createCommand("
             SELECT comment.*,
                     agentj1.agent_name as agent_name,
                     agentj2.agent_name as handler_name,
-                    agentj3.agent_name as deleter_name, 
+                    agentj3.agent_name as deleter_name,
                     'posted' as commentType
             FROM comment
             LEFT JOIN agent as agentj1 on comment.agent_id = agentj1.agent_id
             LEFT JOIN agent as agentj2 on comment.comment_handled_by = agentj2.agent_id
             LEFT JOIN agent as agentj3 on comment.comment_deleted_by = agentj3.agent_id
             WHERE (user_id=:accountId AND media_id=:mediaId)
-            ORDER BY comment_datetime DESC")
+            ORDER BY comment_datetime $commentDisplayOrder")
             ->bindValue(':accountId', $this->user_id)
             ->bindValue(':mediaId', $this->media_id)
             ->queryAll();
@@ -114,7 +115,7 @@ class Media extends \yii\db\ActiveRecord
             INNER JOIN agent on comment_queue.agent_id = agent.agent_id
             WHERE comment_id is NULL AND
             (user_id=:accountId AND media_id=:mediaId)
-            ORDER BY queue_datetime DESC")
+            ORDER BY queue_datetime $commentDisplayOrder")
             ->bindValue(':accountId', $this->user->user_id)
             ->bindValue(':mediaId', $this->media_id)
             ->bindValue(':username', $this->user->user_name)

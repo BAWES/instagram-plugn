@@ -236,6 +236,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function getConversationWithUser($commenterId, $commenterUsername)
     {
+        $commentDisplayOrder = "ASC";
 
         $postedConversation = Yii::$app->db->createCommand("
             SELECT comment.*,
@@ -249,7 +250,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             LEFT JOIN agent as agentj3 on comment.comment_deleted_by = agentj3.agent_id
             WHERE (user_id=:accountId AND comment_by_id=:commenterId)
             OR (user_id=:accountId AND comment_text LIKE '%@".$commenterUsername."%')
-            ORDER BY comment_datetime DESC")
+            ORDER BY comment_datetime $commentDisplayOrder")
             ->bindValue(':accountId', $this->user_id)
             ->bindValue(':commenterId', $commenterId)
             ->queryAll();
@@ -262,7 +263,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             INNER JOIN agent on comment_queue.agent_id = agent.agent_id
             WHERE comment_id is NULL AND
             (user_id=:accountId AND queue_text LIKE '%@".$commenterUsername."%')
-            ORDER BY queue_datetime DESC")
+            ORDER BY queue_datetime $commentDisplayOrder")
             ->bindValue(':accountId', $this->user_id)
             ->bindValue(':username', $this->user_name)
             ->bindValue(':fullname', $this->user_fullname)
