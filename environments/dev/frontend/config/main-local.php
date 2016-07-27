@@ -13,6 +13,8 @@ $config = [
         'urlManagerAgent' => [
             'class' => 'yii\web\UrlManager',
             'scriptUrl' => '/~BAWES/plugn/agent/web/index.php',
+            'enablePrettyUrl' => true,
+            //'showScriptName' => false,
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

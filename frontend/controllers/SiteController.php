@@ -92,6 +92,18 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+    public function actionLoginViaAgent()
+    {
+        Yii::$app->user->logout();
+
+        return $this->redirect("login");
+    }
+
+    /**
+     * Logs out the current user from Plugn Platform
+     *
+     * @return mixed
+     */
     public function actionLogoutReal()
     {
         Yii::$app->user->logout();

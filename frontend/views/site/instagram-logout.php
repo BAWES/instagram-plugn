@@ -14,7 +14,7 @@ $('#iglog').on('load', function(){
 ");
 ?>
 
-<h1>Logging out of Plugn..</h1>
+<h1>Logging out..</h1>
 
 <div style="display:none">
     <iframe id="iglog" src="https://instagram.com/accounts/logout/" width="0" height="0"></iframe>
