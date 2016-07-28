@@ -26,7 +26,7 @@ $this->registerJs($analytics);
 $liveChat = "
 window.intercomSettings = {
 	app_id: 'a25z3ilz',
-	user_id: ". Yii::$app->user->identity->user_name .",
+	user_id:  '". Yii::$app->user->identity->user_name ."',
 	name: '". Yii::$app->user->identity->user_fullname ."',
 	created_at: ". strtotime(Yii::$app->user->identity->user_created_datetime) .",
 	'num_agents': ". Yii::$app->user->identity->getAgentAssignments()->count() .",
