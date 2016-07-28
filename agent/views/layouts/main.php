@@ -26,11 +26,10 @@ $this->registerJs($analytics);
 //Live Chat by Intercom.io
 $liveChat = "
 window.intercomSettings = {
-	app_id: 'a25z3ilz'
+	app_id: 'a25z3ilz',
 	name: '". Yii::$app->user->identity->agent_name ."',
 	email: '". Yii::$app->user->identity->agent_email ."',
 	created_at: ". strtotime(Yii::$app->user->identity->agent_created_at) .",
-	'account_type': 'agent',
 	'accounts_managed': ". count(Yii::$app->accountManager->managedAccounts) .",
 };
 
