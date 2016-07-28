@@ -27,6 +27,8 @@ $this->registerJs($analytics);
 $liveChat = "
 window.intercomSettings = {
 	app_id: 'a25z3ilz',
+	user_id:  '". Yii::$app->user->identity->agent_id ."',
+	user_hash: ".hash_hmac('sha256', Yii::$app->user->identity->agent_id, '1EN9oPUUigmm678OG3M6DoADANxUaQZ7QImVxhUK').",
 	name: '". Yii::$app->user->identity->agent_name ."',
 	email: '". Yii::$app->user->identity->agent_email ."',
 	created_at: ". strtotime(Yii::$app->user->identity->agent_created_at) .",

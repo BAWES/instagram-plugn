@@ -27,6 +27,7 @@ $liveChat = "
 window.intercomSettings = {
 	app_id: 'a25z3ilz',
 	user_id:  '". Yii::$app->user->identity->user_name ."',
+	user_hash: ".hash_hmac('sha256', Yii::$app->user->identity->user_name, '1EN9oPUUigmm678OG3M6DoADANxUaQZ7QImVxhUK').",
 	name: '". Yii::$app->user->identity->user_fullname ."',
 	created_at: ". strtotime(Yii::$app->user->identity->user_created_datetime) .",
 	'num_agents': ". Yii::$app->user->identity->getAgentAssignments()->count() .",
