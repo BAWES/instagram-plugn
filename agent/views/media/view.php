@@ -110,8 +110,24 @@ $(document).ready(function(){
         				<div class="tbl comment-row-item-header">
         					<div class="tbl-row">
         						<div class="tbl-cell tbl-cell-name">
-                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
-                                    <i>@<?= $comment['comment_by_username'] ?></i>
+									<?php
+									$linkToConversation = false;
+									if(!($comment['agent_name']) && ($account->user_name != $comment['comment_by_username'])){
+										$linkToConversation = true;
+										$conversationUrl = Url::to([
+											'conversation/view',
+											'accountId' => $account->user_id,
+											'commenterId' => $comment['comment_by_id']
+										]);
+
+										echo "<a href='$conversationUrl' style='' title='View conversation with @". $comment['comment_by_username'] ."'>";
+									}
+									?>
+
+	                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
+	                                    <i>@<?= $comment['comment_by_username'] ?></i>
+
+									<?= $linkToConversation ? "</a>" : "" ?>
                                 </div>
         						<div class="tbl-cell tbl-cell-date">
                                     <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
