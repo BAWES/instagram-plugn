@@ -89,7 +89,8 @@ $(document).ready(function(){
                         {
                             case Comment::DELETED_TRUE:
                                 $commentClass = "deleted";
-                                $additionalMessage = "<span class='que'><i class='fa fa-trash'></i> Deleted by ".$comment['deleter_name']."</span>";
+								$deleteAppend = $comment['deleter_name']? "Deleted by ".$comment['deleter_name'] : "Deleted via Instagram";
+                                $additionalMessage = "<span class='que'><i class='fa fa-trash'></i> $deleteAppend</span>";
                                 break;
 
                             case Comment::DELETED_QUEUED_FOR_DELETION:
