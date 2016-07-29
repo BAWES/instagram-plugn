@@ -111,8 +111,21 @@ $(document).ready(function(){
         				<div class="tbl comment-row-item-header">
         					<div class="tbl-row">
         						<div class="tbl-cell tbl-cell-name">
-                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
-                                    <i>@<?= $comment['comment_by_username'] ?></i>
+									<?php
+									$mediaUrl = Url::to([
+										'media/view',
+										'accountId' => $account->user_id,
+										'mediaId' => $comment['media_id']
+									]);
+
+									echo "<a href='$mediaUrl' style='' title='View the media this was posted on'>";
+									?>
+
+	                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
+	                                    <i>@<?= $comment['comment_by_username'] ?></i>
+										
+									</a>
+
                                 </div>
         						<div class="tbl-cell tbl-cell-date">
                                     <?= Yii::$app->formatter->asRelativeTime($comment['comment_datetime']) ?>
