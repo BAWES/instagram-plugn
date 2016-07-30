@@ -69,6 +69,9 @@ class AgentController extends Controller
                         ->setSubject("You've been invited to manage @".Yii::$app->user->identity->user_name)
                         ->send();
 
+                //Send Slack notification of agent assignment
+                Yii::info("[Agent Invite sent by @".Yii::$app->user->identity->user_name."] Sent to ".$model->assignment_agent_email, __METHOD__);
+
                 return $this->refresh();
             }
         }
