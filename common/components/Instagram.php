@@ -120,6 +120,10 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
             //Delete the Queued Comment Action as it has been deleted successfully
             $pendingComment->delete();
+
+            //Reduce the comment count on this media by 1
+            $media->updateCounters(['media_num_comments' => -1]);
+
         }else Yii::error("[Fatal Error] Issue deleting a comment from Instagram", __METHOD__);
 
     }
@@ -173,6 +177,24 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
         }else Yii::error("[Fatal Error] Issue posting a comment to Instagram", __METHOD__);
 
+    }
+
+    /**
+     * Updates the number of comments and likes on a specific media
+     * @param \common\models\User $user the user that has token which will be used for this request
+     * @param \common\models\Media $media the media that will be crawled
+     */
+    private function updateMediaCounters($user, $media)
+    {
+        $mediaInstagramId = $media->media_instagram_id;
+
+        $response = $this->apiWithUser($user,
+            "media/$mediaInstagramId",
+            'GET');
+
+        $media->media_num_comments = ArrayHelper::getValue($response, 'data.comments.count');
+        $media->media_num_likes = ArrayHelper::getValue($response, 'data.likes.count');
+        $media->save(false);
     }
 
 
@@ -317,18 +339,38 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'media/'.$media->media_instagram_id.'/comments',
                 'GET');
 
-        //Array of comments currently live on IG account [deleted ignored]
+        //Array of comments currently live on IG account for this media [deleted ignored]
         $liveCommentsArray = array();
 
-        /** $oldCommentsArray returns a map of old Instagram IDs mapped to its ID in our database
+        /** $oldCommentsArray returns a map of old Instagram comment id mapped to its ID in our database
          * Example Output:
          *    [17856567064059917] => 22
          *    [17856289873059917] => 21
         */
         $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
 
+        //Process and save comments from Instagram
+        $this->processCrawledComments($output['data'], $user, $media, $liveCommentsArray, $oldCommentsArray);
+
+        // Soft delete comments available in our db but not available on Instagram
+        $this->processDeletedComments($liveCommentsArray, $oldCommentsArray);
+
+        return true;
+    }
+
+    /**
+     * Processes comments returned from API request,
+     * saves to db or deletes from db
+     * @param array $crawledComments output from Instagram comment GET request
+     * @param \common\models\User $user the user that has token which will be used for this request
+     * @param \common\models\Media $media the media that will be crawled
+     * @param array $liveCommentsArray comments returned from Instagram api
+     * @param array $oldCommentsArray comments in our db
+     */
+    private function processCrawledComments($crawledComments, $user, $media, &$liveCommentsArray, &$oldCommentsArray)
+    {
         // Loop through comments returned from Instagram for this media
-        foreach($output['data'] as $instagramComment)
+        foreach($crawledComments as $instagramComment)
         {
             $commentInstagramId = ArrayHelper::getValue($instagramComment, 'id');
             $liveCommentsArray[$commentInstagramId] = 1;
@@ -360,7 +402,15 @@ class Instagram extends \kotchuprik\authclient\Instagram
             }
 
         }
+    }
 
+    /**
+     * Soft Deletes comments that are in our db but not on Instagram
+     * @param array $liveCommentsArray comments returned from Instagram api
+     * @param array $oldCommentsArray comments in our db
+     */
+    private function processDeletedComments(&$liveCommentsArray, &$oldCommentsArray)
+    {
         //Check if there are any comments in our database for this media that aren't on Instagram (manually deleted by someone)
         $deletedComments = array_diff_key($oldCommentsArray, $liveCommentsArray);
         $commentIdsToDelete = array_values($deletedComments);
@@ -377,8 +427,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 'comment_id' => $commentIdsToDelete,
             ])->execute();
         }
-
-        return true;
     }
 
     /**
