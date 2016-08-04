@@ -353,7 +353,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $this->processCrawledComments($output['data'], $user, $media, $liveCommentsArray, $oldCommentsArray);
 
         // Soft delete comments available in our db but not available on Instagram
-        $this->processDeletedComments($oldCommentsArray, $liveCommentsArray);
+        $this->processDeletedComments($liveCommentsArray, $oldCommentsArray);
 
         return true;
     }
