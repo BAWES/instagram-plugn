@@ -160,7 +160,7 @@ $this->registerJs($liveChat);
 			}}
 			?>
 
-	        <li style='background-color:#EEE;'>
+	        <li <?= $this->context->action->id=="add-account"?" class='opened'":"" ?>>
 	            <a href="<?= Url::to(['dashboard/add-account']) ?>">
 	                <i class="icon fa fa-plus"></i>
 	                <span class="lbl">Add Instagram Account</span>
