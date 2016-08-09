@@ -116,11 +116,15 @@ $this->registerJs($liveChat);
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
                                 <?php /*
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-user"></span>Profile</a>
-                                <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-cog"></span>Settings</a>
+
                                 <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-question-sign"></span>Help</a>
-                                <div class="dropdown-divider"></div>
+
                                 */
                                 ?>
+								<a class="dropdown-item" href="<?= Url::to(['email/index']) ?>"><span class="font-icon glyphicon glyphicon-cog"></span>Email Notifications</a>
+
+								<div class="dropdown-divider"></div>
+
                                 <a class="dropdown-item" href="<?= Url::to(['site/logout']) ?>" data-method= 'post'>
                                     <span class="font-icon glyphicon glyphicon-log-out"></span>Logout
                                 </a>
