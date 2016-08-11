@@ -121,7 +121,8 @@ $this->registerJs($liveChat);
 
                                 */
                                 ?>
-								<a class="dropdown-item" href="<?= Url::to(['email/index']) ?>"><span class="font-icon glyphicon glyphicon-cog"></span>Email Notifications</a>
+								<a class="dropdown-item" href="<?= Url::to(['dashboard/activity']) ?>"><span class="font-icon font-icon-zigzag"></span>Your Activity</a>
+								<a class="dropdown-item" href="<?= Url::to(['email/index']) ?>"><span class="font-icon font-icon-mail"></span>Email Preferences</a>
 
 								<div class="dropdown-divider"></div>
 

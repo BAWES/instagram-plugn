@@ -162,7 +162,8 @@ class Agent extends ActiveRecord implements IdentityInterface
      */
     public function getActivities()
     {
-        return $this->hasMany(Activity::className(), ['agent_id' => 'agent_id']);
+        return $this->hasMany(Activity::className(), ['agent_id' => 'agent_id'])
+                    ->orderBy('activity_datetime DESC');
     }
 
     /**
