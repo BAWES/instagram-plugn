@@ -53,7 +53,8 @@ class DashboardController extends \yii\web\Controller {
      */
     public function actionActivity()
     {
-        $activities = Yii::$app->user->identity->activities;
+        //Get All Activities with the User that activity was made on
+        $activities = Yii::$app->user->identity->getActivities()->with('user')->all();
 
         return $this->render('activity',[
             'activities' => $activities,

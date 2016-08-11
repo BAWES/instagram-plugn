@@ -30,6 +30,7 @@ $(function() {
 		<thead>
 		<tr>
 			<th>When?</th>
+			<th>Where?</th>
 			<th>What?</th>
 		</tr>
 		</thead>
@@ -38,7 +39,12 @@ $(function() {
 	        <?php foreach($activities as $activity){ ?>
 	            <tr>
 	                <td><?= Yii::$app->formatter->asRelativeTime($activity->activity_datetime) ?></td>
-	                <td><?= $activity->activity_detail ?></td>
+					<td>
+						<a target='_blank' href='http://instagram.com/<?= $activity->user->user_name ?>'>
+							@<?= $activity->user->user_name ?>
+						</a>
+					</td>
+					<td><?= $activity->activity_detail ?></td>
 	            </tr>
 	        <?php } ?>
 		</tbody>
