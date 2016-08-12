@@ -123,7 +123,7 @@ $(document).ready(function(){
 
 	                                    <?= $comment['agent_name']?$comment['agent_name']:$comment['comment_by_fullname'] ?>
 	                                    <i>@<?= $comment['comment_by_username'] ?></i>
-										
+
 									</a>
 
                                 </div>
@@ -179,7 +179,7 @@ $(document).ready(function(){
                 ]) ?>
 
                 <?= Html::submitButton('Send', ['class' => 'btn btn-rounded float-left', 'name' => 'send-button']) ?>
-			</form>
+			
             <?php ActiveForm::end(); ?>
 		</div><!--.chat-area-bottom-->
     </section><!--.chat-area-->

@@ -9,6 +9,7 @@ use agent\models\CommentQueue;
 use agent\models\InstagramUser;
 use agent\models\Media;
 use agent\models\Activity;
+use common\models\Agent;
 use common\models\Comment;
 
 /**
@@ -41,8 +42,27 @@ class EmailController extends \yii\web\Controller {
      */
     public function actionIndex()
     {
+        $agentModel = Yii::$app->user->identity;
+
+        if(Yii::$app->request->post())
+        {
+            switch(Yii::$app->request->post('notif-preference'))
+            {
+                case Agent::PREF_EMAIL_DAILY:
+                    $agentModel->agent_email_preference = Agent::PREF_EMAIL_DAILY;
+                    $agentModel->save(false);
+                    break;
+                case Agent::PREF_EMAIL_OFF:
+                    $agentModel->agent_email_preference = Agent::PREF_EMAIL_OFF;
+                    $agentModel->save(false);
+                    break;
+            }
+
+            Yii::$app->session->setFlash('success', 'Your email preferences have been updated');
+        }
 
         return $this->render('index',[
+            'agentModel' => $agentModel
         ]);
     }
 
