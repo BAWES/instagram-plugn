@@ -85,8 +85,8 @@ $this->title = "Email Preferences";
 						<label for="check-det-6">
 						<span class="checkbox-detailed-tbl">
 							<span class="checkbox-detailed-cell">
-								<span class="checkbox-detailed-title">ALL DAY</span>
-								EVERY SINGLE HOUR
+								<span class="checkbox-detailed-title">All day</span>
+								Every hour
 							</span>
 						</span>
 						</label>
