@@ -22,6 +22,7 @@ use Yii;
  * @property integer $comment_deleted
  * @property integer $comment_deleted_by
  * @property string $comment_deleted_reason
+ * @property integer $comment_notification_email_sent
  * @property string $comment_datetime
  *
  * @property Agent $agent
@@ -39,6 +40,9 @@ class Comment extends \yii\db\ActiveRecord
 
     const HANDLED_TRUE = 1;
     const HANDLED_FALSE = 0;
+
+    const NOTIFICATION_EMAIL_SENT_TRUE = 1;
+    const NOTIFICATION_EMAIL_SENT_FALSE = 0;
 
     /**
      * @inheritdoc
