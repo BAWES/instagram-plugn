@@ -20,6 +20,7 @@ use yii\db\ActiveRecord;
  * @property string $agent_password_hash
  * @property string $agent_password_reset_token
  * @property integer $agent_status
+ * @property integer $agent_email_preference
  * @property string $agent_limit_email
  * @property string $agent_created_at
  * @property string $agent_updated_at
@@ -42,6 +43,10 @@ class Agent extends ActiveRecord implements IdentityInterface
     //Email verification values for `agent_email_verified`
     const EMAIL_VERIFIED = 1;
     const EMAIL_NOT_VERIFIED = 0;
+
+    //Email notification preference for `agent_email_preference`
+    const PREF_EMAIL_DAILY = 1;
+    const PREF_EMAIL_OFF = 0;
 
     /**
      * @inheritdoc
