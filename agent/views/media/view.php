@@ -181,7 +181,7 @@ $(document).ready(function(){
                 ]) ?>
 
                 <?= Html::submitButton('Send', ['class' => 'btn btn-rounded float-left', 'name' => 'send-button']) ?>
-			</form>
+			
             <?php ActiveForm::end(); ?>
 		</div><!--.chat-area-bottom-->
     </section><!--.chat-area-->
