@@ -44,7 +44,7 @@ $this->title = "Email Preferences";
 						<span class="checkbox-detailed-tbl">
 							<span class="checkbox-detailed-cell">
 								<span class="checkbox-detailed-title">Off</span>
-								Don't send me anything
+								Don't send me comment notifications
 							</span>
 						</span>
 						</label>
