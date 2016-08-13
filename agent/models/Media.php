@@ -21,7 +21,10 @@ class Media extends \common\models\Media {
     {
         Yii::$app->db->createCommand("
             UPDATE comment
-            SET comment_handled = ".Comment::HANDLED_TRUE.", comment_handled_by = ".Yii::$app->user->identity->agent_id."
+            SET
+                comment_handled = ".Comment::HANDLED_TRUE.",
+                comment_handled_by = ".Yii::$app->user->identity->agent_id.",
+                comment_notification_email_sent = ".Comment::NOTIFICATION_EMAIL_SENT_TRUE."
             WHERE
                 media_id=:mediaId
             AND
