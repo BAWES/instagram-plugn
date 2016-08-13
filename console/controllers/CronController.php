@@ -36,7 +36,7 @@ class CronController extends \yii\console\Controller {
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
 
-        InstagramUser::broadcastEmailNotifications();
+
     }
 
     /**
@@ -45,6 +45,9 @@ class CronController extends \yii\console\Controller {
     public function actionDaily() {
         //Update User data to keep track of follow/follower stats over time
         $this->instagram->updateUserData();
+
+        //Send email notifications to agents with account summaries
+        InstagramUser::broadcastEmailNotifications();
 
         return self::EXIT_CODE_NORMAL;
     }
