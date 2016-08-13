@@ -23,7 +23,10 @@ class InstagramUser extends \common\models\InstagramUser {
     {
         Yii::$app->db->createCommand("
             UPDATE comment
-            SET comment_handled = ".Comment::HANDLED_TRUE.", comment_handled_by = ".Yii::$app->user->identity->agent_id."
+            SET
+                comment_handled = ".Comment::HANDLED_TRUE.",
+                comment_handled_by = ".Yii::$app->user->identity->agent_id.",
+                comment_notification_email_sent = ".Comment::NOTIFICATION_EMAIL_SENT_TRUE."
             WHERE
                 ((user_id=:accountId AND comment_by_id=:commenterId)
                 OR (user_id=:accountId AND comment_text LIKE '%@".$commenterUsername."%'))

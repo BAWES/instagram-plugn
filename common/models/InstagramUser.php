@@ -298,7 +298,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      * summary of account activity
      */
     public function sendAgentsNotificationEmail(){
-        //Get comments on this account which haven't been send as notifications yet
+        //Get comments on this account which haven't been sent as notifications yet
         $comments = $this->getComments()->where([
             'comment_notification_email_sent' => Comment::NOTIFICATION_EMAIL_SENT_FALSE
             ])->orderBy('comment_datetime DESC')->asArray()->all();
