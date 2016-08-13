@@ -101,7 +101,7 @@ class InstagramAuthHandler
                         Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
 
                         //Log agent signup
-                        Yii::info("[New Instagram Signup @".$user->user_name."] ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+                        Yii::info("[New Instagram Signup @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
                     }
                 }
             }
