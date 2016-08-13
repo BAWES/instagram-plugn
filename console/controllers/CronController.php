@@ -5,6 +5,7 @@ namespace console\controllers;
 use Yii;
 use yii\helpers\Console;
 use yii\db\Expression;
+use common\models\InstagramUser;
 
 /**
  * All Cron actions related to this project
@@ -34,13 +35,15 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
+
+        InstagramUser::broadcastEmailNotifications();
     }
 
     /**
      * Method called once a day
      */
     public function actionDaily() {
-        //Update User data to keep track of follow/foller stats over time
+        //Update User data to keep track of follow/follower stats over time
         $this->instagram->updateUserData();
 
         return self::EXIT_CODE_NORMAL;

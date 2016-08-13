@@ -27,7 +27,8 @@ class DashboardController extends \yii\web\Controller {
     }
 
     /**
-     * Default Actions
+     * Default Action
+     * Either takes you to your top managed account or to the page to add account
      */
     public function actionIndex()
     {
@@ -45,6 +46,19 @@ class DashboardController extends \yii\web\Controller {
     public function actionAddAccount()
     {
         return $this->render('addAccount',[]);
+    }
+
+    /**
+     * Displays this accounts agent activity
+     */
+    public function actionActivity()
+    {
+        //Get All Activities with the User that activity was made on
+        $activities = Yii::$app->user->identity->getActivities()->with('user')->all();
+
+        return $this->render('activity',[
+            'activities' => $activities,
+        ]);
     }
 
 
