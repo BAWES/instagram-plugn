@@ -40,7 +40,7 @@ class CronController extends \yii\console\Controller {
      * Method called once a day
      */
     public function actionDaily() {
-        //Update User data to keep track of follow/foller stats over time
+        //Update User data to keep track of follow/follower stats over time
         $this->instagram->updateUserData();
 
         return self::EXIT_CODE_NORMAL;
