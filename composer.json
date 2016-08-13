@@ -1,8 +1,8 @@
 {
-    "name": "BAWES/plug.to",
+    "name": "BAWES/plugn",
     "description": "Never miss an Instagram Comment!",
     "keywords": ["instagram", "crm", "plug", "customer service"],
-    "homepage": "http://www.plug.to/",
+    "homepage": "http://www.plugn.io/",
     "type": "project",
     "minimum-stability": "stable",
     "require": {
