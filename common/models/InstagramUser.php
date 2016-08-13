@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 use yii\helpers\ArrayHelper;
+use common\models\Comment;
 
 /**
  * InstagramUser model
@@ -289,6 +290,72 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function incrementNumApiDeleteCallsThisHour(){
         $this->updateCounters(['user_api_delete_requests_this_hour' => 1]);
+    }
+
+    /**
+     * Send a notification email to all agents assigned to this account
+     * Notification email includes number of new comments along with a mini
+     * summary of account activity
+     */
+    public function sendAgentsNotificationEmail(){
+        //Get comments on this account which haven't been send as notifications yet
+        $comments = $this->getComments()->where([
+            'comment_notification_email_sent' => Comment::NOTIFICATION_EMAIL_SENT_FALSE
+            ])->orderBy('comment_datetime DESC')->asArray()->all();
+
+        $numComments = count($comments);
+        if($numComments > 0)
+        {
+            //Get Agents with Email Notifications Enabled
+            $agents = $this->getAgents()->where([
+                'agent_email_preference' => \common\models\Agent::PREF_EMAIL_DAILY,
+                'agent_status' => \common\models\Agent::STATUS_ACTIVE,
+            ])->asArray()->all();
+
+            $numAgents = count($agents);
+            if($numAgents > 0)
+            {
+                //Get Recent Account Activity
+                $activities = $this->getActivities()->with('agent')->limit(5)->asArray()->all();
+
+                $subject = Yii::t('frontend', 'You have {n,plural,=1{a new comment} other{# new comments}} on @{accountName}', ['n' => $numComments, 'accountName' => $this->user_name]);
+
+                //Send email to all these agents with summary
+                foreach($agents as $agent){
+                    Yii::$app->mailer->compose([
+                            'html' => 'frontend/agentNotification',
+                                ], [
+                            'accountName' => $this->user_name,
+                            'numComments' => $numComments,
+                            'comments' => $comments,
+                            'activities' => $activities
+                        ])
+                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                        ->setTo($agent['agent_email'])
+                        ->setSubject($subject)
+                        ->send();
+                }
+            }
+
+            //Mark all comments for this account as sent via email
+            Comment::updateAll([
+                'comment_notification_email_sent' => Comment::NOTIFICATION_EMAIL_SENT_TRUE
+            ],[
+                'user_id' => $this->user_id
+            ]);
+
+        }
+    }
+
+    /**
+     * Broadcast Email Notifications to agents of all Active Instagram Accounts
+     */
+    public static function broadcastEmailNotifications()
+    {
+        $activeAccounts = static::find()->active();
+        foreach($activeAccounts->each(50) as $account){
+            $account->sendAgentsNotificationEmail();
+        }
     }
 
     /**

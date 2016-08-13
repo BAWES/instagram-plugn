@@ -5,6 +5,7 @@ namespace console\controllers;
 use Yii;
 use yii\helpers\Console;
 use yii\db\Expression;
+use common\models\InstagramUser;
 
 /**
  * All Cron actions related to this project
@@ -34,6 +35,8 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
+
+        InstagramUser::broadcastEmailNotifications();
     }
 
     /**
