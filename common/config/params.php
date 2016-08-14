@@ -1,7 +1,7 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
+    'adminEmail' => 'hello@plugn.io',
+    'supportEmail' => 'hello@plugn.io',
     'instagram.numberOfPastPostsToCrawl' => 20,
     'instagram.endpointHourlyRateLimit' => 60, //30 per hour for sandbox, 60 per hour for live
     'user.passwordResetTokenExpire' => 3600,
