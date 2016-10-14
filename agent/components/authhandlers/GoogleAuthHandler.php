@@ -15,6 +15,7 @@ class GoogleAuthHandler
 {
     /**
      * Specify the target environment so specify how to handle login (mobile/etc.)
+     * @var string
      */
     private $targetEnvironment;
 
