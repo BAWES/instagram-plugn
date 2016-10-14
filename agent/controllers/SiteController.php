@@ -85,6 +85,12 @@ class SiteController extends Controller
             //Handle Slack Authentication
             (new SlackAuthHandler($client, "mobile"))->handle();
         }
+
+        /**
+         * Send Oauth Response to Mobile for handling
+         */
+        Yii::$app->response->content = "<b>Response</b> token/errors/messages will be embedded here";
+        return Yii::$app->response;
     }
 
     /**
