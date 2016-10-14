@@ -73,20 +73,18 @@ class SlackAuthHandler
                             $transaction->commit();
                             Yii::$app->user->login($existingAgent, Yii::$app->params['user.rememberMeDuration']);
                         } else {
-                            Yii::$app->getSession()->setFlash('error', [
-                                Yii::t('app', 'Unable to save {client} account: {errors}', [
+                            $msg = Yii::t('app', 'Unable to save {client} account: {errors}', [
                                     'client' => $this->client->getTitle(),
                                     'errors' => json_encode($auth->getErrors()),
-                                ]),
-                            ]);
+                                ]);
+                            $this->displayError($msg);
                         }
                     } else {
-                        Yii::$app->getSession()->setFlash('error', [
-                            Yii::t('app', 'Unable to save agent: {errors}', [
+                        $msg = Yii::t('app', 'Unable to save agent: {errors}', [
                                 'client' => $this->client->getTitle(),
                                 'errors' => json_encode($existingAgent->getErrors()),
-                            ]),
-                        ]);
+                            ]);
+                        $this->displayError($msg);
                     }
 
                 } else {
@@ -116,20 +114,18 @@ class SlackAuthHandler
                             //Log agent signup
                             Yii::info("[New Agent Signup SlackAuth] ".$agent->agent_email, __METHOD__);
                         } else {
-                            Yii::$app->getSession()->setFlash('error', [
-                                Yii::t('app', 'Unable to save {client} account: {errors}', [
+                            $msg = Yii::t('app', 'Unable to save {client} account: {errors}', [
                                     'client' => $this->client->getTitle(),
                                     'errors' => json_encode($auth->getErrors()),
-                                ]),
-                            ]);
+                                ]);
+                            $this->displayError($msg);
                         }
                     } else {
-                        Yii::$app->getSession()->setFlash('error', [
-                            Yii::t('app', 'Unable to save agent: {errors}', [
+                        $msg = Yii::t('app', 'Unable to save agent: {errors}', [
                                 'client' => $this->client->getTitle(),
                                 'errors' => json_encode($agent->getErrors()),
-                            ]),
-                        ]);
+                            ]);
+                        $this->displayError($msg);
                     }
                 }
             }
@@ -150,21 +146,29 @@ class SlackAuthHandler
                         ]),
                     ]);
                 } else {
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', 'Unable to link {client} account: {errors}', [
+                    $msg = Yii::t('app', 'Unable to link {client} account: {errors}', [
                             'client' => $this->client->getTitle(),
                             'errors' => json_encode($auth->getErrors()),
-                        ]),
-                    ]);
+                        ]);
+                    $this->displayError($msg);
                 }
             } else { // there's existing auth
-                Yii::$app->getSession()->setFlash('error', [
-                    Yii::t('app',
+                $msg = Yii::t('app',
                         'Unable to link {client} account. There is another agent using it.',
-                        ['client' => $this->client->getTitle()]),
-                ]);
+                        ['client' => $this->client->getTitle()]);
+                $this->displayError($msg);
             }
         }
+    }
+
+    /**
+     * Displays error to user depending on target environment
+     * @param  string $message the message that will be added as error
+     */
+    private function displayError($message){
+        Yii::$app->getSession()->setFlash('error', [
+            $message
+        ]);
     }
 
 }
