@@ -14,13 +14,20 @@ use yii\db\Expression;
 class LiveAuthHandler
 {
     /**
+     * Specify the target environment so specify how to handle login (mobile/etc.)
+     */
+    private $targetEnvironment;
+
+    /**
      * @var ClientInterface
      */
     private $client;
 
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, $targetEnv = "browser")
     {
         $this->client = $client;
+
+        $this->targetEnvironment = $targetEnv;
     }
 
     public function handle()

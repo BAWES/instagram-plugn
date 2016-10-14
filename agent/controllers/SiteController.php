@@ -69,22 +69,27 @@ class SiteController extends Controller
         ];
     }
 
+    /**
+     *  Handle successful authentication on Mobile.
+     *  Should return the access token for further requests
+     */
     public function onAuthMobileSuccess($client)
     {
         if($client instanceof yii\authclient\clients\Live){
             //Handle Microsoft Live Authentication
-            (new LiveAuthHandler($client))->handle();
+            (new LiveAuthHandler($client, "mobile"))->handle();
         }elseif($client instanceof yii\authclient\clients\GoogleOAuth){
             //Handle Google Authentication
-            (new GoogleAuthHandler($client))->handle();
+            (new GoogleAuthHandler($client, "mobile"))->handle();
         }elseif($client instanceof \agent\components\SlackAuthClient){
             //Handle Slack Authentication
-            //die(print_r($client,true));
-
-            (new SlackAuthHandler($client))->handle();
+            (new SlackAuthHandler($client, "mobile"))->handle();
         }
     }
 
+    /**
+     *  Handle successful authentication on Desktop
+     */
     public function onAuthSuccess($client)
     {
         if($client instanceof yii\authclient\clients\Live){
@@ -95,8 +100,6 @@ class SiteController extends Controller
             (new GoogleAuthHandler($client))->handle();
         }elseif($client instanceof \agent\components\SlackAuthClient){
             //Handle Slack Authentication
-            //die(print_r($client,true));
-
             (new SlackAuthHandler($client))->handle();
         }
     }
