@@ -8,6 +8,7 @@ return [
                 '/' => 'site/index',
                 'login' => 'site/login',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
+                'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
             ],
         ],
         'urlManagerFrontend' => [

@@ -59,10 +59,30 @@ class SiteController extends Controller
                 'class' => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
             ],
+            'authmobile' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthMobileSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
+    }
+
+    public function onAuthMobileSuccess($client)
+    {
+        if($client instanceof yii\authclient\clients\Live){
+            //Handle Microsoft Live Authentication
+            (new LiveAuthHandler($client))->handle();
+        }elseif($client instanceof yii\authclient\clients\GoogleOAuth){
+            //Handle Google Authentication
+            (new GoogleAuthHandler($client))->handle();
+        }elseif($client instanceof \agent\components\SlackAuthClient){
+            //Handle Slack Authentication
+            //die(print_r($client,true));
+
+            (new SlackAuthHandler($client))->handle();
+        }
     }
 
     public function onAuthSuccess($client)
