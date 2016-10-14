@@ -86,10 +86,18 @@ class SiteController extends Controller
             (new SlackAuthHandler($client, "mobile"))->handle();
         }
 
+        $response = "";
+        if(!Yii::$app->user->isGuest){
+            $response = Yii::$app->user->identity->agent_name." has logged in";
+            //TODO - Method in agent model that gives you his access token or generates one if none
+
+
+        }else $response = "Error during login, please contact us for assistance";
+
         /**
          * Send Oauth Response to Mobile for handling
          */
-        Yii::$app->response->content = "<b>Response</b> token/errors/messages will be embedded here";
+        Yii::$app->response->content = "<b>Response</b> token/errors/messages will be embedded here - $response";
         return Yii::$app->response;
     }
 
