@@ -88,27 +88,21 @@ class SiteController extends Controller
 
         $response = "";
         if(!Yii::$app->user->isGuest){
-            $response = "
-            <script>
-            var evObj = document.createEvent('HTMLEvents');
-            evObj.response = 'Success logged in user: ".Yii::$app->user->identity->agent_name."';
-
-            evObj.initEvent('eventResponse', true, true); //need to listen to this
-            window.dispatchEvent(evObj);
-            </script>
-            Successfully logged in ".Yii::$app->user->identity->agent_name;
-            
-            //window.addEventListener('test', function(e){ alert(e === evObj); },true);
-
+            $response = "Success logged in user: ".Yii::$app->user->identity->agent_name;
             //TODO - Method in agent model that gives you his access token or generates one if none
 
-
         }else $response = "Error during login, please contact us for assistance";
+
+        $response = "
+        <script>
+        var resp = '".$response."';
+        localStorage.setItem('response', resp );
+        </script>";
 
         /**
          * Send Oauth Response to Mobile for handling
          */
-        Yii::$app->response->content = "<b>Response</b> token/errors/messages will be embedded here - $response";
+        Yii::$app->response->content = $response;
         return Yii::$app->response;
     }
 
