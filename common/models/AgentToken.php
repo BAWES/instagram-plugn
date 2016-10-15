@@ -79,6 +79,17 @@ class AgentToken extends \yii\db\ActiveRecord
     }
 
     /**
+     * Generates unique access token to be used as value
+     * @return string
+     */
+    public static function generateUniqueTokenString(){
+        $randomString = Yii::$app->getSecurity()->generateRandomString();
+        if(!static::findOne(['token_value' => $randomString ])){
+            return $randomString;
+        }else return static::generateUniqueTokenString();
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getAgent()

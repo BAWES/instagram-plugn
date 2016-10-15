@@ -372,4 +372,16 @@ class Agent extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken() {
         $this->agent_password_reset_token = null;
     }
+
+    /**
+     * Create New Access Token Record for this Agent
+     * Token is Inactive until activated by our app by providing additional info regarding who's using it
+     */
+    public function generateAccessToken(){
+        $token = new AgentToken();
+        $token->agent_id = $this->agent_id;
+        $token->token_value = AgentToken::generateUniqueTokenString();
+        $token->token_status = AgentToken::STATUS_INACTIVE;
+        $token->save(false);
+    }
 }
