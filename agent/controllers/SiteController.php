@@ -93,7 +93,13 @@ class SiteController extends Controller
 
         }else $response = "Error during login, please contact us for assistance";
 
-        $response = "<input id='response' type='hidden' value='$response'/>";
+        $response = "
+        <script>
+        var resp = '".$response."';
+        localStorage.setItem('response', resp );
+        </script>";
+
+        //$response = "<input id='response' type='hidden' value='$response'/>";
 
         /**
          * Send Oauth Response to Mobile for handling
