@@ -88,7 +88,18 @@ class SiteController extends Controller
 
         $response = "";
         if(!Yii::$app->user->isGuest){
-            $response = Yii::$app->user->identity->agent_name." has logged in";
+            $response = "
+            <script>
+            var evObj = document.createEvent('HTMLEvents');
+            evObj.response = 'Success logged in user: ".Yii::$app->user->identity->agent_name."';
+
+            evObj.initEvent('eventResponse', true, true); //need to listen to this
+            window.dispatchEvent(evObj);
+            </script>
+            Successfully logged in ".Yii::$app->user->identity->agent_name;
+            
+            //window.addEventListener('test', function(e){ alert(e === evObj); },true);
+
             //TODO - Method in agent model that gives you his access token or generates one if none
 
 
