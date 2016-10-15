@@ -29,6 +29,7 @@ use yii\db\ActiveRecord;
  * @property InstagramUser[] $accountsManaged
  * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
+ * @property AgentToken[] $accessTokens
  * @property Comment[] $comments
  * @property Comment[] $handledComments
  * @property Comment[] $deletedComments
@@ -153,7 +154,16 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * All Auth records made for this agent
+     * Access tokens used to login on devices
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessTokens()
+    {
+        return $this->hasMany(AgentToken::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * All Auth records made for this agent (eg: Oauth2 Google/live/Slack etc)
      * @return \yii\db\ActiveQuery
      */
     public function getAgentAuths()
