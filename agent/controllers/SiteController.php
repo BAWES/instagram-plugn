@@ -71,7 +71,9 @@ class SiteController extends Controller
 
     /**
      *  Handle successful authentication on Mobile.
-     *  Should return the access token for further requests
+     *  Should return a temporary invalid access token on success
+     *
+     *  Invalid access tokens need to be exchanged for valid ones once device details are provided
      */
     public function onAuthMobileSuccess($client)
     {
@@ -88,9 +90,8 @@ class SiteController extends Controller
 
         $response = "";
         if(!Yii::$app->user->isGuest){
-            $response = "Success logged in user: ".Yii::$app->user->identity->agent_name;
-            //TODO - Method in agent model that gives you his access token or generates one if none
-
+            // Generate the temporary token to return to app
+            $response = Yii::$app->user->identity->generateInactiveAccessToken();
         }else $response = "Error during login, please contact us for assistance";
 
         $response = "
@@ -99,7 +100,6 @@ class SiteController extends Controller
         localStorage.setItem('response', resp );
         </script>";
 
-        //$response = "<input id='response' type='hidden' value='$response'/>";
 
         /**
          * Send Oauth Response to Mobile for handling
