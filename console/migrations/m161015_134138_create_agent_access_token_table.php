@@ -22,8 +22,8 @@ class m161015_134138_create_agent_access_token_table extends Migration
             'token_device' => $this->string(),
             'token_device_id' => $this->string(),
             'token_status' => $this->smallInteger()->notNull(),
-            'token_last_used_datetime' => $this->datetime()->notNull(),
-            'token_expiry_datetime' => $this->datetime()->notNull(),
+            'token_last_used_datetime' => $this->datetime(),
+            'token_expiry_datetime' => $this->datetime(),
             'token_created_datetime' => $this->datetime()->notNull(),
         ]);
 
