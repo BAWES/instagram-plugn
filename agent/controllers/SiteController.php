@@ -91,7 +91,7 @@ class SiteController extends Controller
         $response = "";
         if(!Yii::$app->user->isGuest){
             // Generate the temporary token to return to app
-            $response = Yii::$app->user->identity->generateInactiveAccessToken();
+            $response = Yii::$app->user->identity->generateInactiveAccessToken()->token_value;
         }else $response = "Error during login, please contact us for assistance";
 
         $response = "
