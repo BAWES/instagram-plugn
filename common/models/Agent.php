@@ -374,18 +374,15 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Create an Inactive Access Token Record for this Agent
+     * Create an Access Token Record for this Agent
      * if the agent already has one, it will return it instead
-     *
-     * Token is Inactive until activated by our app by providing additional info
-     * regarding who's using it
      * @return \common\models\AgentToken
      */
-    public function generateInactiveAccessToken(){
+    public function provideAccessToken(){
         // Return existing inactive token if found
         $token = AgentToken::findOne([
             'agent_id' => $this->agent_id,
-            'token_status' => AgentToken::STATUS_INACTIVE
+            'token_status' => AgentToken::STATUS_ACTIVE
         ]);
         if($token){
             return $token;
@@ -395,7 +392,7 @@ class Agent extends ActiveRecord implements IdentityInterface
         $token = new AgentToken();
         $token->agent_id = $this->agent_id;
         $token->token_value = AgentToken::generateUniqueTokenString();
-        $token->token_status = AgentToken::STATUS_INACTIVE;
+        $token->token_status = AgentToken::STATUS_ACTIVE;
         $token->save(false);
 
         return $token;
