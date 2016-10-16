@@ -128,35 +128,6 @@ class GoogleAuthHandler
                     }
                 }
             }
-        } else { // agent already logged in
-            if (!$auth) { // add auth provider
-                $auth = new AgentAuth([
-                    'agent_id' => Yii::$app->user->id,
-                    'source' => $this->client->getId(),
-                    'source_id' => (string)$attributes['id'],
-                ]);
-                if ($auth->save()) {
-                    /** @var Agent $agent */
-                    $agent = $auth->agent;
-
-                    Yii::$app->getSession()->setFlash('success', [
-                        Yii::t('app', 'Linked {client} account.', [
-                            'client' => $this->client->getTitle()
-                        ]),
-                    ]);
-                } else {
-                    $msg = Yii::t('app', 'Unable to link {client} account: {errors}', [
-                            'client' => $this->client->getTitle(),
-                            'errors' => json_encode($auth->getErrors()),
-                        ]);
-                    $this->displayError($msg);
-                }
-            } else { // there's existing auth
-                $msg = Yii::t('app',
-                        'Unable to link {client} account. There is another agent using it.',
-                        ['client' => $this->client->getTitle()]);
-                $this->displayError($msg);
-            }
         }
     }
 
