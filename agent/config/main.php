@@ -10,13 +10,18 @@ return [
     'id' => 'app-agent',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'agent\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'v1'],
     'modules' => [
         'v1' => [
             'class' => 'agent\api\v1\Module',
         ],
     ],
     'components' => [
+        'request' => [
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
+        ],
         'user' => [
             'identityClass' => 'common\models\Agent',
             'enableAutoLogin' => true,
