@@ -29,6 +29,7 @@ use yii\db\ActiveRecord;
  * @property InstagramUser[] $accountsManaged
  * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
+ * @property AgentToken[] $accessTokens
  * @property Comment[] $comments
  * @property Comment[] $handledComments
  * @property Comment[] $deletedComments
@@ -153,7 +154,16 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * All Auth records made for this agent
+     * Access tokens used to login on devices
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessTokens()
+    {
+        return $this->hasMany(AgentToken::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * All Auth records made for this agent (eg: Oauth2 Google/live/Slack etc)
      * @return \yii\db\ActiveQuery
      */
     public function getAgentAuths()
@@ -257,7 +267,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return AgentToken::find()->where(['token_value' => $token])->with('agent')->one()->agent;
     }
 
     /**
@@ -361,5 +371,30 @@ class Agent extends ActiveRecord implements IdentityInterface
      */
     public function removePasswordResetToken() {
         $this->agent_password_reset_token = null;
+    }
+
+    /**
+     * Create an Access Token Record for this Agent
+     * if the agent already has one, it will return it instead
+     * @return \common\models\AgentToken
+     */
+    public function getAccessToken(){
+        // Return existing inactive token if found
+        $token = AgentToken::findOne([
+            'agent_id' => $this->agent_id,
+            'token_status' => AgentToken::STATUS_ACTIVE
+        ]);
+        if($token){
+            return $token;
+        }
+
+        // Create new inactive token
+        $token = new AgentToken();
+        $token->agent_id = $this->agent_id;
+        $token->token_value = AgentToken::generateUniqueTokenString();
+        $token->token_status = AgentToken::STATUS_ACTIVE;
+        $token->save(false);
+
+        return $token;
     }
 }

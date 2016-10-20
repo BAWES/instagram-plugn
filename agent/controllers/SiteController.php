@@ -59,12 +59,58 @@ class SiteController extends Controller
                 'class' => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
             ],
+            'authmobile' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthMobileSuccess'],
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
         ];
     }
 
+    /**
+     *  Handle successful authentication on Mobile.
+     *  Should return a temporary invalid access token on success
+     *
+     *  Invalid access tokens need to be exchanged for valid ones once device details are provided
+     */
+    public function onAuthMobileSuccess($client)
+    {
+        if($client instanceof yii\authclient\clients\Live){
+            //Handle Microsoft Live Authentication
+            (new LiveAuthHandler($client, "mobile"))->handle();
+        }elseif($client instanceof yii\authclient\clients\GoogleOAuth){
+            //Handle Google Authentication
+            (new GoogleAuthHandler($client, "mobile"))->handle();
+        }elseif($client instanceof \agent\components\SlackAuthClient){
+            //Handle Slack Authentication
+            (new SlackAuthHandler($client, "mobile"))->handle();
+        }
+
+        $response = "";
+        if(!Yii::$app->user->isGuest){
+            // Send a token back to app which will be used in future requests
+            $response = Yii::$app->user->identity->getAccessToken()->token_value;
+        }else $response = "Error during login, please contact us for assistance";
+
+        $response = "
+        <script>
+        var resp = '".$response."';
+        localStorage.setItem('response', resp );
+        </script>";
+
+
+        /**
+         * Send Oauth Response to Mobile for handling
+         */
+        Yii::$app->response->content = $response;
+        return Yii::$app->response;
+    }
+
+    /**
+     *  Handle successful authentication on Desktop
+     */
     public function onAuthSuccess($client)
     {
         if($client instanceof yii\authclient\clients\Live){
@@ -75,8 +121,6 @@ class SiteController extends Controller
             (new GoogleAuthHandler($client))->handle();
         }elseif($client instanceof \agent\components\SlackAuthClient){
             //Handle Slack Authentication
-            //die(print_r($client,true));
-
             (new SlackAuthHandler($client))->handle();
         }
     }
