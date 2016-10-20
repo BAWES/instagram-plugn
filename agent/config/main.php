@@ -10,7 +10,7 @@ return [
     'id' => 'app-agent',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'agent\controllers',
-    'bootstrap' => ['log', 'v1'],
+    'bootstrap' => ['log'],
     'modules' => [
         'v1' => [
             'class' => 'agent\api\v1\Module',

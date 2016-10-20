@@ -24,6 +24,11 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
         // will NOT be persisted across requests using sessions
         \Yii::$app->user->enableSession = false;
         \Yii::$app->user->loginUrl = null;
+
+        \Yii::$app->getUrlManager()->addRules([
+            // rule declarations here
+            'v1/authorize/<authclient:(google|live|slack)>' => 'v1/authorize/auth',
+        ], false); //false to overwrite url rules, true to append to existing rules
     }
 
     /**
@@ -34,6 +39,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
     {
         $app->getUrlManager()->addRules([
             // rule declarations here
+            'v1/authorize/<authclient:(google|live|slack)>' => 'v1/authorize/auth',
         ], false); //false to overwrite url rules, true to append to existing rules
     }
 

@@ -19,8 +19,12 @@ class AuthController extends Controller
         // Basic Auth accepts Base64 encoded username/password and decodes it for you
         $behaviors['basicAuth'] = [
             'class' => HttpBasicAuth::className(),
-            'auth' => function ($username, $password) {
-                die("$username - $password");
+            'auth' => function ($email, $password) {
+                die("$email - $password");
+                $model = new \agent\models\LoginForm();
+                $model->email = $email;
+                $model->password = $password;
+
                 // $user = User::find()->where(['username' => $username])->one();
                 // if ($user->verifyPassword($password)) {
                 //     return $user;
