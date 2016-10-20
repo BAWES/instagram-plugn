@@ -267,7 +267,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return AgentToken::find()->where(['token_value' => $token])->with('agent')->one()->agent;
     }
 
     /**
@@ -378,7 +378,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      * if the agent already has one, it will return it instead
      * @return \common\models\AgentToken
      */
-    public function provideAccessToken(){
+    public function getAccessToken(){
         // Return existing inactive token if found
         $token = AgentToken::findOne([
             'agent_id' => $this->agent_id,

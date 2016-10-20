@@ -19,9 +19,11 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
     {
         parent::init();
 
-        // initialize the module with the configuration loaded from config.php
-        \Yii::configure($this, require(__DIR__ . '/config.php'));
-
+        // Disable session and login url
+        // so the api is stateless and user authentication status
+        // will NOT be persisted across requests using sessions
+        \Yii::$app->user->enableSession = false;
+        \Yii::$app->user->loginUrl = null;
     }
 
     /**
@@ -32,7 +34,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
     {
         $app->getUrlManager()->addRules([
             // rule declarations here
-        ], false); //false to overwrite, true to append
+        ], false); //false to overwrite url rules, true to append to existing rules
     }
 
 }
