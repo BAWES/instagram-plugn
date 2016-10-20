@@ -1,6 +1,6 @@
 <?php
 
-namespace agent\api\v1\controllers;
+namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;

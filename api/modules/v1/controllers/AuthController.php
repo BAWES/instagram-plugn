@@ -1,10 +1,12 @@
 <?php
 
-namespace agent\api\v1\controllers;
+namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
 use yii\filters\auth\HttpBasicAuth;
+
+use common\models\Agent;
 
 /**
  * Auth controller provides the initial access token that is required for further requests
@@ -25,10 +27,15 @@ class AuthController extends Controller
                 $model->email = $email;
                 $model->password = $password;
 
-                // $user = User::find()->where(['username' => $username])->one();
-                // if ($user->verifyPassword($password)) {
-                //     return $user;
-                // }
+                $agent = Agent::findByEmail($this->email);
+                if ($agent && $agent->validatePassword($password)) {
+                    // Email and password are correct, check if his email has been verified
+                    // If agent email has been verified, then allow him to log in
+                    if($agent->agent_email_verified == Agent::EMAIL_VERIFIED){
+                        return $agent;
+                    }else die("Agent email not verified");
+                }
+
                 return null;
             },
         ];

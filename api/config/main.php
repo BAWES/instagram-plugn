@@ -17,9 +17,17 @@ return [
         ],
     ],
     'components' => [
+        'request' => [
+            // Accept and parse JSON Requests
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
+        ],
         'user' => [
             'identityClass' => 'common\models\Agent',
             'enableAutoLogin' => false,
+            'enableSession' => false,
+            'loginUrl' => null
         ],
         'accountManager' => [ //Component for agent to manage Instagram Accounts
             'class' => 'agent\components\AccountManager',
@@ -49,14 +57,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '/' => 'site/index',
-                'login' => 'site/login',
-                'auth/<authclient:(google|live|slack)>' => 'site/auth',
-                'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
+                // Rules here
             ],
-        ],
-        'session' => [
-            'name' => 'app-api',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -66,9 +68,6 @@ return [
                     'levels' => ['error', 'warning'],
                 ],
             ],
-        ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
         ],
     ],
     'params' => $params,
