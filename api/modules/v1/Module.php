@@ -18,6 +18,7 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
+        die("module works");
 
         //Can Initialize / add params to this module here
     }
