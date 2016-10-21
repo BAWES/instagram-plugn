@@ -83,7 +83,7 @@ class AccountManager extends Object
 
         // Assign the output to each cached Instagram_User model
         foreach($unhandledTotalQuery as $unhandledSummary){
-            $accounts[$unhandledSummary['user_id']]->unhandledCount = $unhandledSummary['totalUnhandled'];
+            $accounts[$unhandledSummary['user_id']]->unhandledCount = (int) $unhandledSummary['totalUnhandled'];
         }
     }
 
