@@ -25,6 +25,6 @@ class MainController extends Controller
      */
     public function actionIndex()
     {
-
+        return ["Agent Logged in" => Yii::$app->user->identity->agent_name];
     }
 }
