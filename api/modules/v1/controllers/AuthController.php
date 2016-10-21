@@ -46,10 +46,10 @@ class AuthController extends Controller
         // Email and password are correct, check if his email has been verified
         // If agent email has been verified, then allow him to log in
         if($agent->agent_email_verified != Agent::EMAIL_VERIFIED){
-            $resendLink = \yii\helpers\Url::to(["site/resend-verification",
+            $resendLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(["site/resend-verification",
                 'id' => $agent->agent_id,
                 'email' => $agent->agent_email,
-            ]);
+            ], true);
 
             return [
                 "error" => "Please click the verification link sent to you by email to activate your account",
