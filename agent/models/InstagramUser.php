@@ -15,6 +15,29 @@ class InstagramUser extends \common\models\InstagramUser {
     public $unhandledCount = 0;
 
     /**
+     * @inheritdoc
+     */
+    public function fields()
+    {
+        // Whitelisted fields to return
+        return [
+            'user_id',
+            'user_name',
+            'user_fullname',
+            'user_profile_pic',
+            'user_bio',
+            'user_website',
+            'user_media_count',
+            'user_following_count',
+            'user_follower_count',
+            'unhandledCount'
+            // 'name' => function ($model) {
+            //     return $model->first_name . ' ' . $model->last_name;
+            // },
+        ];
+    }
+
+    /**
      * Mark comments provided as handled by this agent
      * @param array $comments list of comment Ids
      * @return boolean

@@ -21,10 +21,12 @@ class MainController extends Controller
     }
 
     /**
-     * Sample action
+     * Return a List of Accounts Managed by User
      */
-    public function actionIndex()
+    public function actionManagedAccounts()
     {
-        return ["Agent Logged in" => Yii::$app->user->identity->agent_name];
+        $managedAccounts = Yii::$app->accountManager->managedAccounts;
+
+        return $managedAccounts;
     }
 }
