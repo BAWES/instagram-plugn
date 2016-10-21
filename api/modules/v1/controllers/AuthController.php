@@ -22,18 +22,9 @@ class AuthController extends Controller
         $behaviors['basicAuth'] = [
             'class' => HttpBasicAuth::className(),
             'auth' => function ($email, $password) {
-                die("$email - $password");
-                $model = new \agent\models\LoginForm();
-                $model->email = $email;
-                $model->password = $password;
-
-                $agent = Agent::findByEmail($this->email);
+                $agent = Agent::findByEmail($email);
                 if ($agent && $agent->validatePassword($password)) {
-                    // Email and password are correct, check if his email has been verified
-                    // If agent email has been verified, then allow him to log in
-                    if($agent->agent_email_verified == Agent::EMAIL_VERIFIED){
-                        return $agent;
-                    }else die("Agent email not verified");
+                    return $agent;
                 }
 
                 return null;
@@ -43,12 +34,31 @@ class AuthController extends Controller
     }
 
     /**
+     * Perform validation on the agent account (check if he's allowed login to platform)
+     * If everything is alright,
      * Returns the BEARER access token required for futher requests to the API
-     * @return string
+     * @return array
      */
-    public function actionIndex()
+    public function actionLogin()
     {
-        $accessToken = Yii::$app->user->identity->accessToken->token_value;
-        return $accessToken;
+        $agent = Yii::$app->user->identity;
+
+        // Email and password are correct, check if his email has been verified
+        // If agent email has been verified, then allow him to log in
+        if($agent->agent_email_verified != Agent::EMAIL_VERIFIED){
+            $resendLink = \yii\helpers\Url::to(["site/resend-verification",
+                'id' => $agent->agent_id,
+                'email' => $agent->agent_email,
+            ]);
+
+            return [
+                "error" => "Please click the verification link sent to you by email to activate your account",
+                "resendVerifLink" => $resendLink
+            ];
+        }
+
+        // Return agent access token if everything valid
+        $accessToken = $agent->accessToken->token_value;
+        return ["token" => $accessToken];
     }
 }
