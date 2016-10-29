@@ -25,7 +25,7 @@ class AuthController extends Controller
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::className(),
             'cors' => [
-                'Origin' => ['*'],//Yii::$app->params['allowedOrigins'],
+                'Origin' => Yii::$app->params['allowedOrigins'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => null,
@@ -37,6 +37,7 @@ class AuthController extends Controller
         // Basic Auth accepts Base64 encoded username/password and decodes it for you
         $behaviors['authenticator'] = [
             'class' => HttpBasicAuth::className(),
+            'except' => ['options'],
             'auth' => function ($email, $password) {
                 $agent = Agent::findByEmail($email);
                 if ($agent && $agent->validatePassword($password)) {
@@ -46,8 +47,28 @@ class AuthController extends Controller
                 return null;
             }
         ];
+        // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+        $behaviors['authenticator']['except'] = ['options'];
 
         return $behaviors;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        $actions = parent::actions();
+
+        // Return Header explaining what options are available for next request
+        $actions['options'] = [
+            'class' => 'yii\rest\OptionsAction',
+            // optional:
+            'collectionOptions' => ['GET', 'POST', 'HEAD', 'OPTIONS'],
+            'resourceOptions' => ['GET', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+        ];
+        return $actions;
     }
 
 
