@@ -48,7 +48,8 @@ class AuthController extends Controller
             }
         ];
         // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
-        $behaviors['authenticator']['except'] = ['options'];
+        // also avoid for public actions like registration and password reset
+        $behaviors['authenticator']['except'] = ['options', 'create-account', 'request-reset-password'];
 
         return $behaviors;
     }
@@ -99,5 +100,29 @@ class AuthController extends Controller
         // Return agent access token if everything valid
         $accessToken = $agent->accessToken->token_value;
         return ["token" => $accessToken];
+    }
+
+    /**
+     * Creates new agent account manually
+     * @return array
+     */
+    public function actionCreateAccount()
+    {
+        $fullname = Yii::$app->request->post("fullname");
+        $email = Yii::$app->request->post("email");
+        $password = Yii::$app->request->post("password");
+
+        return ["value returned" => Yii::$app->request->post()];
+    }
+
+    /**
+     * Sends password reset email to user
+     * @return array
+     */
+    public function actionRequestResetPassword()
+    {
+        $email = Yii::$app->request->post("email");
+
+        return ["value returned" => Yii::$app->request->post()];
     }
 }

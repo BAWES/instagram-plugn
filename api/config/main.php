@@ -43,6 +43,8 @@ return [
                     'pluralize' => false,
                     'patterns' => [
                         'GET login' => 'login',
+                        'POST request-reset-password' => 'request-reset-password',
+                        'POST create-account' => 'create-account',
                         // OPTIONS VERBS
                         'OPTIONS login' => 'options',
                     ]
