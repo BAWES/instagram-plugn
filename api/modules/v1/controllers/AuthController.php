@@ -108,9 +108,9 @@ class AuthController extends Controller
      */
     public function actionCreateAccount()
     {
-        $fullname = Yii::$app->request->post("fullname");
-        $email = Yii::$app->request->post("email");
-        $password = Yii::$app->request->post("password");
+        $fullname = Yii::$app->request->getBodyParam("fullname");
+        $email = Yii::$app->request->getBodyParam("email");
+        $password = Yii::$app->request->getBodyParam("password");
 
         return ["value returned" => Yii::$app->request->post()];
     }
@@ -121,8 +121,55 @@ class AuthController extends Controller
      */
     public function actionRequestResetPassword()
     {
-        $email = Yii::$app->request->getBodyParam("email");
+        $emailInput = Yii::$app->request->getBodyParam("email");
 
-        return ["value returned" => $email];
+        $model = new \agent\models\PasswordResetRequestForm();
+        $model->email = $emailInput;
+
+        $errors = false;
+
+        if ($model->validate()){
+
+            $agent = Agent::findOne([
+                'agent_email' => $model->email,
+            ]);
+
+            if ($agent) {
+                //Check if this user sent an email in past few minutes (to limit email spam)
+                $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
+                date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
+                $currentDatetime = new \DateTime();
+
+                if ($currentDatetime < $emailLimitDatetime) {
+                    $difference = $currentDatetime->diff($emailLimitDatetime);
+                    $minuteDifference = (int) $difference->i;
+                    $secondDifference = (int) $difference->s;
+
+                    $errors = Yii::t('app', "Email was sent previously, you may request another one in {numMinutes, number} minutes and {numSeconds, number} seconds", [
+                                'numMinutes' => $minuteDifference,
+                                'numSeconds' => $secondDifference,
+                    ]);
+
+                    Yii::$app->getSession()->setFlash('warning', $warningMessage);
+                } else if ($model->sendEmail($agent)) {
+                    $successMessage = Yii::t('agent', 'Password reset link sent, please check your email for further instructions.');
+                } else {
+                    $errors = Yii::t('agent', 'Sorry, we are unable to reset password for email provided.');
+                }
+            }
+        }else $errors = $model->errors;
+
+        // If errors exist show them
+        if($errors){
+            return [
+                'operation' => 'error',
+                'error' => $errors
+            ];
+        }
+
+        // Otherwise return success
+        return return [
+            'operation' => 'success',
+        ];
     }
 }
