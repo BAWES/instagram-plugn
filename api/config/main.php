@@ -47,6 +47,8 @@ return [
                         'POST create-account' => 'create-account',
                         // OPTIONS VERBS
                         'OPTIONS login' => 'options',
+                        'OPTIONS request-reset-password' => 'options',
+                        'OPTIONS create-account' => 'options',
                     ]
                 ],
             ],

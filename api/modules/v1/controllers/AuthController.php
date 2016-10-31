@@ -121,8 +121,8 @@ class AuthController extends Controller
      */
     public function actionRequestResetPassword()
     {
-        $email = Yii::$app->request->post("email");
+        $email = Yii::$app->request->getBodyParam("email");
 
-        return ["value returned" => Yii::$app->request->post()];
+        return ["value returned" => $email];
     }
 }
