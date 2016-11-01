@@ -3,8 +3,6 @@
 /* @var $agent common\models\Agent */
 
 use yii\helpers\Url;
-
-$verificationUrl = Yii::$app->urlManager->createAbsoluteUrl(['site/email-verify', 'code' => $agent->agent_auth_key, 'verify' => $agent->agent_id]);
 ?>
 
 <!doctype html>

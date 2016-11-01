@@ -78,15 +78,20 @@ class LoginForm extends Model
             //Check if Agent has verified their email
             $agent = $this->getAgent();
             if($agent){
-                if($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED){                    
+                if($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED){
+
+                    $resendLink = \yii\helpers\Url::to(["site/resend-verification",
+                        'id' => $agent->agent_id,
+                        'email' => $agent->agent_email,
+                    ], true);
+
+                    $message = Yii::t('agent',"Please click the verification link sent to you by email to activate your account.", [
+                            'resendLink' => $resendLink,
+                        ]);
+
                     //Set Flash that agent needs to verify his email + resend option
-                    Yii::$app->session->setFlash("warning",
-                        Yii::t('agent',"Please click the verification link sent to you by email to activate your account.<br/><a href='{resendLink}'>Resend verification email</a>",[
-                                'resendLink' => \yii\helpers\Url::to(["site/resend-verification",
-                                    'id' => $agent->agent_id,
-                                    'email' => $agent->agent_email,
-                                ]),
-                            ]));
+                    Yii::$app->session->setFlash("warning", $message);
+
                 }else{
                     //Log him in
                     return Yii::$app->user->login($this->getAgent(), $this->rememberMe ? 3600 * 24 * 30 : 0);

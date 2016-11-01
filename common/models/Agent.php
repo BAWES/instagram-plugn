@@ -214,19 +214,34 @@ class Agent extends ActiveRecord implements IdentityInterface
         $this->agent_limit_email = new Expression('NOW()');
         $this->save(false);
 
+        // Generate Different Reset Link If API is calling
+        if(Yii::$app->id == "app-api"){
+            // API application calling
+            $verificationUrl = Yii::$app->urlManagerAgent->createAbsoluteUrl([
+                'site/email-verify',
+                'code' => $agent->agent_auth_key,
+                'verify' => $agent->agent_id
+            ]);
+        }else{
+            // Agent portal calling
+            $verificationUrl = Yii::$app->urlManager->createAbsoluteUrl([
+                'site/email-verify',
+                'code' => $agent->agent_auth_key,
+                'verify' => $agent->agent_id
+            ]);
+        }
 
         return Yii::$app->mailer->compose([
                     'html' => 'agent/verificationEmail-html',
                     'text' => 'agent/verificationEmail-text',
                         ], [
-                    'agent' => $this
+                    'agent' => $this,
+                    'verificationUrl' => $verificationUrl
                 ])
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
                 ->setTo($this->agent_email)
                 ->setSubject('[Plugn] Email Verification')
                 ->send();
-
-
     }
 
     /**
