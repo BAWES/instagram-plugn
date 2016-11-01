@@ -168,7 +168,7 @@ class AuthController extends Controller
         }
 
         // Otherwise return success
-        return return [
+        return [
             'operation' => 'success',
         ];
     }
