@@ -91,11 +91,6 @@ class AuthController extends Controller
         // Email and password are correct, check if his email has been verified
         // If agent email has been verified, then allow him to log in
         if($agent->agent_email_verified != Agent::EMAIL_VERIFIED){
-            $resendLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(["site/resend-verification",
-                'id' => $agent->agent_id,
-                'email' => $agent->agent_email,
-            ], true);
-
             return [
                 "operation" => "error",
                 "error-type" => "email-not-verified",
@@ -117,28 +112,31 @@ class AuthController extends Controller
      */
     public function actionCreateAccount()
     {
-        $fullname = Yii::$app->request->getBodyParam("fullname");
-        $email = Yii::$app->request->getBodyParam("email");
-        $password = Yii::$app->request->getBodyParam("password");
-
         $model = new \common\models\Agent();
         $model->scenario = "manualSignup";
 
-        if ($model->load(Yii::$app->request->post()))
-        {
-            if ($model->signup())
-            {
-                //Log agent signup
-                Yii::info("[New Agent Signup Manual] ".$model->agent_email, __METHOD__);
+        $model->agent_name = Yii::$app->request->getBodyParam("fullname");
+        $model->agent_email = Yii::$app->request->getBodyParam("email");
+        $model->agent_password_hash = Yii::$app->request->getBodyParam("password");
 
-                Yii::$app->session->setFlash('success', "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account");
-                return $this->redirect(['index']);
+        if (!$model->signup())
+        {
+            if(isset($model->errors['agent_email'])){
+                return [
+                    "operation" => "error",
+                    "message" => $model->errors['agent_email']
+                ];
+            }else{
+                return [
+                    "operation" => "error",
+                    "message" => "We've faced a problem creating your account, please contact us for assistance."
+                ];
             }
         }
 
         return [
             "operation" => "success",
-            "message" => "contenthere"
+            "message" => "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account"
         ];
     }
 
@@ -230,7 +228,9 @@ class AuthController extends Controller
                     $errors = Yii::t('agent', 'Sorry, we are unable to reset password for email provided.');
                 }
             }
-        }else $errors = $model->errors['email'];
+        }else if(isset($model->errors['email'])){
+            $errors = $model->errors['email'];
+        }
 
         // If errors exist show them
         if($errors){
