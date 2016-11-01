@@ -92,6 +92,7 @@ class AuthController extends Controller
             ], true);
 
             return [
+                "operation" => "error",
                 "error" => "Please click the verification link sent to you by email to activate your account",
                 "resendVerifLink" => $resendLink
             ];
@@ -99,7 +100,10 @@ class AuthController extends Controller
 
         // Return agent access token if everything valid
         $accessToken = $agent->accessToken->token_value;
-        return ["token" => $accessToken];
+        return [
+            "operation" => "success",
+            "token" => $accessToken
+        ];
     }
 
     /**
@@ -157,7 +161,7 @@ class AuthController extends Controller
                     $errors = Yii::t('agent', 'Sorry, we are unable to reset password for email provided.');
                 }
             }
-        }else $errors = $model->errors;
+        }else $errors = $model->errors['email'];
 
         // If errors exist show them
         if($errors){

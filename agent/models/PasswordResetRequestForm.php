@@ -63,12 +63,26 @@ class PasswordResetRequestForm extends Model
 
             if ($agent->save(false)) {
 
+                $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
+
+                // Generate Different Reset Link If API is calling
+                if(Yii::$app->id == "app-api"){
+
+                }
+
+
                 //Send English Email
-                return \Yii::$app->mailer->compose(['html' => 'agent/passwordResetToken-html', 'text' => 'agent/passwordResetToken-text'], ['agent' => $agent])
-                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
-                    ->setTo($agent->agent_email)
-                    ->setSubject('[Plugn] Password Reset')
-                    ->send();
+                return \Yii::$app->mailer->compose([
+                    'html' => 'agent/passwordResetToken-html',
+                    'text' => 'agent/passwordResetToken-text'
+                ], [
+                    'agent' => $agent,
+                    'resetLink' => $resetLink
+                ])
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                ->setTo($agent->agent_email)
+                ->setSubject('[Plugn] Password Reset')
+                ->send();
 
             }
         }
