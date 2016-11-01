@@ -4,8 +4,6 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $agent common\models\Agent */
-
-$resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
 ?>
 
 <!doctype html>
