@@ -219,15 +219,15 @@ class Agent extends ActiveRecord implements IdentityInterface
             // API application calling
             $verificationUrl = Yii::$app->urlManagerAgent->createAbsoluteUrl([
                 'site/email-verify',
-                'code' => $agent->agent_auth_key,
-                'verify' => $agent->agent_id
+                'code' => $this->agent_auth_key,
+                'verify' => $this->agent_id
             ]);
         }else{
             // Agent portal calling
             $verificationUrl = Yii::$app->urlManager->createAbsoluteUrl([
                 'site/email-verify',
-                'code' => $agent->agent_auth_key,
-                'verify' => $agent->agent_id
+                'code' => $this->agent_auth_key,
+                'verify' => $this->agent_id
             ]);
         }
 

@@ -49,7 +49,12 @@ class AuthController extends Controller
         ];
         // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
         // also avoid for public actions like registration and password reset
-        $behaviors['authenticator']['except'] = ['options', 'create-account', 'request-reset-password'];
+        $behaviors['authenticator']['except'] = [
+            'options',
+            'create-account',
+            'request-reset-password',
+            'resend-verification-email'
+        ];
 
         return $behaviors;
     }
@@ -93,8 +98,8 @@ class AuthController extends Controller
 
             return [
                 "operation" => "error",
+                "error-type" => "email-not-verified",
                 "message" => "Please click the verification link sent to you by email to activate your account",
-                "resendVerifLink" => $resendLink
             ];
         }
 
@@ -134,6 +139,55 @@ class AuthController extends Controller
         return [
             "operation" => "success",
             "message" => "contenthere"
+        ];
+    }
+
+    /**
+     * Re-send manual verification email to agent
+     * @return array
+     */
+    public function actionResendVerificationEmail()
+    {
+        $emailInput = Yii::$app->request->getBodyParam("email");
+
+        $agent = Agent::findOne([
+            'agent_email' => $emailInput,
+        ]);
+
+        $errors = false;
+
+        if ($agent) {
+            //Check if this user sent an email in past few minutes (to limit email spam)
+            $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
+            date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
+            $currentDatetime = new \DateTime();
+
+            if ($currentDatetime < $emailLimitDatetime) {
+                $difference = $currentDatetime->diff($emailLimitDatetime);
+                $minuteDifference = (int) $difference->i;
+                $secondDifference = (int) $difference->s;
+
+                $errors = Yii::t('app', "Email was sent previously, you may request another one in {numMinutes, number} minutes and {numSeconds, number} seconds", [
+                            'numMinutes' => $minuteDifference,
+                            'numSeconds' => $secondDifference,
+                ]);
+            } else if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
+                $agent->sendVerificationEmail();
+            }
+        }
+
+        // If errors exist show them
+        if($errors){
+            return [
+                'operation' => 'error',
+                'message' => $errors
+            ];
+        }
+
+        // Otherwise return success
+        return [
+            'operation' => 'success',
+            'message' => Yii::t('register', 'Please click on the link sent to you by email to verify your account')
         ];
     }
 

@@ -43,12 +43,14 @@ return [
                     'pluralize' => false,
                     'patterns' => [
                         'GET login' => 'login',
-                        'POST request-reset-password' => 'request-reset-password',
                         'POST create-account' => 'create-account',
+                        'POST request-reset-password' => 'request-reset-password',
+                        'POST resend-verification-email' => 'resend-verification-email',
                         // OPTIONS VERBS
                         'OPTIONS login' => 'options',
-                        'OPTIONS request-reset-password' => 'options',
                         'OPTIONS create-account' => 'options',
+                        'OPTIONS request-reset-password' => 'options',
+                        'OPTIONS resend-verification-email' => 'options',
                     ]
                 ],
             ],

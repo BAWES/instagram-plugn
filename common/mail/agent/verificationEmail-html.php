@@ -74,7 +74,7 @@ use yii\helpers\Url;
                     </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px 30px 6px;" align="left"><div style="cursor:auto;color:#000000;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;line-height:22px;">
                         We may need to send you critical information about our service and it is important that we have an accurate email address.
                     </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:8px 16px 10px;padding-bottom:16px;padding-right:30px;padding-left:30px;" align="left"><table cellpadding="0" cellspacing="0" style="border:none;border-radius:25px;" align="left" border="0"><tbody><tr><td style="background:#00a8ff;border-radius:25px;color:white;cursor:auto;" align="center" valign="middle" bgcolor="#00a8ff"><a href="<?= $verificationUrl ?>" style="display:inline-block;text-decoration:none;background:#00a8ff;border:1px solid #00a8ff;border-radius:25px;color:white;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;padding:8px 16px 10px;" target="_blank">
-                        Confirm E-Mail Adress
+                        Confirm E-Mail Address
                     </a></td></tr></tbody></table></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px 30px 30px 30px;" align="left"><div style="cursor:auto;color:#000000;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;line-height:22px;">
                         — Plugn Team
                     </div></td></tr></tbody></table></div><!--[if mso | IE]>
