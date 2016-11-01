@@ -153,8 +153,7 @@ class AuthController extends Controller
                                 'numMinutes' => $minuteDifference,
                                 'numSeconds' => $secondDifference,
                     ]);
-
-                    Yii::$app->getSession()->setFlash('warning', $warningMessage);
+                    
                 } else if ($model->sendEmail($agent)) {
                     $successMessage = Yii::t('agent', 'Password reset link sent, please check your email for further instructions.');
                 } else {
