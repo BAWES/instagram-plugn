@@ -93,7 +93,7 @@ class AuthController extends Controller
 
             return [
                 "operation" => "error",
-                "error" => "Please click the verification link sent to you by email to activate your account",
+                "message" => "Please click the verification link sent to you by email to activate your account",
                 "resendVerifLink" => $resendLink
             ];
         }
@@ -116,7 +116,25 @@ class AuthController extends Controller
         $email = Yii::$app->request->getBodyParam("email");
         $password = Yii::$app->request->getBodyParam("password");
 
-        return ["value returned" => Yii::$app->request->post()];
+        $model = new \common\models\Agent();
+        $model->scenario = "manualSignup";
+
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($model->signup())
+            {
+                //Log agent signup
+                Yii::info("[New Agent Signup Manual] ".$model->agent_email, __METHOD__);
+
+                Yii::$app->session->setFlash('success', "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account");
+                return $this->redirect(['index']);
+            }
+        }
+
+        return [
+            "operation" => "success",
+            "message" => "contenthere"
+        ];
     }
 
     /**
@@ -153,10 +171,8 @@ class AuthController extends Controller
                                 'numMinutes' => $minuteDifference,
                                 'numSeconds' => $secondDifference,
                     ]);
-                    
-                } else if ($model->sendEmail($agent)) {
-                    $successMessage = Yii::t('agent', 'Password reset link sent, please check your email for further instructions.');
-                } else {
+
+                } else if (!$model->sendEmail($agent)) {
                     $errors = Yii::t('agent', 'Sorry, we are unable to reset password for email provided.');
                 }
             }
@@ -166,13 +182,14 @@ class AuthController extends Controller
         if($errors){
             return [
                 'operation' => 'error',
-                'error' => $errors
+                'message' => $errors
             ];
         }
 
         // Otherwise return success
         return [
             'operation' => 'success',
+            'message' => Yii::t('agent', 'Password reset link sent, please check your email for further instructions.')
         ];
     }
 }
