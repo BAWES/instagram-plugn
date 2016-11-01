@@ -6,9 +6,9 @@ use Yii;
 use yii\rest\Controller;
 
 /**
- * Main controller is an example of what a typical controller should look like
+ * Account controller will return the actual Instagram Accounts and all controls associated
  */
-class MainController extends Controller
+class AccountController extends Controller
 {
     public function behaviors()
     {
@@ -58,7 +58,7 @@ class MainController extends Controller
     /**
      * Return a List of Accounts Managed by User
      */
-    public function actionManagedAccounts()
+    public function actionListManagedAccounts()
     {
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
