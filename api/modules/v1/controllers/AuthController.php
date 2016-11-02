@@ -93,7 +93,7 @@ class AuthController extends Controller
         if($agent->agent_email_verified != Agent::EMAIL_VERIFIED){
             return [
                 "operation" => "error",
-                "error-type" => "email-not-verified",
+                "errorType" => "email-not-verified",
                 "message" => "Please click the verification link sent to you by email to activate your account",
             ];
         }
