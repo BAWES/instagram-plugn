@@ -136,7 +136,7 @@ class AuthController extends Controller
 
         return [
             "operation" => "success",
-            "message" => "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account"
+            "message" => "Please click on the link sent to you by email to verify your account"
         ];
     }
 
