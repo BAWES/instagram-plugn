@@ -24,13 +24,13 @@ return [
             ]
         ],
         'user' => [
-            'identityClass' => 'common\models\Agent',
+            'identityClass' => 'api\models\Agent',
             'enableAutoLogin' => false,
             'enableSession' => false,
             'loginUrl' => null
         ],
         'accountManager' => [ //Component for agent to manage Instagram Accounts
-            'class' => 'agent\components\AccountManager',
+            'class' => 'api\components\AccountManager',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -56,6 +56,16 @@ return [
                 [ // AccountController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/account',
+                    'patterns' => [
+                        'GET' => 'list',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
+                [ // Mediaontroller
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/media',
+                    'pluralize' => false,
                     'patterns' => [
                         'GET' => 'list',
                         // OPTIONS VERBS

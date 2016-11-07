@@ -1,12 +1,12 @@
 <?php
 
-namespace agent\components;
+namespace api\components;
 
 use Yii;
 use yii\base\Object;
 use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
-use agent\models\InstagramUser;
+use api\models\InstagramUser;
 use common\models\Comment;
 
 /**
@@ -103,7 +103,7 @@ class AccountManager extends Object
     /**
      * Returns the accounts managed by this agent
      *
-     * @return \agent\models\InstagramUser    Records of accounts managed by this agent
+     * @return \api\models\InstagramUser    Records of accounts managed by this agent
      */
     public function getManagedAccounts(){
         return $this->_managedAccounts;
@@ -113,7 +113,7 @@ class AccountManager extends Object
      * Gets the account that the agent wants to manage
      *
      * @param integer $accountId id number of the account
-     * @return \agent\models\InstagramUser  The user account
+     * @return \api\models\InstagramUser  The user account
      * @throws \yii\web\NotFoundHttpException if the account isnt one this agent manages
      */
     public function getManagedAccount($accountId){
