@@ -15,27 +15,26 @@ class Media extends \common\models\Media {
     /**
      * @inheritdoc
      */
-    // public function fields()
-    // {
-    //     // Whitelisted fields to return
-    //     return [
-    //         //'media_id'
-    //         // 'user_id',
-    //         // 'user_name',
-    //         // 'user_fullname',
-    //         // 'user_profile_pic',
-    //         // 'user_bio',
-    //         // 'user_website',
-    //         // 'user_media_count',
-    //         // 'user_following_count',
-    //         // 'user_follower_count',
-    //         // 'unhandledCount',
-    //         // 'lastAgentActivity'
-    //         // 'name' => function ($model) {
-    //         //     return $model->first_name . ' ' . $model->last_name;
-    //         // },
-    //     ];
-    // }
+    public function fields()
+    {
+        // Whitelisted fields to return
+        return [
+            'media_id' => 'media_id',
+            'numComments' => 'media_num_comments',
+            'numLikes' => 'media_num_likes',
+            'caption' => 'media_caption',
+            'image' => function ($model) {
+                return [
+                    'lowres' => $model->media_image_lowres,
+                    'thumb' => $model->media_image_thumb,
+                    'standard' => $model->media_image_standard
+                ];
+            },
+            'datePosted' => function($model) {
+                return Yii::$app->formatter->asDate($model->media_created_datetime);
+            }
+        ];
+    }
 
     /**
      * Handle all comments under this Media
