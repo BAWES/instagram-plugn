@@ -37,7 +37,7 @@ return [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                [
+                [ // AuthController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/auth',
                     'pluralize' => false,
@@ -51,6 +51,15 @@ return [
                         'OPTIONS create-account' => 'options',
                         'OPTIONS request-reset-password' => 'options',
                         'OPTIONS resend-verification-email' => 'options',
+                    ]
+                ],
+                [ // AccountController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/account',
+                    'patterns' => [
+                        'GET' => 'list',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
                     ]
                 ],
             ],

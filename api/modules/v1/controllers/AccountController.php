@@ -58,7 +58,7 @@ class AccountController extends Controller
     /**
      * Return a List of Accounts Managed by User
      */
-    public function actionListManagedAccounts()
+    public function actionList()
     {
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
