@@ -13,6 +13,7 @@ use common\models\Comment;
 class InstagramUser extends \common\models\InstagramUser {
 
     public $unhandledCount = 0;
+    public $lastAgentActivity = false;
 
     /**
      * @inheritdoc
@@ -30,7 +31,8 @@ class InstagramUser extends \common\models\InstagramUser {
             'user_media_count',
             'user_following_count',
             'user_follower_count',
-            'unhandledCount'
+            'unhandledCount',
+            'lastAgentActivity'
             // 'name' => function ($model) {
             //     return $model->first_name . ' ' . $model->last_name;
             // },

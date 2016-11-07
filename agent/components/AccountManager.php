@@ -54,7 +54,7 @@ class AccountManager extends Object
         }, $cacheDuration, $cacheDependency);
 
         // Populate accounts with unhandled comment count
-        $this->populateAccountsWithUnhandledCount();
+        $this->populateAccountsWithUnhandledCountandLastActivity();
 
         parent::__construct($config);
     }
@@ -62,7 +62,7 @@ class AccountManager extends Object
     /**
      * Populates Agent Instagram Accounts with number of Unhandled Comments within each account
      */
-    private function populateAccountsWithUnhandledCount(){
+    private function populateAccountsWithUnhandledCountandLastActivity(){
         $accounts = array();
         $accountIds = array();
 
@@ -84,6 +84,19 @@ class AccountManager extends Object
         // Assign the output to each cached Instagram_User model
         foreach($unhandledTotalQuery as $unhandledSummary){
             $accounts[$unhandledSummary['user_id']]->unhandledCount = (int) $unhandledSummary['totalUnhandled'];
+        }
+
+        // Query for last activity for user id
+        $lastAccountActivities = \common\models\Activity::find()
+                        ->select(['user_id', 'lastActivity' => 'MAX(activity_datetime)'])
+                        ->where(['in', 'user_id', $accountIds])
+                        ->groupBy('user_id')
+                        ->createCommand()
+                        ->queryAll();
+
+        // Assign the output to each cached Instagram_User model
+        foreach($lastAccountActivities as $activityDetail){
+            $accounts[$activityDetail['user_id']]->lastAgentActivity = Yii::$app->formatter->asRelativeTime($activityDetail['lastActivity']);
         }
     }
 
