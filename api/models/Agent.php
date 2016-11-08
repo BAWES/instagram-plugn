@@ -26,7 +26,10 @@ class Agent extends \common\models\Agent {
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {
-        return AgentToken::find()->where(['token_value' => $token])->with('agent')->one()->agent;
+        $token = AgentToken::find()->where(['token_value' => $token])->with('agent')->one();
+        if($token){
+            return $token->agent;
+        }
     }
 
 }
