@@ -13,7 +13,7 @@ use common\models\Comment;
 class InstagramUser extends \common\models\InstagramUser {
 
     public $unhandledCount = 0;
-    public $lastAgentActivity = false;
+    public $lastAgentActivity;
 
     /**
      * @inheritdoc
