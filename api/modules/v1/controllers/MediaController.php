@@ -62,6 +62,11 @@ class MediaController extends Controller
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        return $instagramAccount->media;
+        $media = $instagramAccount->mediaWithUnhandledComments;
+        return $media;
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+
     }
 }

@@ -49,6 +49,13 @@ class InstagramUser extends \common\models\InstagramUser {
                     ->orderBy("media_created_datetime DESC");
     }
 
+    public function getMediaWithUnhandledComments()
+    {
+        return $this->hasMany(Media::className(), ['user_id' => 'user_id'])
+                    ->orderBy("media_created_datetime DESC")
+                    ->with("unhandledComments");
+    }
+
     /**
      * Mark comments provided as handled by this agent
      * @param array $comments list of comment Ids

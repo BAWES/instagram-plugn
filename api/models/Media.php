@@ -20,8 +20,11 @@ class Media extends \common\models\Media {
         // Whitelisted fields to return
         return [
             'media_id' => 'media_id',
-            'numComments' => 'media_num_comments',
             'numLikes' => 'media_num_likes',
+            'numComments' => 'media_num_comments',
+            'numCommentsUnhandled' => function($model) {
+                return count($this->unhandledComments);
+            },
             'caption' => 'media_caption',
             'image' => function ($model) {
                 return [
