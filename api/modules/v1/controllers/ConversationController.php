@@ -6,9 +6,9 @@ use Yii;
 use yii\rest\Controller;
 
 /**
- * List and Manage Media
+ * List and Manage Conversations
  */
-class MediaController extends Controller
+class ConversationController extends Controller
 {
     public function behaviors()
     {
@@ -56,14 +56,15 @@ class MediaController extends Controller
     }
 
     /**
-     * Return a List of Media for specified account id
+     * Return a List of Conversations for specified account id
      */
     public function actionList($accountId)
     {
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        $media = $instagramAccount->mediaWithUnhandledComments;
-        return $media;
+        $conversations = $instagramAccount->conversations;
+
+        return $conversations;
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();

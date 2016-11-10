@@ -62,10 +62,19 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
-                [ // Mediaontroller
+                [ // MediaController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/media',
                     'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'list',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
+                [ // ConversationController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/conversation',
                     'patterns' => [
                         'GET' => 'list',
                         // OPTIONS VERBS
