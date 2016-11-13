@@ -77,8 +77,10 @@ return [
                     'controller' => 'v1/conversation',
                     'patterns' => [
                         'GET' => 'list',
+                        'GET detail' => 'detail',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
+                        'OPTIONS detail' => 'options',
                     ]
                 ],
             ],

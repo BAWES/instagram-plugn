@@ -57,6 +57,8 @@ class ConversationController extends Controller
 
     /**
      * Return a List of Conversations for specified account id
+     * @param  integer $accountId
+     * @return array
      */
     public function actionList($accountId)
     {
@@ -65,6 +67,27 @@ class ConversationController extends Controller
         $conversations = $instagramAccount->conversations;
 
         return $conversations;
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+
+    }
+
+    /**
+     * Return conversation detail between the account and its commenter
+     * @param  integer $accountId
+     * @param  integer $commenterId
+     * @param  string $commenterUsername
+     * @return array
+     */
+    public function actionDetail($accountId, $commenterId, $commenterUsername)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        //Get Comments in this conversation
+        $comments = $instagramAccount->getConversationWithUser($commenterId, $commenterUsername);
+
+        return ['conversationComments' => $comments];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
