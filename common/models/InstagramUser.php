@@ -271,7 +271,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             ->bindValue(':photo', $this->user_profile_pic)
             ->queryAll();
 
-        $actualConversation = ArrayHelper::merge($queuedComments, $postedConversation);
+        $actualConversation = ArrayHelper::merge($postedConversation, $queuedComments);
 
         //die(print_r($actualConversation, true));
 
