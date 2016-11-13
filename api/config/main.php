@@ -68,8 +68,10 @@ return [
                     'pluralize' => false,
                     'patterns' => [
                         'GET' => 'list',
+                        'GET detail' => 'detail',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
+                        'OPTIONS detail' => 'options',
                     ]
                 ],
                 [ // ConversationController

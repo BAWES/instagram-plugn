@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
+use api\models\Media;
 
 /**
  * List and Manage Media
@@ -64,6 +65,29 @@ class MediaController extends Controller
 
         $media = $instagramAccount->mediaWithUnhandledComments;
         return $media;
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+
+    }
+
+    /**
+     * Return media comments on this account
+     * @param  integer $accountId
+     * @param  integer $mediaId
+     * @return array
+     */
+    public function actionDetail($accountId, $mediaId)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        $media = Media::find()->where([
+            'user_id' => (int) $accountId,
+            'media_id' => (int) $mediaId
+        ])->one();
+
+        //Return comments merged with Queued Comments
+        return $media->commentsWithQueued;
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
