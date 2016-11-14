@@ -31,6 +31,7 @@ class InstagramUser extends \common\models\InstagramUser {
             'user_media_count',
             'user_following_count',
             'user_follower_count',
+            'user_instagram_id',
             'unhandledCount',
             'lastAgentActivity'
             // 'name' => function ($model) {
