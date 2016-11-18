@@ -85,6 +85,15 @@ return [
                         'OPTIONS detail' => 'options',
                     ]
                 ],
+                [ // CommentController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/comment',
+                    'patterns' => [
+                        'POST' => 'post-comment',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
             ],
         ],
         'log' => [

@@ -4,6 +4,9 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
+use api\models\CommentQueue;
+use api\models\Activity;
+use api\models\Media;
 
 /**
  * List and Manage Comments
@@ -53,6 +56,74 @@ class CommentController extends Controller
             'resourceOptions' => ['GET', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
         ];
         return $actions;
+    }
+
+    /**
+     *  Post a comment
+     */
+    public function actionPostComment()
+    {
+        // Get POST params
+        $accountId = Yii::$app->request->getBodyParam("accountId");
+        $mediaId = Yii::$app->request->getBodyParam("mediaId");
+        $commentMessage = Yii::$app->request->getBodyParam("commentMessage");
+        $respondingTo = Yii::$app->request->getBodyParam("respondingTo");
+
+        // Check for valid access to this IG account
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        if($mediaId && $commentMessage){
+            // Check if the Media belongs to this user
+            $media = Media::find()->where([
+                'media_id' => (int) $mediaId,
+                'user_id' => $instagramAccount->user_id,
+            ])->one();
+            if(!$media){
+                return ["operation" => "error",
+                    "message" => "Unable to comment on posts that do not belong to this user."];
+            }
+
+            // Prepare and Validate comment before adding it to Queue for posting
+            // Scenario validation whether this is a conversation comment or not
+            $commentQueueForm = new CommentQueue();
+            $commentQueueForm->scenario = $respondingTo? "newConversationComment" : "newMediaComment";
+            $commentQueueForm->respondingToUsername = $respondingTo;
+
+            $commentQueueForm->media_id = $mediaId;
+            $commentQueueForm->user_id = $instagramAccount->user_id;
+            $commentQueueForm->agent_id = Yii::$app->user->identity->agent_id;
+            $commentQueueForm->queue_text = $commentMessage;
+
+            if($commentQueueForm->save()){
+                if($respondingTo){
+                    // Posted a response to user
+                    Activity::log($instagramAccount->user_id, "Posted comment on conversation with @$respondingTo: ".$commentQueueForm->queue_text);
+                }else{
+                    // Posted a comment on Media
+                    Activity::log($instagramAccount->user_id, "Posted on media #".$media->media_id.": ".$commentQueueForm->queue_text);
+                }
+                return [
+                    "operation" => "success",
+                ];
+            }else{
+                //Display error message to user
+                if(isset($commentQueueForm->errors['queue_text'][0])){
+                    return [
+                        "operation" => "error",
+                        "message" => $commentQueueForm->errors['queue_text'][0]
+                    ];
+                }
+            }
+        }else return [
+                "operation" => "error",
+                "message" => "Request data missing, please contact us for assistance."
+            ];
+
+        // Error for cases not accounted for
+        return [
+            "operation" => "error",
+            "message" => "Unknown error occured, please contact us for assistance."
+        ];
     }
 
     /**
