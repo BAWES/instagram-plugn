@@ -61,6 +61,7 @@ class MediaController extends Controller
      */
     public function actionList($accountId)
     {
+        // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
         $media = $instagramAccount->mediaWithUnhandledComments;
@@ -79,6 +80,7 @@ class MediaController extends Controller
      */
     public function actionDetail($accountId, $mediaId)
     {
+        // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
         $media = Media::find()->where([

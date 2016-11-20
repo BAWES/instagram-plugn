@@ -60,6 +60,7 @@ class AccountController extends Controller
      */
     public function actionList()
     {
+        // Get cached managed accounts list from account manager component
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
         return $managedAccounts;

@@ -93,4 +93,36 @@ class ConversationController extends Controller
         return Yii::getLogger()->getDbProfiling();
 
     }
+
+    /**
+     * Mark the conversation as handled
+     * @param  integer $accountId
+     * @param  integer $commenterId
+     * @param  string $commenterUsername
+     * @return array
+     */
+    public function actionHandle()
+    {
+        // Get POST params
+        $accountId = Yii::$app->request->getBodyParam("accountId");
+        $commenterId = Yii::$app->request->getBodyParam("commenterId");
+        $commenterUsername = Yii::$app->request->getBodyParam("commenterUsername");
+
+        // Get Instagram account from Account Manager component
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        // Mark Conversation as handled
+        $handled = $instagramAccount->handleConversationComments($commenterId, $commenterUsername);
+        if($handled){
+            return [
+                "operation" => "success",
+            ];
+        }
+
+        // Error for cases not accounted for
+        return [
+            "operation" => "error",
+            "message" => "Unknown error occured, please contact us for assistance."
+        ];
+    }
 }

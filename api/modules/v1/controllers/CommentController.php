@@ -136,6 +136,7 @@ class CommentController extends Controller
         $accountId = Yii::$app->request->getBodyParam("accountId");
         $commentId = Yii::$app->request->getBodyParam("commentId");
 
+        // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
         //Get Comment that user wishes to delete (to ensure he owns this comment)
