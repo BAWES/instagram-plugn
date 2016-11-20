@@ -91,6 +91,7 @@ return [
                     'controller' => 'v1/comment',
                     'patterns' => [
                         'POST' => 'post-comment',
+                        'PATCH' => 'handle-comment',
                         'DELETE' => 'delete-comment',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',

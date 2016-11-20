@@ -165,6 +165,60 @@ class CommentController extends Controller
             return [
                 "operation" => "success",
             ];
+        }else{
+            return [
+                "operation" => "error",
+                "message" => "Comment not found or already deleted."
+            ];
+        }
+
+        // Error for cases not accounted for
+        return [
+            "operation" => "error",
+            "message" => "Unknown error occured, please contact us for assistance."
+        ];
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+    }
+
+    /**
+     * Mark a comment as handled
+     */
+    public function actionHandleComment()
+    {
+        // Get POST params
+        $accountId = Yii::$app->request->getBodyParam("accountId");
+        $commentId = Yii::$app->request->getBodyParam("commentId");
+
+        // Get Instagram account from Account Manager component
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        //Get Comment that user wishes to delete (to ensure he owns this comment)
+        $commentToHandle = Comment::find()->where([
+            'user_id' => $instagramAccount->user_id,
+            'comment_id' => (int) $commentId,
+            'comment_handled' => Comment::HANDLED_FALSE,
+            ])->one();
+
+        if($commentToHandle){
+            // Set Comment as Handled
+            $commentToHandle->comment_handled = Comment::HANDLED_TRUE;
+            $commentToHandle->comment_handled_by = Yii::$app->user->identity->agent_id;
+            $commentToHandle->comment_notification_email_sent = Comment::NOTIFICATION_EMAIL_SENT_TRUE;
+            $commentToHandle->save(false);
+
+            //Log that agent made change
+            Activity::log($instagramAccount->user_id, "Handled comment by @".$commentToHandle->comment_by_username." (".$commentToHandle->comment_text.")");
+
+            return [
+                "operation" => "success",
+            ];
+        }else{
+            return [
+                "operation" => "error",
+                "message" => "Comment already handled."
+            ];
         }
 
         // Error for cases not accounted for
