@@ -69,7 +69,6 @@ class MediaController extends Controller
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
-
     }
 
     /**
@@ -93,6 +92,45 @@ class MediaController extends Controller
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
+    }
 
+    /**
+     * Mark the media as handled
+     * @param  integer $accountId
+     * @param  integer $mediaId
+     * @return array
+     */
+    public function actionHandle()
+    {
+        // Get POST params
+        $accountId = Yii::$app->request->getBodyParam("accountId");
+        $mediaId = Yii::$app->request->getBodyParam("mediaId");
+
+        // Get Instagram account from Account Manager component
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        // Find the media object
+        $mediaToHandle = Media::find()->where([
+            'media_id' => (int) $mediaId,
+            'user_id' => $instagramAccount->user_id,
+        ])->one();
+
+        if($mediaToHandle){
+            // Mark Conversation as handled
+            if($mediaToHandle->handleMediaComments()){
+                return [
+                    "operation" => "success",
+                ];
+            }else return [
+                "operation" => "error",
+                "message" => "All comments within this media already handled."
+            ];
+        }
+
+        // Error for cases not accounted for
+        return [
+            "operation" => "error",
+            "message" => "Unknown error occured, please contact us for assistance."
+        ];
     }
 }

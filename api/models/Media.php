@@ -46,7 +46,7 @@ class Media extends \common\models\Media {
      */
     public function handleMediaComments()
     {
-        Yii::$app->db->createCommand("
+        $affectedRows = Yii::$app->db->createCommand("
             UPDATE comment
             SET
                 comment_handled = ".Comment::HANDLED_TRUE.",
@@ -59,6 +59,10 @@ class Media extends \common\models\Media {
             ")
             ->bindValue(':mediaId', $this->media_id)
             ->execute();
+
+        // Return false if no effected rows
+        if($affectedRows == 0)
+            return false;
 
         //Log that agent made change
         Activity::log($this->user_id, "Marked all comments on media #".$this->media_id." as handled");
