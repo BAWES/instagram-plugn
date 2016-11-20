@@ -7,6 +7,7 @@ use yii\rest\Controller;
 use api\models\CommentQueue;
 use api\models\Activity;
 use api\models\Media;
+use common\models\Comment;
 
 /**
  * List and Manage Comments
@@ -129,13 +130,47 @@ class CommentController extends Controller
     /**
      * Delete a comment
      */
-    public function actionDeleteComment($accountId, $commenterId)
+    public function actionDeleteComment()
     {
+        // Get POST params
+        $accountId = Yii::$app->request->getBodyParam("accountId");
+        $commentId = Yii::$app->request->getBodyParam("commentId");
+
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        $conversations = $instagramAccount->conversations;
+        //Get Comment that user wishes to delete (to ensure he owns this comment)
+        $commentToDelete = Comment::find()->where([
+            'user_id' => $instagramAccount->user_id,
+            'comment_id' => (int) $commentId,
+            'comment_deleted' => Comment::DELETED_FALSE,
+            ])->one();
 
-        return $conversations;
+        if($commentToDelete){
+            //Queue the comment for deletion
+            $deleteQueue = new CommentQueue();
+            $deleteQueue->media_id = $commentToDelete->media_id;
+            $deleteQueue->user_id = $instagramAccount->user_id;
+            $deleteQueue->agent_id = Yii::$app->user->identity->agent_id;
+            $deleteQueue->comment_id = $commentToDelete->comment_id;
+            $deleteQueue->save(false);
+
+            //Mark comment as queued for deletion
+            $commentToDelete->comment_deleted = Comment::DELETED_QUEUED_FOR_DELETION;
+            $commentToDelete->save(false);
+
+            //Log that agent made change
+            Activity::log($instagramAccount->user_id, "Deleted comment from @".$commentToDelete->comment_by_username." (".$commentToDelete->comment_text.")");
+
+            return [
+                "operation" => "success",
+            ];
+        }
+
+        // Error for cases not accounted for
+        return [
+            "operation" => "error",
+            "message" => "Unknown error occured, please contact us for assistance."
+        ];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
