@@ -130,12 +130,14 @@ class CommentController extends Controller
     /**
      * Delete a comment
      */
-    public function actionDeleteComment()
+    /**
+     * [actionDeleteComment description]
+     * @param  integer $accountId
+     * @param  integer $commentId
+     * @return array
+     */
+    public function actionDeleteComment($accountId, $commentId)
     {
-        // Get POST params
-        $accountId = Yii::$app->request->getBodyParam("accountId");
-        $commentId = Yii::$app->request->getBodyParam("commentId");
-
         // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
