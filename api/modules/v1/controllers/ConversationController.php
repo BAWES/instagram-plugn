@@ -119,10 +119,9 @@ class ConversationController extends Controller
             ];
         }
 
-        // Error for cases not accounted for
         return [
             "operation" => "error",
-            "message" => "Unknown error occured, please contact us for assistance."
+            "message" => "All of the comments within this conversation are already handled."
         ];
     }
 }

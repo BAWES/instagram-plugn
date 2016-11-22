@@ -64,7 +64,7 @@ class InstagramUser extends \common\models\InstagramUser {
      */
     public function handleConversationComments($commenterId, $commenterUsername)
     {
-        Yii::$app->db->createCommand("
+        $affectedRows = Yii::$app->db->createCommand("
             UPDATE comment
             SET
                 comment_handled = ".Comment::HANDLED_TRUE.",
@@ -79,6 +79,10 @@ class InstagramUser extends \common\models\InstagramUser {
             ->bindValue(':accountId', $this->user_id)
             ->bindValue(':commenterId', $commenterId)
             ->execute();
+
+        // Return false if no effected rows
+        if($affectedRows == 0)
+            return false;
 
         //Log that agent made change
         Activity::log($this->user_id, "Marked the conversation with @$commenterUsername as handled");
