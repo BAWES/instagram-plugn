@@ -13,11 +13,12 @@
         "yiisoft/yii2-imagine": "~2.0.0",
         "yiisoft/yii2-httpclient": "dev-master",
         "yiisoft/yii2-redis": "~2.0.0",
-        "understeam/yii2-slack": "*",
+        "yiisoft/yii2-shell": "~2.0.0",
+        "understeam/yii2-slack": "v0.3.0",
         "openbuildings/swiftmailer-css-inliner": "*",
         "stichoza/google-translate-php": "~3.2",
         "yiisoft/yii2-authclient": "2.0.5",
-        "kotchuprik/yii2-instagram-authclient": "*"
+        "kotchuprik/yii2-instagram-authclient": "v1.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
