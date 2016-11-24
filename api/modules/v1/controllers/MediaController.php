@@ -73,22 +73,26 @@ class MediaController extends Controller
 
     /**
      * Return media comments on this account
-     * @param  integer $accountId
      * @param  integer $mediaId
      * @return array
      */
-    public function actionDetail($accountId, $mediaId)
+    public function actionDetail($mediaId)
     {
-        // Get Instagram account from Account Manager component
-        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
-
+        // Find the Media
         $media = Media::find()->where([
-            'user_id' => (int) $accountId,
             'media_id' => (int) $mediaId
         ])->one();
+        if($media){
+            // Get Instagram account from Account Manager component
+            // (To check that the requester has permission to get the details)
+            $instagramAccount = Yii::$app->accountManager->getManagedAccount($media->user_id);
 
-        //Return comments merged with Queued Comments
-        return $media->commentsWithQueued;
+            //Return comments merged with Queued Comments
+            return $media->commentsWithQueued;
+        }else return [
+            "operation" => "error",
+            "message" => "Unable to find requested media"
+        ];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
