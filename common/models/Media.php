@@ -123,7 +123,7 @@ class Media extends \yii\db\ActiveRecord
             ->bindValue(':photo', $this->user->user_profile_pic)
             ->queryAll();
 
-        $allCommentsWithQueued = ArrayHelper::merge($queuedComments, $postedConversation);
+        $allCommentsWithQueued = ArrayHelper::merge($postedConversation, $queuedComments);
 
         //die(print_r($allCommentsWithQueued, true));
 
