@@ -100,26 +100,23 @@ class MediaController extends Controller
 
     /**
      * Mark the media as handled
-     * @param  integer $accountId
      * @param  integer $mediaId
      * @return array
      */
     public function actionHandle()
     {
         // Get POST params
-        $accountId = Yii::$app->request->getBodyParam("accountId");
         $mediaId = Yii::$app->request->getBodyParam("mediaId");
-
-        // Get Instagram account from Account Manager component
-        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
         // Find the media object
         $mediaToHandle = Media::find()->where([
-            'media_id' => (int) $mediaId,
-            'user_id' => $instagramAccount->user_id,
+            'media_id' => (int) $mediaId
         ])->one();
-
         if($mediaToHandle){
+            // Get Instagram account from Account Manager component
+            // (To check that the requester has permission to get the details)
+            $instagramAccount = Yii::$app->accountManager->getManagedAccount($mediaToHandle->user_id);
+
             // Mark Conversation as handled
             if($mediaToHandle->handleMediaComments()){
                 return [
