@@ -65,6 +65,8 @@ class StatsController extends Controller
 
         // $media = $instagramAccount->mediaWithUnhandledComments;
         // return $media;
+        $records = $instagramAccount->records;
+        return $records;
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
