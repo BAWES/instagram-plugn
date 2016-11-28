@@ -98,6 +98,16 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
+                [ // StatsController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/stats',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET followers' => 'followers',
+                        // OPTIONS VERBS
+                        'OPTIONS followers' => 'options',
+                    ]
+                ],
             ],
         ],
         'log' => [
