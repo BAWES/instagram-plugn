@@ -58,8 +58,10 @@ return [
                     'controller' => 'v1/account',
                     'patterns' => [
                         'GET' => 'list',
+                        'GET stats' => 'stats',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
+                        'OPTIONS stats' => 'options',
                     ]
                 ],
                 [ // MediaController
@@ -96,16 +98,6 @@ return [
                         'DELETE' => 'delete-comment',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
-                    ]
-                ],
-                [ // StatsController
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'v1/stats',
-                    'pluralize' => false,
-                    'patterns' => [
-                        'GET followers' => 'followers',
-                        // OPTIONS VERBS
-                        'OPTIONS followers' => 'options',
                     ]
                 ],
             ],

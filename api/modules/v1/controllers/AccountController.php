@@ -65,4 +65,21 @@ class AccountController extends Controller
 
         return $managedAccounts;
     }
+
+    /**
+     * Return stats records for account with $accountId
+     */
+    public function actionStats($accountId)
+    {
+        // Get Instagram account from Account Manager component
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        // $media = $instagramAccount->mediaWithUnhandledComments;
+        // return $media;
+        $records = $instagramAccount->records;
+        return $records;
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+    }
 }
