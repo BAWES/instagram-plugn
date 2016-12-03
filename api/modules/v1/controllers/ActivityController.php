@@ -70,6 +70,7 @@ class ActivityController extends Controller
         $activities = Activity::find()
                         ->with(['user', 'agent'])
                         ->where(['user_id' => $instagramAccount->user_id])
+                        ->orderBy('activity_datetime DESC')
                         ->all();
 
         return $activities;
@@ -87,6 +88,7 @@ class ActivityController extends Controller
         $activities = Activity::find()
                         ->with(['user'])
                         ->where(['agent_id' => Yii::$app->user->identity->agent_id])
+                        ->orderBy('activity_datetime DESC')
                         ->all();
 
         return $activities;
