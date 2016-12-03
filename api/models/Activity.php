@@ -12,6 +12,26 @@ use Yii;
 class Activity extends \common\models\Activity {
 
     /**
+     * @inheritdoc
+     */
+    public function fields()
+    {
+        // Whitelisted fields to return via API
+        return [
+            'agent' => function($model) {
+                return $this->agent->agent_name;
+            },
+            'account' => function($model) {
+                return $this->user->user_name;
+            },
+            'action' => 'activity_detail',
+            'datetime' => function($model) {
+                return Yii::$app->formatter->asRelativeTime($this->activity_datetime);
+            },
+        ];
+    }
+
+    /**
      * Log the action performed by the agent on the user account
      * @param integer The instagram user id
      * @param string The message to log

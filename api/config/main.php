@@ -100,6 +100,18 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
+                [ // ActivityController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/activity',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'personal-activity',
+                        'GET on-account' => 'activity-on-account',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                        'OPTIONS on-account' => 'options',
+                    ]
+                ],
             ],
         ],
         'log' => [
