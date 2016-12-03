@@ -12,6 +12,7 @@ use yii\db\Expression;
  *
  * @property string $note_id
  * @property integer $user_id
+ * @property string $note_about_username
  * @property string $note_title
  * @property string $note_text
  * @property string $created_by_agent_id
@@ -39,6 +40,7 @@ class Note extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['user_id', 'note_about_username'], 'required'],
             [['user_id', 'created_by_agent_id', 'updated_by_agent_id'], 'integer'],
             [['note_text'], 'string'],
             [['note_title'], 'string', 'max' => 255],
@@ -69,6 +71,7 @@ class Note extends \yii\db\ActiveRecord
         return [
             'note_id' => 'Note ID',
             'user_id' => 'User ID',
+            'note_about_username' => 'Note About Username',
             'note_title' => 'Note Title',
             'note_text' => 'Note Text',
             'created_by_agent_id' => 'Created By Agent ID',
