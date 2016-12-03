@@ -66,8 +66,13 @@ class ActivityController extends Controller
         // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        $media = $instagramAccount->mediaWithUnhandledComments;
-        return $media;
+        //Get All Activities with the User that activity was made on
+        $activities = Activity::find()
+                        ->with(['user', 'agent'])
+                        ->where(['user_id' => $instagramAccount->user_id])
+                        ->all();
+
+        return $activities;
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
@@ -80,7 +85,7 @@ class ActivityController extends Controller
     {
         //Get All Activities with the User that activity was made on
         $activities = Activity::find()
-                        ->with(['user', 'agent'])
+                        ->with(['user'])
                         ->where(['agent_id' => Yii::$app->user->identity->agent_id])
                         ->all();
 
