@@ -112,6 +112,18 @@ return [
                         'OPTIONS on-account' => 'options',
                     ]
                 ],
+                [ // NoteController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/note',
+                    'patterns' => [
+                        'GET' => 'list',
+                        'POST' => 'create',
+                        'PATCH' => 'update',
+                        'DELETE' => 'delete',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
             ],
         ],
         'log' => [

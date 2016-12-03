@@ -61,7 +61,7 @@ class NoteController extends Controller
      * @param  [string] $username
      * @return array
      */
-     public function actionGetNotes($accountId, $username)
+     public function actionList($accountId, $username)
      {
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
@@ -82,7 +82,7 @@ class NoteController extends Controller
      /**
       * Create a note
       */
-     public function actionCreateNote()
+     public function actionCreate()
      {
          // Get the passed params
          $accountId = Yii::$app->request->getBodyParam("accountId");
@@ -109,7 +109,7 @@ class NoteController extends Controller
      /**
       * Update a note
       */
-     public function actionUpdateNote()
+     public function actionUpdate()
      {
          // Get the passed params
          $noteId = Yii::$app->request->getBodyParam("noteId");
@@ -136,7 +136,7 @@ class NoteController extends Controller
      /**
       * Delete a note
       */
-     public function actionDeleteNote()
+     public function actionDelete()
      {
          // Get the passed params
          $noteId = Yii::$app->request->getBodyParam("noteId");
