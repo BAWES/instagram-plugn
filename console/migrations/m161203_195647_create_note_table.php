@@ -15,6 +15,7 @@ class m161203_195647_create_note_table extends Migration
         $this->createTable('note', [
             'note_id' => $this->bigPrimaryKey()->unsigned(),
             'user_id' => $this->integer()->notNull()->unsigned(), //which IG account this belongs to
+            'note_about_username' => $this->string()->notNull(), //Username we're writing a note about
             'note_title' => $this->string(),
             'note_text' => $this->text(),
             'created_by_agent_id' => $this->bigInteger()->unsigned(),
@@ -23,6 +24,12 @@ class m161203_195647_create_note_table extends Migration
             'note_updated_datetime' => $this->datetime()->notNull(),
         ]);
 
+        // creates index for column `note_about_username`
+        $this->createIndex(
+            'idx-note-note_about_username',
+            'note',
+            'note_about_username'
+        );
         // creates index for column `user_id`
         $this->createIndex(
             'idx-note-user_id',
