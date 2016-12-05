@@ -109,10 +109,13 @@ class NoteController extends Controller
              }else{
                  return [
                      "operation" => "error",
-                     "message" => print_r($note->errors, true)
+                     "message" => isset($note->errors['note_title'][0])?$note->errors['note_title'][0]:"Validation Error"
                  ];
              }
-         }else return [
+         }
+
+         // Unaccounted for
+         return [
              "operation" => "error",
              "message" => "Request data missing, please contact us for assistance."
          ];
@@ -135,14 +138,30 @@ class NoteController extends Controller
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-         //Get All Activities with the User that activity was made on
-         // $activities = Activity::find()
-         //                 ->with(['user', 'agent'])
-         //                 ->where(['user_id' => $instagramAccount->user_id])
-         //                 ->orderBy('activity_datetime DESC')
-         //                 ->all();
-         //
-         // return $activities;
+         // Find the Note to Update
+         $note = Note::findOne(['note_id' => $noteId, 'user_id' => $instagramAccount->user_id]);
+
+         if($note){
+             $note->note_title = $noteTitle;
+             $note->note_text = $noteText;
+
+             if($note->save()){
+                 return ["operation" => "success"];
+             }else return [
+                 "operation" => "error",
+                 "message" => isset($note->errors['note_title'][0])?$note->errors['note_title'][0]:"Validation Error"
+             ];
+
+         }else return [
+             "operation" => "error",
+             "message" => "Note not found."
+         ];
+
+         // Unaccounted error
+         return [
+             "operation" => "error",
+             "message" => "Error. Please contact us for assistance."
+         ];
 
          // Check SQL Query Count and Duration
          return Yii::getLogger()->getDbProfiling();
