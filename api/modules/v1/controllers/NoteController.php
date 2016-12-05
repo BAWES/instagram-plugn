@@ -67,17 +67,19 @@ class NoteController extends Controller
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-         //Get All Activities with the User that activity was made on
-         // $activities = Activity::find()
-         //                 ->with(['user', 'agent'])
-         //                 ->where(['user_id' => $instagramAccount->user_id])
-         //                 ->orderBy('activity_datetime DESC')
-         //                 ->all();
-         //
-         // return $activities;
+         //Get All Notes made on this account for this username
+         $notes = Note::find()
+                         ->with(['createdByAgent', 'updatedByAgent'])
+                         ->where([
+                             'user_id' => $instagramAccount->user_id,
+                             'note_about_username' => $username
+                         ])
+                         ->orderBy('note_updated_datetime DESC')
+                         ->all();
+         return $notes;
 
          // Check SQL Query Count and Duration
-         return Yii::getLogger()->getDbProfiling();
+        //  return Yii::getLogger()->getDbProfiling();
      }
 
      /**

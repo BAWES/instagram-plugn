@@ -11,5 +11,29 @@ use Yii;
  */
 class Note extends \common\models\Note {
 
+    /**
+     * @inheritdoc
+     */
+    public function fields()
+    {
+        // Whitelisted fields to return via API
+        return [
+            'id' => 'note_id',
+            'title' => 'note_title',
+            'content' => 'note_text',
+            'created_by' => function($model) {
+                return $this->createdByAgent->agent_name;
+            },
+            'updated_by' => function($model) {
+                return $this->updatedByAgent->agent_name;
+            },
+            'created_datetime' => function($model) {
+                return Yii::$app->formatter->asRelativeTime($this->note_created_datetime);
+            },
+            'updated_datetime' => function($model) {
+                return Yii::$app->formatter->asRelativeTime($this->note_updated_datetime);
+            },
+        ];
+    }
 
 }
