@@ -33,6 +33,7 @@ class Media extends \common\models\Media {
                     'standard' => $model->media_image_standard
                 ];
             },
+            'link' => 'media_link',
             'datePosted' => function($model) {
                 return Yii::$app->formatter->asDate($model->media_created_datetime);
             }

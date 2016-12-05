@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
+use api\models\Note;
 
 /**
  * Notes created by agent about a specific user (CRM)
@@ -93,14 +94,26 @@ class NoteController extends Controller
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-         //Get All Activities with the User that activity was made on
-         // $activities = Activity::find()
-         //                 ->with(['user', 'agent'])
-         //                 ->where(['user_id' => $instagramAccount->user_id])
-         //                 ->orderBy('activity_datetime DESC')
-         //                 ->all();
-         //
-         // return $activities;
+
+         if($noteAboutUsername){
+             $note = new Note();
+             $note->user_id = $instagramAccount->user_id;
+             $note->note_about_username = $noteAboutUsername;
+             $note->note_title = $noteTitle;
+             $note->note_text = $noteText;
+
+             if($note->save()){
+                 return ["operation" => "success"];
+             }else{
+                 return [
+                     "operation" => "error",
+                     "message" => print_r($note->errors, true)
+                 ];
+             }
+         }else return [
+             "operation" => "error",
+             "message" => "Request data missing, please contact us for assistance."
+         ];
 
          // Check SQL Query Count and Duration
          return Yii::getLogger()->getDbProfiling();
