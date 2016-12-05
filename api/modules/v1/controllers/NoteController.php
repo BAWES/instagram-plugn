@@ -179,14 +179,16 @@ class NoteController extends Controller
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-         //Get All Activities with the User that activity was made on
-         // $activities = Activity::find()
-         //                 ->with(['user', 'agent'])
-         //                 ->where(['user_id' => $instagramAccount->user_id])
-         //                 ->orderBy('activity_datetime DESC')
-         //                 ->all();
-         //
-         // return $activities;
+         // Find the Note to Delete
+         $note = Note::findOne(['note_id' => $noteId, 'user_id' => $instagramAccount->user_id]);
+         if($note){
+             // Delete the note
+             $note->delete();
+             return ["operation" => "success"];
+         }else return [
+             "operation" => "error",
+             "message" => "Note not found."
+         ];
 
          // Check SQL Query Count and Duration
          return Yii::getLogger()->getDbProfiling();
