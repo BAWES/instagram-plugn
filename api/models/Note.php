@@ -19,6 +19,7 @@ class Note extends \common\models\Note {
         // Whitelisted fields to return via API
         return [
             'id' => 'note_id',
+            'userId' => 'user_id',
             'title' => 'note_title',
             'content' => 'note_text',
             'created_by' => function($model) {
