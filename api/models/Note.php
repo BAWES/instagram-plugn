@@ -20,6 +20,7 @@ class Note extends \common\models\Note {
         return [
             'id' => 'note_id',
             'userId' => 'user_id',
+            'noteAboutUsername' => 'note_about_username',
             'title' => 'note_title',
             'content' => 'note_text',
             'created_by' => function($model) {
