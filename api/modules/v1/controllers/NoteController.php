@@ -170,12 +170,8 @@ class NoteController extends Controller
      /**
       * Delete a note
       */
-     public function actionDelete()
+     public function actionDelete($noteId, $accountId)
      {
-         // Get the passed params
-         $noteId = Yii::$app->request->getBodyParam("noteId");
-         $accountId = Yii::$app->request->getBodyParam("accountId");
-
          // Get Instagram account from Account Manager component
          $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
