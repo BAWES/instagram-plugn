@@ -102,7 +102,9 @@ class AuthController extends Controller
         $accessToken = $agent->accessToken->token_value;
         return [
             "operation" => "success",
-            "token" => $accessToken
+            "token" => $accessToken,
+            "name" => $agent->agent_name,
+            "email" => $agent->agent_email
         ];
     }
 
