@@ -38,4 +38,25 @@ class Note extends \common\models\Note {
         ];
     }
 
+    // Create activities on save and update
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                // Created Note
+                Activity::log($this->user_id, "Added a note on @".$this->note_about_username."'s profile. ".$this->note_text);
+            }else{
+                // Updated Note
+                Activity::log($this->user_id, "Updated a note on @".$this->note_about_username."'s profile. ".$this->note_text);
+            }
+
+            return true;
+        }
+    }
+
+    public function beforeDelete() {
+        Activity::log($this->user_id, "Deleted a note on @".$this->note_about_username."'s profile. ".$this->note_text);
+
+        return true;
+    }
+
 }
