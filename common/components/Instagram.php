@@ -247,6 +247,12 @@ class Instagram extends \kotchuprik\authclient\Instagram
         //Loop through active users in batches of 50
         foreach($activeUsers->each(50) as $user)
         {
+            // Is this the first time we crawl this user?
+            $initialCrawl = false;
+            if(!$user->user_initially_crawled){
+                // New user, this is his first crawl *cute*
+                $initialCrawl = true;
+            }
 
             //Get the latest 20 posts from the user
             $output = $this->apiWithUser($user ,
@@ -264,7 +270,6 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 $posts = ArrayHelper::getValue($output, 'data');
                 foreach($posts as $post)
                 {
-
                     $tempMedia = new Media();
                     $tempMedia->user_id = $user->user_id;
                     $tempMedia->media_instagram_id = ArrayHelper::getValue($post, 'id');
@@ -306,7 +311,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         //If Number of Comments has changed, Crawl comments again
                         if($oldCommentCount != $media->media_num_comments)
                         {
-                            $this->crawlComments($user, $media);
+                            $this->crawlComments($user, $media, $initialCrawl);
                         }
 
                     }else{//If Media doesn't exist
@@ -314,7 +319,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                         if($tempMedia->save())
                         {
                             //Crawl this medias comments as it is newly added to our db
-                            $this->crawlComments($user, $tempMedia);
+                            $this->crawlComments($user, $tempMedia, $initialCrawl);
                         }else{
                             Yii::error("[Fatal Error] Issue saving new media. ".print_r($tempMedia->errors, true), __METHOD__);
                         }
@@ -322,9 +327,14 @@ class Instagram extends \kotchuprik\authclient\Instagram
 
                 }
 
+                // If Initial crawl, we're done! Mark user as already crawled *now grown up!*
+                if($initialCrawl){
+                    $user->user_initially_crawled = 1;
+                    $user->save(false);
+                }
+
             }
         }
-
     }
 
     /**
@@ -333,7 +343,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * @param \common\models\Media $media the media that will be crawled
      * @return array API response
      */
-    public function crawlComments($user, $media)
+    public function crawlComments($user, $media, $initialCrawl = false)
     {
         //Crawl comments
         $output = $this->apiWithUser($user ,
@@ -351,7 +361,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $oldCommentsArray = ArrayHelper::map($media->comments, 'comment_instagram_id', 'comment_id');
 
         //Process and save comments from Instagram
-        $this->processCrawledComments($output['data'], $user, $media, $liveCommentsArray, $oldCommentsArray);
+        $this->processCrawledComments($output['data'], $user, $media, $liveCommentsArray, $oldCommentsArray, $initialCrawl);
 
         // Soft delete comments available in our db but not available on Instagram
         $this->processDeletedComments($liveCommentsArray, $oldCommentsArray);
@@ -368,7 +378,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
      * @param array $liveCommentsArray comments returned from Instagram api
      * @param array $oldCommentsArray comments in our db
      */
-    private function processCrawledComments($crawledComments, $user, $media, &$liveCommentsArray, &$oldCommentsArray)
+    private function processCrawledComments($crawledComments, $user, $media, &$liveCommentsArray, &$oldCommentsArray, $initialCrawl)
     {
         // Loop through comments returned from Instagram for this media
         foreach($crawledComments as $instagramComment)
@@ -389,6 +399,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 $comment->comment_by_photo = ArrayHelper::getValue($instagramComment, 'from.profile_picture');
                 $comment->comment_by_id = ArrayHelper::getValue($instagramComment, 'from.id');
                 $comment->comment_by_fullname = ArrayHelper::getValue($instagramComment, 'from.full_name');
+
+                // Mark comment handled/etc. if this is his initial crawl
+                if($initialCrawl){
+                    $comment->comment_pushnotif_sent = 1;
+                    $comment->comment_notification_email_sent = 1
+                    $comment->comment_handled = 1;
+                }
 
                 $unixTime = ArrayHelper::getValue($instagramComment, 'created_time');
                 $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
