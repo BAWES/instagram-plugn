@@ -15,16 +15,31 @@ class PushNotification extends \yii\base\Model
      * @return [type] [description]
      */
     public function send(){
-        $content = array(
-			"en" => 'English Message'
-			);
+        $headings = ["en" => "@mai_almutairi"];
+        $content = ["en" => "Hello brother"];
 
-		$fields = array(
+        // TODO: Specify the Instagram account we're notifying about
+        // So it will group all notifications for same account together
+        $collapseId = "khalidmnet";
+
+		$fields = [
 			'app_id' => "6ca2c182-dda4-4749-aed6-0b4310188986",
-			'included_segments' => array('Active Users'),
-			'data' => array("foo" => "bar"),
-			'contents' => $content
-		);
+			'filters' => [
+                ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
+                ["operator" => "OR"],
+                // ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
+            ],
+			'data' => [
+                "foo" => "bar"
+            ],
+			'contents' => $content,
+            'headings' => $headings,
+            "small_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
+            "large_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
+            "collapse_id" => $collapseId,
+            "android_group" => $collapseId,
+            "android_group_message" => ["en" => "$[notif_count] new comments"]
+		];
 
 		$fields = json_encode($fields);
     	print("\nJSON sent:\n");
@@ -46,11 +61,11 @@ class PushNotification extends \yii\base\Model
 
 		//return $response
 
-        $return["allresponses"] = $response;
-    	$return = json_encode( $return);
+        // $return["allresponses"] = $response;
+    	// $return = json_encode( $return);
 
     	print("\n\nJSON received:\n");
-    	print($return);
+    	print_r($response);
     	print("\n");
     }
 }
