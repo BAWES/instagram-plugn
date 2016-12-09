@@ -403,7 +403,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
                 // Mark comment handled/etc. if this is his initial crawl
                 if($initialCrawl){
                     $comment->comment_pushnotif_sent = 1;
-                    $comment->comment_notification_email_sent = 1
+                    $comment->comment_notification_email_sent = 1;
                     $comment->comment_handled = 1;
                 }
 
