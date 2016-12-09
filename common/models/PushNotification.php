@@ -9,6 +9,7 @@ use Yii;
  */
 class PushNotification extends \yii\base\Model
 {
+    private $oneSignalAppId = "6ca2c182-dda4-4749-aed6-0b4310188986";
 
     /**
      * Send the push notification
@@ -22,7 +23,7 @@ class PushNotification extends \yii\base\Model
         $content = ["en" => "Hello brother"];
 
 		$fields = [
-			'app_id' => "6ca2c182-dda4-4749-aed6-0b4310188986",
+			'app_id' => $this->oneSignalAppId,
 			'filters' => [
                 ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
                 ["operator" => "OR"],
