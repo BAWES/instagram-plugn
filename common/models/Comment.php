@@ -23,6 +23,7 @@ use Yii;
  * @property integer $comment_deleted_by
  * @property string $comment_deleted_reason
  * @property integer $comment_notification_email_sent
+ * @property integer $comment_pushnotif_sent
  * @property string $comment_datetime
  *
  * @property Agent $agent
