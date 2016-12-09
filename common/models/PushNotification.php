@@ -15,12 +15,11 @@ class PushNotification extends \yii\base\Model
      * @return [type] [description]
      */
     public function send(){
-        $headings = ["en" => "@mai_almutairi"];
-        $content = ["en" => "Hello brother"];
+        $groupId = "@mai_almutairi";
 
-        // TODO: Specify the Instagram account we're notifying about
-        // So it will group all notifications for same account together
-        $collapseId = "khalidmnet";
+        // Title and Content of Notification
+        $headings = ["en" => $groupId];
+        $content = ["en" => "Hello brother"];
 
 		$fields = [
 			'app_id' => "6ca2c182-dda4-4749-aed6-0b4310188986",
@@ -34,10 +33,8 @@ class PushNotification extends \yii\base\Model
             ],
 			'contents' => $content,
             'headings' => $headings,
-            "small_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
             "large_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
-            "collapse_id" => $collapseId,
-            "android_group" => $collapseId,
+            "android_group" => $groupId,
             "android_group_message" => ["en" => "$[notif_count] new comments"]
 		];
 
