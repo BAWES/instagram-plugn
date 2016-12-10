@@ -80,6 +80,7 @@ class PushNotification extends \yii\base\Model
 
         // Title and Content of Notification
         $headings = ["en" => "@".$comment['comment_by_username']];
+        $subtitle = "on @".$comment['user']['user_name'];
         $content = ["en" => $comment['comment_text']];
 
 		$fields = [
@@ -90,10 +91,11 @@ class PushNotification extends \yii\base\Model
             ],
 			'contents' => $content,
             'headings' => $headings,
+            'subtitle' => ["en" => $subtitle],
             "large_icon" => $comment['comment_by_photo'],
             "android_group" => $groupId,
             "collapse_id" => $groupId,
-            "android_group_message" => ["en" => "$[notif_count] new comments on @".$comment['user']['user_name']]
+            "android_group_message" => ["en" => "$[notif_count] new comments $subtitle"]
 		];
 
 		$fields = json_encode($fields);
