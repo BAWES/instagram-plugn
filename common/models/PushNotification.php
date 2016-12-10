@@ -36,6 +36,7 @@ class PushNotification extends \yii\base\Model
             'headings' => $headings,
             "large_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
             "android_group" => $groupId,
+            "collapse_id" => $groupId,
             "android_group_message" => ["en" => "$[notif_count] new comments"]
 		];
 
