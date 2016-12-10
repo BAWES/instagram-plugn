@@ -24,46 +24,48 @@ class PushNotification extends \yii\base\Model
             ->asArray()
             ->all();
 
-        // Update all comments set push notification as sent
-        Comment::updateAll(['comment_pushnotif_sent' => 1], ['comment_pushnotif_sent' => 0]);
+        if($newComments){
+            // Update all comments set push notification as sent
+            Comment::updateAll(['comment_pushnotif_sent' => 1], ['comment_pushnotif_sent' => 0]);
 
-        $crawledAccount = null;
-        $agentsNotificationFilter = [];
-        // Loop through comments
-        foreach($newComments as $comment){
-            $instagramAccount = $comment['user_id'];
-            if($instagramAccount != $crawledAccount){
-                $crawledAccount = $instagramAccount;
-                $agentsNotificationFilter = [];
-                $index = 0;
+            $crawledAccount = null;
+            $agentsNotificationFilter = [];
+            // Loop through comments
+            foreach($newComments as $comment){
+                $instagramAccount = $comment['user_id'];
+                if($instagramAccount != $crawledAccount){
+                    $crawledAccount = $instagramAccount;
+                    $agentsNotificationFilter = [];
+                    $index = 0;
 
-                // Define the tag filters on notifications
-                foreach($comment['user']['agents'] as $agent)
-                {
-                    // If there's more than one agent then append an OR operator
-                    if($index > 0){
-                        $agentsNotificationFilter[] = ["operator" => "OR"];
+                    // Define the tag filters on notifications
+                    foreach($comment['user']['agents'] as $agent)
+                    {
+                        // If there's more than one agent then append an OR operator
+                        if($index > 0){
+                            $agentsNotificationFilter[] = ["operator" => "OR"];
+                        }
+
+                        $agentsNotificationFilter[] = [
+                            "field" => "tag",
+                            "key" => "email",
+                            "relation" => "=",
+                            "value" => $agent['agent_email']
+                        ];
+
+                        $index++;
                     }
 
-                    $agentsNotificationFilter[] = [
-                        "field" => "tag",
-                        "key" => "email",
-                        "relation" => "=",
-                        "value" => $agent['agent_email']
-                    ];
-
-                    $index++;
+                    echo "\nCrawling Instagram User #$crawledAccount \n\n";
+                    echo "Agents: \n";
+                    print_r($agentsNotificationFilter);
                 }
 
-                echo "\nCrawling Instagram User #$crawledAccount \n\n";
-                echo "Agents: \n";
-                print_r($agentsNotificationFilter);
+                // Send the comment to the assigned agents
+                PushNotification::sendCommentNotificationToAgents($comment, $agentsNotificationFilter);
             }
-
-            // Send the comment to the assigned agents
-            PushNotification::sendCommentNotificationToAgents($comment, $agentsNotificationFilter);
-
         }
+
 
     }
 
