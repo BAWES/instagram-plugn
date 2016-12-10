@@ -25,8 +25,7 @@ class PushNotification extends \yii\base\Model
             ->all();
 
         // Update all comments set push notification as sent
-        // Comment::updateAll(['comment_pushnotif_sent' => 1], ['comment_pushnotif_sent' => 0]);
-        // TODO: Maybe remove "asArray" and update notification field as sent one by one
+        Comment::updateAll(['comment_pushnotif_sent' => 1], ['comment_pushnotif_sent' => 0]);
 
         $crawledAccount = null;
         $agentsNotificationFilter = [];
@@ -48,9 +47,9 @@ class PushNotification extends \yii\base\Model
 
                     $agentsNotificationFilter[] = [
                         "field" => "tag",
-                        "key" => "agentId",
+                        "key" => "email",
                         "relation" => "=",
-                        "value" => $agent['agent_id']
+                        "value" => $agent['agent_email']
                     ];
 
                     $index++;
@@ -83,9 +82,7 @@ class PushNotification extends \yii\base\Model
 
 		$fields = [
 			'app_id' => static::ONE_SIGNAL_APP_ID,
-			'filters' => [
-                $agentsTagFilter
-            ],
+			'filters' => $agentsTagFilter,
 			'data' => [
                 "foo" => "bar"
             ],
