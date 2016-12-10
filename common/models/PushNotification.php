@@ -3,35 +3,66 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Model for creating and sending Push Notifications
  */
 class PushNotification extends \yii\base\Model
 {
-    private $oneSignalAppId = "6ca2c182-dda4-4749-aed6-0b4310188986";
+    const ONE_SIGNAL_APP_ID = "6ca2c182-dda4-4749-aed6-0b4310188986";
 
     /**
      * Send Push Notifications for New Comments
      */
     public static function notifyNewComments(){
+        // Get all comments that have notification not sent
         $newComments = Comment::find()
-                    ->where(['comment_pushnotif_sent' => 0)
-                    ->with('user.agentAssignments')
-                    ->orderBy('user_id, comment_datetime')
-                    ->asArray()
-                    ->all();
-        print_r($newComments);
+            ->where(['comment_pushnotif_sent' => 0])
+            ->with('user.agents')
+            ->orderBy('user_id, comment_datetime')
+            ->asArray()
+            ->all();
+
+        // Update all comments set push notification as sent
+        // Comment::updateAll(['comment_pushnotif_sent' => 1], ['comment_pushnotif_sent' => 0]);
+        // TODO: Maybe remove "asArray" and update notification field as sent one by one
 
         $crawledAccount = null;
-        $agentsAssignedToCrawlAccount = [];
+        $agentsNotificationFilter = [];
         // Loop through comments
         foreach($newComments as $comment){
             $instagramAccount = $comment['user_id'];
             if($instagramAccount != $crawledAccount){
                 $crawledAccount = $instagramAccount;
-                $agentsAssignedToCrawlAccount = $comment['user']['agentAssignments'];
+                $agentsNotificationFilter = [];
+                $index = 0;
+
+                // Define the tag filters on notifications
+                foreach($comment['user']['agents'] as $agent)
+                {
+                    // If there's more than one agent then append an OR operator
+                    if($index > 0){
+                        $agentsNotificationFilter[] = ["operator" => "OR"];
+                    }
+
+                    $agentsNotificationFilter[] = [
+                        "field" => "tag",
+                        "key" => "agentId",
+                        "relation" => "=",
+                        "value" => $agent['agent_id']
+                    ];
+
+                    $index++;
+                }
+
+                echo "\nCrawling Instagram User #$crawledAccount \n\n";
+                echo "Agents: \n";
+                print_r($agentsNotificationFilter);
             }
+
+            // Send the comment to the assigned agents
+            PushNotification::sendCommentNotificationToAgents($comment, $agentsNotificationFilter);
 
         }
 
@@ -39,28 +70,28 @@ class PushNotification extends \yii\base\Model
 
     /**
      * Send the push notification
-     * @return [type] [description]
+     * @param  [type] $comment           [description]
+     * @param  [type] $agentsTagFilter    [description]
+     * @return [type]              [description]
      */
-    public function send(){
-        $groupId = "@mai_almutairi";
+    public static function sendCommentNotificationToAgents($comment, $agentsTagFilter){
+        $groupId = "@".$comment['comment_by_username'];
 
         // Title and Content of Notification
         $headings = ["en" => $groupId];
-        $content = ["en" => "Hello brother"];
+        $content = ["en" => $comment['comment_text']];
 
 		$fields = [
-			'app_id' => $this->oneSignalAppId,
+			'app_id' => static::ONE_SIGNAL_APP_ID,
 			'filters' => [
-                ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
-                //["operator" => "OR"],
-                // ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
+                $agentsTagFilter
             ],
 			'data' => [
                 "foo" => "bar"
             ],
 			'contents' => $content,
             'headings' => $headings,
-            "large_icon" => "https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xta1/t51.2885-19/11351974_903363216397161_1294946634_a.jpg",
+            "large_icon" => $comment['comment_by_photo'],
             "android_group" => $groupId,
             "collapse_id" => $groupId,
             "android_group_message" => ["en" => "$[notif_count] new comments"]
