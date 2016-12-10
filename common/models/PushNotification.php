@@ -12,6 +12,32 @@ class PushNotification extends \yii\base\Model
     private $oneSignalAppId = "6ca2c182-dda4-4749-aed6-0b4310188986";
 
     /**
+     * Send Push Notifications for New Comments
+     */
+    public static function notifyNewComments(){
+        $newComments = Comment::find()
+                    ->where(['comment_pushnotif_sent' => 0)
+                    ->with('user.agentAssignments')
+                    ->orderBy('user_id, comment_datetime')
+                    ->asArray()
+                    ->all();
+        print_r($newComments);
+
+        $crawledAccount = null;
+        $agentsAssignedToCrawlAccount = [];
+        // Loop through comments
+        foreach($newComments as $comment){
+            $instagramAccount = $comment['user_id'];
+            if($instagramAccount != $crawledAccount){
+                $crawledAccount = $instagramAccount;
+                $agentsAssignedToCrawlAccount = $comment['user']['agentAssignments'];
+            }
+
+        }
+
+    }
+
+    /**
      * Send the push notification
      * @return [type] [description]
      */
@@ -26,7 +52,7 @@ class PushNotification extends \yii\base\Model
 			'app_id' => $this->oneSignalAppId,
 			'filters' => [
                 ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
-                ["operator" => "OR"],
+                //["operator" => "OR"],
                 // ["field" => "tag", "key" => "agentId", "relation" => "=", "value" => "1"],
             ],
 			'data' => [
