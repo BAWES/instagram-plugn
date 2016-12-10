@@ -32,9 +32,9 @@ class PushNotification extends \yii\base\Model
             $agentsNotificationFilter = [];
             // Loop through comments
             foreach($newComments as $comment){
-                $instagramAccount = $comment['user_id'];
-                if($instagramAccount != $crawledAccount){
-                    $crawledAccount = $instagramAccount;
+                $instagramAccountId = $comment['user_id'];
+                if($instagramAccountId != $crawledAccount){
+                    $crawledAccount = $instagramAccountId;
                     $agentsNotificationFilter = [];
                     $index = 0;
 
@@ -76,10 +76,10 @@ class PushNotification extends \yii\base\Model
      * @return [type]              [description]
      */
     public static function sendCommentNotificationToAgents($comment, $agentsTagFilter){
-        $groupId = "@".$comment['comment_by_username'];
+        $groupId = "@".$comment['user']['user_name'];
 
         // Title and Content of Notification
-        $headings = ["en" => $groupId];
+        $headings = ["en" => "@".$comment['comment_by_username']];
         $content = ["en" => $comment['comment_text']];
 
 		$fields = [
@@ -93,7 +93,7 @@ class PushNotification extends \yii\base\Model
             "large_icon" => $comment['comment_by_photo'],
             "android_group" => $groupId,
             "collapse_id" => $groupId,
-            "android_group_message" => ["en" => "$[notif_count] new comments"]
+            "android_group_message" => ["en" => "$[notif_count] new comments on @".$comment['user']['user_name']]
 		];
 
 		$fields = json_encode($fields);
