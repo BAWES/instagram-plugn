@@ -87,7 +87,17 @@ class PushNotification extends \yii\base\Model
 			'app_id' => static::ONE_SIGNAL_APP_ID,
 			'filters' => $agentsTagFilter,
 			'data' => [
-                "foo" => "bar"
+                "comment_id" => $comment['comment_id'],
+                "media_id" => $comment['media_id'],
+                "user_id" => $comment['user_id'],
+                "agent_id" => $comment['agent_id'],
+                "comment_instagram_id" => $comment['comment_instagram_id'],
+                "comment_text" => $comment['comment_text'],
+                "comment_by_username" => $comment['comment_by_username'],
+                "comment_by_photo" => $comment['comment_by_photo'],
+                "comment_by_id" => $comment['comment_by_id'],
+                "comment_by_fullname" => $comment['comment_by_fullname'],
+                "comment_datetime" => $comment['comment_datetime']
             ],
 			'contents' => $content,
             'headings' => $headings,
