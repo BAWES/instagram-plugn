@@ -104,7 +104,7 @@ class PushNotification extends \yii\base\Model
             'subtitle' => ["en" => $subtitle],
             "large_icon" => $comment['comment_by_photo'],
             "android_group" => $groupId,
-            "collapse_id" => $groupId,
+            //"collapse_id" => $groupId,
             "android_group_message" => ["en" => "$[notif_count] new comments $subtitle"]
 		];
 
