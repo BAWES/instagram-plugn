@@ -109,8 +109,8 @@ class PushNotification extends \yii\base\Model
 		];
 
 		$fields = json_encode($fields);
-    	print("\nJSON sent:\n");
-    	print($fields);
+    	// print("\nJSON sent:\n");
+    	// print($fields);
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
@@ -126,13 +126,8 @@ class PushNotification extends \yii\base\Model
 		$response = curl_exec($ch);
 		curl_close($ch);
 
-		//return $response
-
-        // $return["allresponses"] = $response;
-    	// $return = json_encode( $return);
-
-    	print("\n\nJSON received:\n");
-    	print_r($response);
-    	print("\n");
+    	// print("\n\nJSON received:\n");
+    	// print_r($response);
+    	// print("\n");
     }
 }
