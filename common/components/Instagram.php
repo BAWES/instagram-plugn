@@ -165,6 +165,7 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $comment->comment_handled = Comment::HANDLED_TRUE;
             $comment->comment_handled_by = $pendingComment->agent_id;
             $comment->comment_notification_email_sent = Comment::NOTIFICATION_EMAIL_SENT_TRUE;
+            $comment->comment_pushnotif_sent = 1;
 
             $unixTime = ArrayHelper::getValue($response, 'data.created_time');
             $comment->comment_datetime = new yii\db\Expression("FROM_UNIXTIME($unixTime)");
