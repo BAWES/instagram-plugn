@@ -15,11 +15,19 @@ class NotificationController extends \yii\console\Controller {
      * Used for testing only
      */
     public function actionIndex(){
-        //$this->stdout("Gather comments to notify agents about \n", Console::FG_RED, Console::BOLD);
+        $this->stdout("Processing Push Notifications \n", Console::FG_RED, Console::BOLD);
         PushNotification::notifyNewComments();
 
         return self::EXIT_CODE_NORMAL;
     }
+
+    /**
+     * # CRON every 15 seconds
+* * * * * php ~/www/yii cron/every15-seconds > /dev/null 2>&1
+* * * * * sleep 15; php ~/www/yii cron/every15-seconds > /dev/null 2>&1
+* * * * * sleep 30; php ~/www/yii cron/every15-seconds > /dev/null 2>&1
+* * * * * sleep 45; php ~/www/yii cron/every15-seconds > /dev/null 2>&1
+     */
 
     // public function actionTest(){
     //     $this->stdout("Testing Notification Query \n", Console::FG_RED, Console::BOLD);
