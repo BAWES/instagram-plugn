@@ -127,7 +127,7 @@ class PushNotification extends \yii\base\Model
 		curl_close($ch);
 
     	// print("\n\nJSON received:\n");
-    	// print_r($response);
+    	print_r($response);
     	// print("\n");
     }
 }
