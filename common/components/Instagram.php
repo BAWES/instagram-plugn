@@ -113,7 +113,13 @@ class Instagram extends \kotchuprik\authclient\Instagram
         $responseCode = ArrayHelper::getValue($response, 'meta.code');
         if($responseCode == 200){ //Successfully deleted comment
 
-            //Mark Comment as Deleted
+            // Mark Comment Handled if not already
+            if($commentToDelete->comment_handled == Comment::HANDLED_FALSE){
+                $commentToDelete->comment_handled = Comment::HANDLED_TRUE;
+                $commentToDelete->comment_handled_by = $pendingComment->agent->agent_id;
+            }
+
+            // Mark Comment as Deleted
             $commentToDelete->comment_deleted = Comment::DELETED_TRUE;
             $commentToDelete->comment_deleted_by = $pendingComment->agent->agent_id;
             $commentToDelete->save(false);
