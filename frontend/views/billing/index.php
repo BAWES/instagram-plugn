@@ -4,6 +4,12 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
+$this->registerJsFile("https://www.2checkout.com/checkout/api/2co.min.js");
+//, ['position' => \yii\web\View::POS_HEAD]
+$this->registerJs("
+TCO.loadPubKey('sandbox');
+");
+
 $this->title = 'Billing';
 ?>
 
@@ -22,7 +28,7 @@ $this->title = 'Billing';
 <div class="container-fluid">
 	<div class="box-typical box-typical-padding">
 
-		
+
 
 		<div class="add-customers-screen tbl">
 			<div class="add-customers-screen-in">
