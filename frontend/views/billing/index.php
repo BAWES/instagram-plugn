@@ -29,21 +29,32 @@ $this->title = 'Billing';
 	<div class="box-typical box-typical-padding">
 
 
+		<form id="myCCForm"
+			action="https://www.mysite.com/examplescript.php" method="post">
+		  <input name="token" type="hidden" value="" />
+		  <div>
+		    <label>
+		      <span>Card Number</span>
+		      <input class="form-control" id="ccNo" type="text" value="" autocomplete="off" required />
+		    </label>
+		  </div>
+		  <div>
+		    <label>
+		      <span>Expiration Date (MM/YYYY)</span>
+		  	</label>
+		    <input class="form-control" id="expMonth" type="text" size="2" placeholder="MM" required />
+		    <span> / </span>
+		    <input class="form-control" id="expYear" type="text" size="4" placeholder="YYYY" required />
+		  </div>
+		  <div>
+		    <label>
+		      <span>CVC</span>
+		      <input class="form-control" id="cvv" type="text" value="" autocomplete="off" required />
+		    </label>
+		  </div>
 
-		<div class="add-customers-screen tbl">
-			<div class="add-customers-screen-in">
-
-				<div class="add-customers-screen-user">
-					<i class="font-icon font-icon-build"></i>
-				</div>
-
-				<h2>Billing</h2>
-				<p class="lead color-blue-grey-lighter">
-					Plugn is free to use during our beta period
-                </p>
-			</div>
-		</div>
-
+		  <input class="btn btn-primary" type="submit" value="Submit Payment" style="margin-top:10px;"/>
+		</form>
 
 
 	</div><!--.box-typical-->
