@@ -7,7 +7,53 @@ use yii\helpers\Html;
 $this->registerJsFile("https://www.2checkout.com/checkout/api/2co.min.js");
 //, ['position' => \yii\web\View::POS_HEAD]
 $this->registerJs("
-TCO.loadPubKey('sandbox');
+// Called when token created successfully.
+var successCallback = function(data) {
+	var myForm = document.getElementById('myCCForm');
+
+	// Set the token as the value for the token input
+	myForm.token.value = data.response.token.token;
+
+	// IMPORTANT: Here we call `submit()` on the form element directly instead of using jQuery to prevent and infinite token request loop.
+	myForm.submit();
+};
+
+// Called when token creation fails.
+var errorCallback = function(data) {
+	if (data.errorCode === 200) {
+	  // This error code indicates that the ajax call failed. We recommend that you retry the token request.
+	} else {
+	  alert(data.errorMsg);
+	}
+};
+
+var tokenRequest = function() {
+	// Setup token request arguments
+    var args = {
+        sellerId: '103110406',
+        publishableKey: '88992314-9CE9-4E91-96B8-66FB6845F51A',
+        ccNo: $('#ccNo').val(),
+        cvv: $('#cvv').val(),
+        expMonth: $('#expMonth').val(),
+        expYear: $('#expYear').val()
+    };
+
+	// Make the token request
+    TCO.requestToken(successCallback, errorCallback, args);
+};
+
+$(function() {
+	// Pull in the public encryption key for our environment
+    TCO.loadPubKey('sandbox');
+
+    $('#myCCForm').submit(function(e) {
+		// Call our token request function
+        tokenRequest();
+
+		// Prevent form from submitting
+        return false;
+    });
+});
 ");
 
 $this->title = 'Billing';
