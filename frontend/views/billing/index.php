@@ -33,8 +33,8 @@ var errorCallback = function(data) {
 var tokenRequest = function() {
 	// Setup token request arguments
     var args = {
-        sellerId: '103110406',
-        publishableKey: '88992314-9CE9-4E91-96B8-66FB6845F51A',
+        sellerId: '901335342',
+        publishableKey: '9DA7066C-F76D-4BFB-AEAF-0009E4D664BC',
         ccNo: $('#ccNo').val(),
         cvv: $('#cvv').val(),
         expMonth: $('#expMonth').val(),
