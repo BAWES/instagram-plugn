@@ -81,13 +81,32 @@ class BillingController extends Controller
                     "currency" => 'USD',
                     "total" => '10.00',
                     "billingAddr" => [
-                        "name" => 'Testing Tester',
+                        // Card holder’s name. (128 characters max)
+                        "name" => 'Jasem the weird',
+                        // Card holder’s street address. (64 characters max) Required
                         "addrLine1" => '123 Test St',
+                        // Card holder’s street address line 2. (64 characters max)
+                        // Required if “country” value is: CHN, JPN, RUS - Optional for all other “country” values.
+                        "addrLine2" => '123213',
+                        // Card holder’s city. (64 characters max) Required
                         "city" => 'Columbus',
+                        /**
+                         *  Card holder’s state. (64 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP,
+                         *  EGY, FRA, IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR,
+                         *   GBR, USA - Optional for all other “country” values.
+                         */
                         "state" => 'OH',
+                        /**
+                         * Card holder’s zip. (16 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP, EGY, FRA,
+                         *  IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR, GBR,
+                         *  USA - Optional for all other “country” values.
+                         */
                         "zipCode" => '43123',
+                        // Card holder’s country. (64 characters max) Required
                         "country" => 'USA',
+                        // Card holder’s email. (64 characters max) Required
                         "email" => 'testingtester@2co.com',
+                        // Card holder’s phone. (16 characters max) Optional
                         "phoneNumber" => '555-555-5555'
                     ]
                 ]);
