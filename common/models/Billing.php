@@ -1,0 +1,113 @@
+<?php
+
+namespace common\models;
+
+use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+
+/**
+ * This is the model class for table "billing".
+ *
+ * @property string $billing_id
+ * @property integer $user_id
+ * @property integer $country_id
+ * @property string $billing_name
+ * @property string $billing_email
+ * @property string $billing_city
+ * @property string $billing_zip_code
+ * @property string $billing_address_line1
+ * @property string $billing_address_line2
+ * @property string $billing_total
+ * @property string $billing_currency
+ * @property string $2co_token
+ * @property string $2co_order_num
+ * @property string $2co_transaction_id
+ * @property string $2co_response_code
+ * @property string $2co_response_msg
+ * @property string $billing_datetime
+ *
+ * @property Country $country
+ * @property InstagramUser $user
+ */
+class Billing extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'billing';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['country_id', 'billing_name', 'billing_email', 'billing_city', 'billing_address_line1', 'billing_total', 'billing_currency'], 'required'],
+            [['country_id'], 'integer'],
+            [['billing_total'], 'number'],
+            [['billing_name'], 'string', 'max' => 128],
+            [['billing_email', 'billing_city', 'billing_address_line1', 'billing_address_line2'], 'string', 'max' => 64],
+            [['billing_zip_code'], 'string', 'max' => 16],
+            [['billing_currency'], 'string', 'max' => 12],
+            [['2co_token', '2co_order_num', '2co_transaction_id', '2co_response_code', '2co_response_msg'], 'string', 'max' => 255],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'country_id']]
+        ];
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'billing_datetime',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'billing_id' => 'Billing ID',
+            'user_id' => 'User ID',
+            'country_id' => 'Country ID',
+            'billing_name' => 'Billing Name',
+            'billing_email' => 'Billing Email',
+            'billing_city' => 'Billing City',
+            'billing_zip_code' => 'Billing Zip Code',
+            'billing_address_line1' => 'Billing Address Line1',
+            'billing_address_line2' => 'Billing Address Line2',
+            'billing_total' => 'Billing Total',
+            'billing_currency' => 'Billing Currency',
+            '2co_token' => '2co Token',
+            '2co_order_num' => '2co Order Num',
+            '2co_transaction_id' => '2co Transaction ID',
+            '2co_response_code' => '2co Response Code',
+            '2co_response_msg' => '2co Response Msg',
+            'billing_datetime' => 'Billing Datetime',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::className(), ['country_id' => 'country_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
+    }
+}
