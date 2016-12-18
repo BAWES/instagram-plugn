@@ -149,6 +149,8 @@ $this->title = 'Billing';
 					  <input class="form-control" id="cvv" type="text" value="" autocomplete="off" required />
 					</label>
 				</div>
+
+				<img src='https://www.2checkout.com/upload/images/paymentlogoshorizontal.png' alt='payment options'/>
 		  	</div>
 
 			<div class='col-sm-12' style='text-align:center; margin-top:20px;'>
