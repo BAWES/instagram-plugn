@@ -86,32 +86,80 @@ $this->title = 'Billing';
 <div class="container-fluid">
 	<div class="box-typical box-typical-padding">
 
+		<form id="myCCForm" class='row' method="post" action="<?= $processFormUrl ?>">
 
-		<form id="myCCForm" method="post" action="<?= $processFormUrl ?>">
-		  <input name="token" type="hidden" value="" />
-		  <div>
-		    <label>
-		      <span>Card Number</span>
-		      <input class="form-control" id="ccNo" type="text" value="" autocomplete="off" required />
-		    </label>
-		  </div>
-		  <div>
-		    <label>
-		      <span>Expiration Date (MM/YYYY)</span>
-		  	</label>
-		    <input class="form-control" id="expMonth" type="text" size="2" placeholder="MM" required />
-		    <span> / </span>
-		    <input class="form-control" id="expYear" type="text" size="4" placeholder="YYYY" required />
-		  </div>
-		  <div>
-		    <label>
-		      <span>CVC</span>
-		      <input class="form-control" id="cvv" type="text" value="" autocomplete="off" required />
-		    </label>
+		  <!-- Card Holder Info -->
+		  <div class='col-md-6'>
+			  <h4>Card Holder</h4>
+
+			  <div>
+				  <label>
+					<span>Name</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>Email</span>
+					<input class="form-control" type="email" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>Address Line 1</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>Address Line 2</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>Country</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>City</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+				  <label>
+					<span>Zip code</span>
+					<input class="form-control" type="text" value="" autocomplete="off" />
+				  </label>
+			  </div>
 		  </div>
 
-		  <input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment" style="margin-top:10px;"/>
+			<!-- Card Info -->
+			<div class='col-md-6'>
+				<h4>Creditcard</h4>
+
+				<input name="token" type="hidden" value="" />
+				<div>
+					<label>
+					  <span>Card Number</span>
+					  <input class="form-control" id="ccNo" type="text" value="" autocomplete="off" required />
+					</label>
+				</div>
+				<div>
+					<label>
+					  <span>Expiration Date (MM/YYYY)</span>
+					</label>
+					<input class="form-control" id="expMonth" type="text" size="2" placeholder="MM" required />
+					<span> / </span>
+					<input class="form-control" id="expYear" type="text" size="4" placeholder="YYYY" required />
+				</div>
+				<div>
+					<label>
+					  <span>CVC</span>
+					  <input class="form-control" id="cvv" type="text" value="" autocomplete="off" required />
+					</label>
+				</div>
+		  	</div>
+
+			<div class='col-sm-12' style='text-align:center; margin-top:20px;'>
+				<input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment"/>
+			</div>
+
+
+
+
 		</form>
+
 
 
 	</div><!--.box-typical-->

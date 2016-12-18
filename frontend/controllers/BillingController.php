@@ -107,7 +107,7 @@ class BillingController extends Controller
                         // Card holder’s email. (64 characters max) Required
                         "email" => 'testingtester@2co.com',
                         // Card holder’s phone. (16 characters max) Optional
-                        "phoneNumber" => '555-555-5555'
+                        // "phoneNumber" => '555-555-5555'
                     ]
                 ]);
 
