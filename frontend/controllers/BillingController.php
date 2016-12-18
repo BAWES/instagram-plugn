@@ -45,10 +45,14 @@ class BillingController extends Controller
             $token = Yii::$app->request->post('token');
 
             // Use the token to create a sale
-            
+
         }
 
-        return $this->render('index');
+        return $this->render('index', [
+            'environment' => Yii::$app->params['2co.sandbox.environment'],
+            'sellerId' => Yii::$app->params['2co.sandbox.sellerId'],
+            'publishableKey' => Yii::$app->params['2co.sandbox.publishableKey'],
+        ]);
     }
 
 }

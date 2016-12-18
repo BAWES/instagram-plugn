@@ -40,8 +40,8 @@ var errorCallback = function(data) {
 var tokenRequest = function() {
 	// Setup token request arguments
     var args = {
-        sellerId: '901335342',
-        publishableKey: '9DA7066C-F76D-4BFB-AEAF-0009E4D664BC',
+        sellerId: '$sellerId',
+        publishableKey: '$publishableKey',
         ccNo: $('#ccNo').val(),
         cvv: $('#cvv').val(),
         expMonth: $('#expMonth').val(),
@@ -54,7 +54,7 @@ var tokenRequest = function() {
 
 $(function() {
 	// Pull in the public encryption key for our environment
-    TCO.loadPubKey('sandbox');
+    TCO.loadPubKey('$environment');
 
     $('#myCCForm').submit(function(e) {
 		// Disable Submit Button
