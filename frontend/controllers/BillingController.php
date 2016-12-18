@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -40,19 +41,27 @@ class BillingController extends Controller
      */
     public function actionIndex()
     {
-        // Token returned from 2CO after creditcard input
-        if(Yii::$app->request->post('token')){
-            $token = Yii::$app->request->post('token');
-
-            // Use the token to create a sale
-
-        }
-
         return $this->render('index', [
+            'processFormUrl' => Url::to(['billing/process']),
             'environment' => Yii::$app->params['2co.sandbox.environment'],
             'sellerId' => Yii::$app->params['2co.sandbox.sellerId'],
             'publishableKey' => Yii::$app->params['2co.sandbox.publishableKey'],
         ]);
+    }
+
+
+    /**
+     * Process the payment token
+     */
+    public function actionProcess(){
+        // Token returned from 2CO after creditcard input
+        if(Yii::$app->request->post('token')){
+            $token = Yii::$app->request->post('token');
+            die($token);
+
+            // Use the token to create a sale
+
+        }
     }
 
 }

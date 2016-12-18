@@ -87,7 +87,7 @@ $this->title = 'Billing';
 	<div class="box-typical box-typical-padding">
 
 
-		<form id="myCCForm" method="post">
+		<form id="myCCForm" method="post" action="<?= $processFormUrl ?>">
 		  <input name="token" type="hidden" value="" />
 		  <div>
 		    <label>
