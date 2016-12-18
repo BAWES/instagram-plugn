@@ -38,6 +38,10 @@ class BillingController extends Controller
      */
     public function actionIndex()
     {
+        if(Yii::$app->request->post()){
+            die(print_r(Yii::$app->request->post()));
+        }
+
         return $this->render('index');
     }
 

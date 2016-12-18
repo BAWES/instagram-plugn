@@ -20,6 +20,9 @@ var successCallback = function(data) {
 
 // Called when token creation fails.
 var errorCallback = function(data) {
+	// Re-enable submit button
+	$('#submitBtn').removeAttr('disabled');
+
 	if (data.errorCode === 200) {
 	  // This error code indicates that the ajax call failed. We recommend that you retry the token request.
 	} else {
@@ -47,6 +50,8 @@ $(function() {
     TCO.loadPubKey('sandbox');
 
     $('#myCCForm').submit(function(e) {
+		// Disable Submit Button
+		$('#submitBtn').attr('disabled', 'disabled');
 		// Call our token request function
         tokenRequest();
 
@@ -75,8 +80,7 @@ $this->title = 'Billing';
 	<div class="box-typical box-typical-padding">
 
 
-		<form id="myCCForm"
-			action="https://www.mysite.com/examplescript.php" method="post">
+		<form id="myCCForm" method="post">
 		  <input name="token" type="hidden" value="" />
 		  <div>
 		    <label>
@@ -99,7 +103,7 @@ $this->title = 'Billing';
 		    </label>
 		  </div>
 
-		  <input class="btn btn-primary" type="submit" value="Submit Payment" style="margin-top:10px;"/>
+		  <input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment" style="margin-top:10px;"/>
 		</form>
 
 
