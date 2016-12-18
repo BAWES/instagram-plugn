@@ -15,7 +15,7 @@ use yii\filters\AccessControl;
 class BillingController extends Controller
 {
     public $enableCsrfValidation = false;
-    
+
     /**
      * @inheritdoc
      */
@@ -40,8 +40,12 @@ class BillingController extends Controller
      */
     public function actionIndex()
     {
-        if(Yii::$app->request->post()){
-            die(print_r(Yii::$app->request->post()));
+        // Token returned from 2CO after creditcard input
+        if(Yii::$app->request->post('token')){
+            $token = Yii::$app->request->post('token');
+
+            // Use the token to create a sale
+            
         }
 
         return $this->render('index');

@@ -26,7 +26,14 @@ var errorCallback = function(data) {
 	if (data.errorCode === 200) {
 	  // This error code indicates that the ajax call failed. We recommend that you retry the token request.
 	} else {
-	  alert(data.errorMsg);
+	  //alert(data.errorMsg);
+	  swal({
+		  title: 'Unable to Process Card',
+		  text: data.errorMsg,
+		  type: 'error',
+		  confirmButtonClass: 'btn-danger',
+		  confirmButtonText: 'Ok'
+	  });
 	}
 };
 
