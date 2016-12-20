@@ -113,7 +113,7 @@ class Billing extends \yii\db\ActiveRecord
             'billing_city' => 'City',
             'billing_state' => 'State',
             'billing_zip_code' => 'Zip Code',
-            'billing_address_line1' => 'Address Line 1',
+            'billing_address_line1' => 'Street Address',
             'billing_address_line2' => 'Address Line 2',
             'billing_total' => 'Total',
             'billing_currency' => 'Currency',

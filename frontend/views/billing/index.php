@@ -238,7 +238,7 @@ $this->title = 'Billing';
 						<div class="price-card-amount">$7.99</div>
 						<div class="price-card-amount-lbl">per month</div>
 						<div class="clear"></div>
-						<input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment"/>
+						<input id='submitBtn' class="btn btn-primary" type="submit" value="Confirm Payment"/>
 					</div>
 				</article>
 		  	</div>
