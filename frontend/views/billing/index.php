@@ -1,6 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 
@@ -85,42 +87,65 @@ $this->title = 'Billing';
 
 <div class="container-fluid">
 	<div class="box-typical box-typical-padding">
+		<?php
+        // Field Templates
+        $fieldTemplate = "{label}\n{beginWrapper}\n"
+                        . "<div class='inputer'>\n<div class='input-wrapper'>\n"
+                        . "{input}"
+                        . "</div>\n</div>\n{hint}\n{error}\n"
+                        . "{endWrapper}";
 
-		<form id="myCCForm" class='row' method="post" action="<?= $processFormUrl ?>">
+        $selectTemplate = "{label}\n{beginWrapper}\n"
+                        . "<div class=''>\n<div class=''>\n"
+                        . "{input}"
+                        . "</div>\n</div>\n{hint}\n{error}\n"
+                        . "{endWrapper}";
 
+
+        /**
+         * Start Form
+         */
+        $form = ActiveForm::begin([
+            'id' => 'myCCForm',
+            //'layout' => 'horizontal',
+            'options' => ['enctype' => 'multipart/form-data', 'class' => 'row'],
+            'fieldConfig' => [
+                'template' => $fieldTemplate,
+                'horizontalCssClasses' => [
+                    // 'label' => 'col-md-3',
+                    // 'offset' => '',
+                    // 'wrapper' => "col-md-5",
+                    // 'error' => '',
+                    // 'hint' => '',
+                ],
+            ],
+        ]);
+        ?>
 		  <!-- Card Holder Info -->
 		  <div class='col-md-6'>
 			  <h4>Card Holder</h4>
 
 			  <div>
-				  <label>
-					<span>Name</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>Email</span>
-					<input class="form-control" type="email" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>Address Line 1</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>Address Line 2</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>Country</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>City</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
-				  <label>
-					<span>Zip code</span>
-					<input class="form-control" type="text" value="" autocomplete="off" />
-				  </label>
+				  <?= $form->field($model, 'billing_name')->textInput(['placeholder' => 'Your name']) ?>
+				  <?= $form->field($model, 'billing_email')->input('email', ['placeholder' => 'email@company.com']) ?>
+				  <?= $form->field($model, 'billing_address_line1')->textInput() ?>
+				  <?= $form->field($model, 'billing_address_line2')->textInput() ?>
+				  <?= $form->field($model, 'country_id',[
+		                'template' => $selectTemplate,
+		            ])->dropDownList(
+		                ArrayHelper::map(
+							common\models\Country::find()->all(),
+							"country_id",
+		                    "country_name"),
+							[
+								'prompt'=>''
+				                // 'class' => 'selectpicker',
+				                // 'data-live-search' => 'true',
+				                // 'data-width' => '100%'
+		            		]);
+					?>
+				  <?= $form->field($model, 'billing_city')->textInput() ?>
+				  <?= $form->field($model, 'billing_zip_code')->textInput() ?>
 			  </div>
 		  </div>
 
@@ -158,11 +183,7 @@ $this->title = 'Billing';
 			</div>
 
 
-
-
-		</form>
-
-
+		<?php ActiveForm::end(); ?>
 
 	</div><!--.box-typical-->
 </div><!--.container-fluid-->
