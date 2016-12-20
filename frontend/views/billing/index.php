@@ -164,9 +164,14 @@ $this->title = 'Billing';
 					<label>
 					  <span>Expiration Date (MM/YYYY)</span>
 					</label>
-					<input class="form-control" id="expMonth" type="text" size="2" placeholder="MM" required />
-					<span> / </span>
-					<input class="form-control" id="expYear" type="text" size="4" placeholder="YYYY" required />
+					<input class="form-control"
+						style='width:40%; float:left;'
+						id="expMonth" type="text" size="2" placeholder="MM" required />
+					<span style='width:10%; text-align:center;float:left;'> / </span>
+					<input class="form-control"
+						style='width:40%; float:left;'
+						id="expYear" type="text" size="4" placeholder="YYYY" required />
+					<div class="clear"></div>
 				</div>
 				<div>
 					<label>
@@ -176,10 +181,20 @@ $this->title = 'Billing';
 				</div>
 
 				<img src='https://www.2checkout.com/upload/images/paymentlogoshorizontal.png' alt='payment options'/>
+
+				<article class="price-card">
+					<header class="price-card-header">Payment Summary</header>
+					<div class="price-card-body">
+						<div class="price-card-amount">$7.99</div>
+						<div class="price-card-amount-lbl">per month</div>
+						<div class="clear"></div>
+						<input id='submitBtn' class="btn btn-primary" type="submit" value="Pay"/>
+					</div>
+				</article>
 		  	</div>
 
 			<div class='col-sm-12' style='text-align:center; margin-top:20px;'>
-				<input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment"/>
+				<!--<input id='submitBtn' class="btn btn-primary" type="submit" value="Subscribe at $7.99 a month"/>-->
 			</div>
 
 
