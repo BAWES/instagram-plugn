@@ -47,6 +47,12 @@ class BillingController extends Controller
     {
         $model = new Billing();
 
+        // Handle AJAX Validation
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return \yii\widgets\ActiveForm::validate($model);
+        }
+
         if($model->load(Yii::$app->request->post())){
             // Token returned from 2CO after creditcard input
             if(Yii::$app->request->post('token') && $model->save()){

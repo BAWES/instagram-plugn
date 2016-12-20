@@ -107,6 +107,9 @@ $this->title = 'Billing';
          */
         $form = ActiveForm::begin([
             'id' => 'myCCForm',
+			'enableClientValidation' => true,
+			'enableAjaxValidation' => true,
+
             //'layout' => 'horizontal',
             'options' => ['enctype' => 'multipart/form-data', 'class' => 'row'],
             'fieldConfig' => [

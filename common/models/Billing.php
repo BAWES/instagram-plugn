@@ -48,6 +48,22 @@ class Billing extends \yii\db\ActiveRecord
         return [
             [['country_id', 'billing_name', 'billing_email', 'billing_city', 'billing_address_line1'], 'required'],
             [['country_id'], 'integer'],
+            // Address Line 2 is required for CHN, JPN, RUS countries.
+            [['billing_address_line2'], 'required', 'when' => function($model){
+                $countries = Country::find()->where([
+                    'country_addrline2_required' => 1
+                ])->all();
+                foreach($countries as $country){
+                    // If this is a country that needs line 2 address input is required
+                    if($model->country_id == $country->country_id){
+                        return true;
+                    }
+                }
+            }, 'whenClient' => "function (attribute, value) {
+                    // Ignore client side validation for this field
+                    return false;
+                }"
+            ],
             [['billing_email'], 'email'],
             [['billing_name'], 'string', 'max' => 128],
             [['billing_email', 'billing_city', 'billing_address_line1', 'billing_address_line2'], 'string', 'max' => 64],
