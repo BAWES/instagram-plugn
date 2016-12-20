@@ -70,6 +70,50 @@ $(function() {
 });
 ");
 
+// JS to show fields for required countries
+$this->registerJs("
+var zipStateRequiredCountries = $zipStateCountries;
+var addrLineRequiredCountries = $addrCountries;
+
+var addrInput = $('.field-billing-billing_address_line2');
+var stateInput = $('.field-billing-billing_state');
+var zipInput = $('.field-billing-billing_zip_code');
+
+addrInput.hide();
+stateInput.hide();
+zipInput.hide();
+
+$('#billing-country_id').change(function(){
+	// Check if selected country is in adr line
+	var addrLine2Required = false;
+	addrLineRequiredCountries.forEach(function(country){
+		if(country.country_id == $('#billing-country_id').val()){
+			addrLine2Required = true;
+		}
+	});
+	if(addrLine2Required){
+		addrInput.show();
+	}else addrInput.hide();
+
+	// Check if selected country is in zip / state
+	var zipStateRequired = false;
+	zipStateRequiredCountries.forEach(function(country){
+		if(country.country_id == $('#billing-country_id').val()){
+			zipStateRequired = true;
+		}
+	});
+	if(zipStateRequired){
+		stateInput.show();
+		zipInput.show();
+	}else{
+		stateInput.hide();
+		zipInput.hide();
+	}
+
+
+});
+");
+
 $this->title = 'Billing';
 ?>
 
@@ -131,8 +175,7 @@ $this->title = 'Billing';
 			  <div>
 				  <?= $form->field($model, 'billing_name')->textInput(['placeholder' => 'Your name', 'required' => 'required']) ?>
 				  <?= $form->field($model, 'billing_email')->input('email', ['placeholder' => 'email@company.com', 'required' => 'required']) ?>
-				  <?= $form->field($model, 'billing_address_line1')->input('text', ['required' => 'required']) ?>
-				  <?= $form->field($model, 'billing_address_line2')->textInput() ?>
+
 				  <?= $form->field($model, 'country_id',[
 		                'template' => $selectTemplate,
 		            ])->dropDownList(
@@ -148,9 +191,11 @@ $this->title = 'Billing';
 				                // 'data-width' => '100%'
 		            		]);
 					?>
-				  <?= $form->field($model, 'billing_city')->textInput() ?>
-				  <?= $form->field($model, 'billing_state')->textInput() ?>
-				  <?= $form->field($model, 'billing_zip_code')->textInput() ?>
+					<?= $form->field($model, 'billing_city')->textInput() ?>
+					<?= $form->field($model, 'billing_address_line1')->input('text', ['required' => 'required']) ?>
+					<?= $form->field($model, 'billing_address_line2')->textInput() ?>
+					<?= $form->field($model, 'billing_state')->textInput() ?>
+					<?= $form->field($model, 'billing_zip_code')->textInput() ?>
 			  </div>
 		  </div>
 

@@ -118,9 +118,22 @@ class BillingController extends Controller
             }
         }
 
+        // List of Zip / State Required Countries
+        $zipStateCountries = \common\models\Country::find()->select('country_id')
+            ->where(['country_zipstate_required' => 1])->asArray()->all();
+
+        // List of Addr Line 2 required countries
+        $addrCountries = \common\models\Country::find()->select('country_id')
+            ->where(['country_addrline2_required' => 1])->asArray()->all();
+
 
         return $this->render('index', [
+            // Form
             'model' => $model,
+            'zipStateCountries' => json_encode($zipStateCountries),
+            'addrCountries' => json_encode($addrCountries),
+
+            // 2 CO
             'processFormUrl' => Url::to(['billing/process']),
             'environment' => Yii::$app->params['2co.sandbox.environment'],
             'sellerId' => Yii::$app->params['2co.sandbox.sellerId'],
