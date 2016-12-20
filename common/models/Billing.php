@@ -46,15 +46,12 @@ class Billing extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['country_id', 'billing_name', 'billing_email', 'billing_city', 'billing_address_line1', 'billing_total', 'billing_currency'], 'required'],
+            [['country_id', 'billing_name', 'billing_email', 'billing_city', 'billing_address_line1'], 'required'],
             [['country_id'], 'integer'],
             [['billing_email'], 'email'],
-            [['billing_total'], 'number'],
             [['billing_name'], 'string', 'max' => 128],
             [['billing_email', 'billing_city', 'billing_address_line1', 'billing_address_line2'], 'string', 'max' => 64],
             [['billing_zip_code'], 'string', 'max' => 16],
-            [['billing_currency'], 'string', 'max' => 12],
-            [['2co_token', '2co_order_num', '2co_transaction_id', '2co_response_code', '2co_response_msg'], 'string', 'max' => 255],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'country_id']]
         ];
     }

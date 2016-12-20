@@ -126,9 +126,9 @@ $this->title = 'Billing';
 			  <h4>Card Holder</h4>
 
 			  <div>
-				  <?= $form->field($model, 'billing_name')->textInput(['placeholder' => 'Your name']) ?>
-				  <?= $form->field($model, 'billing_email')->input('email', ['placeholder' => 'email@company.com']) ?>
-				  <?= $form->field($model, 'billing_address_line1')->textInput() ?>
+				  <?= $form->field($model, 'billing_name')->textInput(['placeholder' => 'Your name', 'required' => 'required']) ?>
+				  <?= $form->field($model, 'billing_email')->input('email', ['placeholder' => 'email@company.com', 'required' => 'required']) ?>
+				  <?= $form->field($model, 'billing_address_line1')->input('text', ['required' => 'required']) ?>
 				  <?= $form->field($model, 'billing_address_line2')->textInput() ?>
 				  <?= $form->field($model, 'country_id',[
 		                'template' => $selectTemplate,
@@ -138,7 +138,8 @@ $this->title = 'Billing';
 							"country_id",
 		                    "country_name"),
 							[
-								'prompt'=>''
+								'prompt'=>'',
+								'required' => 'required'
 				                // 'class' => 'selectpicker',
 				                // 'data-live-search' => 'true',
 				                // 'data-width' => '100%'
@@ -188,14 +189,16 @@ $this->title = 'Billing';
 						<div class="price-card-amount">$7.99</div>
 						<div class="price-card-amount-lbl">per month</div>
 						<div class="clear"></div>
-						<input id='submitBtn' class="btn btn-primary" type="submit" value="Pay"/>
+						<input id='submitBtn' class="btn btn-primary" type="submit" value="Submit Payment"/>
 					</div>
 				</article>
 		  	</div>
 
+			<?php /*
 			<div class='col-sm-12' style='text-align:center; margin-top:20px;'>
 				<!--<input id='submitBtn' class="btn btn-primary" type="submit" value="Subscribe at $7.99 a month"/>-->
 			</div>
+			*/ ?>
 
 
 		<?php ActiveForm::end(); ?>
