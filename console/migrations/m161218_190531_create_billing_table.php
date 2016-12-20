@@ -19,6 +19,7 @@ class m161218_190531_create_billing_table extends Migration
             'billing_name' => $this->string(128)->notNull(),
             'billing_email' => $this->string(64)->notNull(),
             'billing_city' => $this->string(64)->notNull(),
+            'billing_state' => $this->string(64),
             'billing_zip_code' => $this->string(16),
             'billing_address_line1' => $this->string(64)->notNull(),
             'billing_address_line2' => $this->string(64),

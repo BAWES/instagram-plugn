@@ -149,6 +149,7 @@ $this->title = 'Billing';
 		            		]);
 					?>
 				  <?= $form->field($model, 'billing_city')->textInput() ?>
+				  <?= $form->field($model, 'billing_state')->textInput() ?>
 				  <?= $form->field($model, 'billing_zip_code')->textInput() ?>
 			  </div>
 		  </div>

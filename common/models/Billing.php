@@ -15,6 +15,7 @@ use yii\db\Expression;
  * @property string $billing_name
  * @property string $billing_email
  * @property string $billing_city
+ * @property string $billing_state
  * @property string $billing_zip_code
  * @property string $billing_address_line1
  * @property string $billing_address_line2
@@ -64,9 +65,24 @@ class Billing extends \yii\db\ActiveRecord
                     return false;
                 }"
             ],
+            [['billing_state', 'billing_zip_code'], 'required', 'when' => function($model){
+                $countries = Country::find()->where([
+                    'country_zipstate_required' => 1
+                ])->all();
+                foreach($countries as $country){
+                    // If this is a country that requires state and zip
+                    if($model->country_id == $country->country_id){
+                        return true;
+                    }
+                }
+            }, 'whenClient' => "function (attribute, value) {
+                    // Ignore client side validation for this field
+                    return false;
+                }"
+            ],
             [['billing_email'], 'email'],
             [['billing_name'], 'string', 'max' => 128],
-            [['billing_email', 'billing_city', 'billing_address_line1', 'billing_address_line2'], 'string', 'max' => 64],
+            [['billing_email', 'billing_city', 'billing_state', 'billing_address_line1', 'billing_address_line2'], 'string', 'max' => 64],
             [['billing_zip_code'], 'string', 'max' => 16],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Country::className(), 'targetAttribute' => ['country_id' => 'country_id']]
         ];
@@ -95,6 +111,7 @@ class Billing extends \yii\db\ActiveRecord
             'billing_name' => 'Name',
             'billing_email' => 'Email',
             'billing_city' => 'City',
+            'billing_state' => 'State',
             'billing_zip_code' => 'Zip Code',
             'billing_address_line1' => 'Address Line 1',
             'billing_address_line2' => 'Address Line 2',
