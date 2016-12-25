@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use frontend\assets\DataTableAsset;
+use agency\assets\DataTableAsset;
 
 /* @var $this yii\web\View */
 

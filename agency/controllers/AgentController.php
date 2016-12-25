@@ -58,7 +58,7 @@ class AgentController extends Controller
             }else{
                 //Send Email to Agent notifying him that he got assigned
                 Yii::$app->mailer->compose([
-                            'html' => 'frontend/agentInvite',
+                            'html' => 'agency/agentInvite',
                                 ], [
                             'accountFullName' => Yii::$app->user->identity->user_fullname,
                             'accountName' => Yii::$app->user->identity->user_name,

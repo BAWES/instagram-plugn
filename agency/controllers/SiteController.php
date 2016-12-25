@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
-use frontend\components\InstagramAuthHandler;
+use agency\components\InstagramAuthHandler;
 
 /**
  * Site controller
