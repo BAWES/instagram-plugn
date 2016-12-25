@@ -1,0 +1,32 @@
+<?php
+
+use yii\db\Migration;
+
+class m161225_194328_create_agency extends Migration
+{
+    public function up()
+    {
+        $this->createTable('agency', [
+            'agency_id' => $this->bigPrimaryKey()->unsigned(),
+            'agency_fullname' => $this->string()->notNull(),
+            'agency_company' => $this->string(),
+            'agency_email' => $this->string()->notNull()->unique(),
+            'agency_email_verified' => $this->boolean()->defaultValue(0),
+            'agency_auth_key' => $this->string(32)->notNull(),
+            'agency_password_hash' => $this->string(), //Can be null if they're using social login
+            'agency_password_reset_token' => $this->string()->unique(),
+            'agency_limit_email' => $this->datetime(),
+
+            'agency_status' => $this->smallInteger()->notNull()->defaultValue(10),
+            'agency_created_at' => $this->datetime()->notNull(),
+            'agency_updated_at' => $this->datetime()->notNull(),
+        ]);
+    }
+
+    public function down()
+    {
+        //Drop Tables
+        $this->dropTable('agency');
+    }
+
+}
