@@ -22,6 +22,7 @@ ga('send', 'pageview');
 ";
 $this->registerJs($analytics);
 
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

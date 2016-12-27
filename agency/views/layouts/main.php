@@ -5,7 +5,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use frontend\assets\TemplateAsset;
+use agency\assets\TemplateAsset;
 use common\widgets\Alert;
 
 TemplateAsset::register($this);

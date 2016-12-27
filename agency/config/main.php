@@ -13,7 +13,7 @@ return [
     'controllerNamespace' => 'agency\controllers',
     'components' => [
         'user' => [
-            'identityClass' => 'common\models\InstagramUser',
+            'identityClass' => 'common\models\Agency',
             'enableAutoLogin' => true,
         ],
         'authClientCollection' => [
