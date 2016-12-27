@@ -13,6 +13,7 @@ use agency\components\InstagramAuthHandler;
 use agency\models\LoginForm;
 use agency\models\PasswordResetRequestForm;
 use agency\models\ResetPasswordForm;
+use common\models\Agent;
 
 /**
  * Site controller
