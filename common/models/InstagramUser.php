@@ -15,6 +15,7 @@ use common\models\Comment;
  * InstagramUser model
  *
  * @property integer $user_id
+ * @property string $agency_id
  * @property string $user_name
  * @property string $user_fullname
  * @property string $user_auth_key
@@ -39,6 +40,7 @@ use common\models\Comment;
  * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
+ * @property Agency $agency
  * @property Media[] $media
  * @property Record[] $records
  */
@@ -98,6 +100,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return [
             'user_id' => 'User ID',
+            'agency_id' => 'Agency ID',
             'user_name' => 'User Name',
             'user_fullname' => 'User Fullname',
             'user_auth_key' => 'User Auth Key',
@@ -136,6 +139,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Agent::className(), ['agent_id' => 'agent_id'])
                     ->via('agentAssignments');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgency()
+    {
+        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
     }
 
     /**

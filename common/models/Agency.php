@@ -22,6 +22,8 @@ use yii\web\IdentityInterface;
  * @property integer $agency_status
  * @property string $agency_created_at
  * @property string $agency_updated_at
+ *
+ * @property InstagramUser[] $instagramUsers
  */
 class Agency extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -90,6 +92,14 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             'agency_created_at' => 'Created At',
             'agency_updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInstagramUsers()
+    {
+        return $this->hasMany(InstagramUser::className(), ['agency_id' => 'agency_id']);
     }
 
     /**
