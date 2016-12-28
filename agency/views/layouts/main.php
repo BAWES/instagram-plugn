@@ -93,7 +93,7 @@ $this->registerJs($analytics);
 
                         <div class="dropdown user-menu">
                             <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="http://www.name-list.net/img/portrait/Banor_8.jpg" alt="">
+                                <img src="<?= Url::to("@web/img/avatar-2-64.png") ?>" alt="">
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
                                 <?php /*
