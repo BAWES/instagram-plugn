@@ -19,8 +19,8 @@ $this->registerCss(".help-block{margin-bottom:0}");
 ?>
 
 <div style='text-align:center; margin-bottom:5px'>
-    <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px'>
-    <h4>Agent Login</h4>
+    <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px; margin-bottom:20px;'>
+    <h3>Agency Login</h3>
 </div>
 
 <?php $form = ActiveForm::begin(['id' => 'login-form', 'errorCssClass' => 'form-group-error', 'options' => ['class' => 'sign-box']]); ?>
