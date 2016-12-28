@@ -93,7 +93,7 @@ $this->registerJs($analytics);
 
                         <div class="dropdown user-menu">
                             <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="<?= Yii::$app->user->identity->user_profile_pic ?>" alt="">
+                                <img src="http://www.name-list.net/img/portrait/Banor_8.jpg" alt="">
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
                                 <?php /*
@@ -118,40 +118,42 @@ $this->registerJs($analytics);
 
     <div class="mobile-menu-left-overlay"></div>
     <nav class="side-menu">
-        <div class="side-menu-avatar">
-            <div class="avatar-preview avatar-preview-100">
-                <img src="<?= Yii::$app->user->identity->user_profile_pic ?>" alt="">
-                <span style='color:#343434; font-weight:600'>@<?= Yii::$app->user->identity->user_name ?></span>
-            </div>
-        </div>
-        <ul class="side-menu-list">
-            <li class="blue <?= Yii::$app->controller->id=="agent"?"opened":"" ?>">
-                <a href="<?= Url::to(['agent/index']) ?>">
-                    <i class="font-icon font-icon-users"></i>
-                    <span class="lbl">Agents</span>
-                </a>
-            </li>
-            <li class="pink-red <?= Yii::$app->controller->id=="activity"?"opened":"" ?>">
-                <a href="<?= Url::to(['activity/index']) ?>">
-                    <i class="font-icon font-icon-zigzag"></i>
-                    <span class="lbl">Activity</span>
-                </a>
-            </li>
-            <li class="aquamarine <?= Yii::$app->controller->id=="billing"?"opened":"" ?>">
-                <a href="<?= Url::to(['billing/index']) ?>">
-                    <i class="font-icon font-icon-build"></i>
-                    <span class="lbl">Billing</span>
-                </a>
-            </li>
-            <li class="blue-sky <?= Yii::$app->controller->id=="help"?"opened":"" ?>">
-                <a href="<?= Url::to(['help/index']) ?>">
-                    <i class="font-icon font-icon-question"></i>
-                    <span class="lbl">Help</span>
-                </a>
-            </li>
-        </ul>
+		<section>
+            <header class="side-menu-title">Accounts</header>
+            <ul class="side-menu-list">
+                <li>
+                    <a href="<?= Yii::$app->urlManagerAgent->createUrl('site/index') ?>" target='_blank'>
+                        <i class="font-icon font-icon-user"></i>
+                        <span class="lbl">Add Instagram Account</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+		<section>
+			<header class="side-menu-title">Settings</header>
+	        <ul class="side-menu-list">
+	            <li class="blue <?= Yii::$app->controller->id=="agent"?"opened":"" ?>">
+	                <a href="<?= Url::to(['agent/index']) ?>">
+	                    <i class="font-icon font-icon-users"></i>
+	                    <span class="lbl">Agents</span>
+	                </a>
+	            </li>
+	            <li class="pink-red <?= Yii::$app->controller->id=="activity"?"opened":"" ?>">
+	                <a href="<?= Url::to(['activity/index']) ?>">
+	                    <i class="font-icon font-icon-zigzag"></i>
+	                    <span class="lbl">Activity</span>
+	                </a>
+	            </li>
+	            <li class="aquamarine <?= Yii::$app->controller->id=="billing"?"opened":"" ?>">
+	                <a href="<?= Url::to(['billing/index']) ?>">
+	                    <i class="font-icon font-icon-build"></i>
+	                    <span class="lbl">Billing</span>
+	                </a>
+	            </li>
+	        </ul>
+		</section
         <section>
-            <header class="side-menu-title">Agent Portal</header>
+            <header class="side-menu-title">Agent Web Portal</header>
             <ul class="side-menu-list">
                 <li>
                     <a href="<?= Yii::$app->urlManagerAgent->createUrl('site/index') ?>" target='_blank'>
@@ -159,11 +161,6 @@ $this->registerJs($analytics);
                         Switch to agent portal
                     </a>
                 </li>
-            </ul>
-        </section>
-        <section>
-            <header class="side-menu-title">Mobile Apps [Soon]</header>
-            <ul class="side-menu-list">
                 <li>
                     <a href="#" style='padding-left:22px'>
                         <img src="<?= Url::to('@web/img/applecomingsoon.png') ?>" alt="Soon on App Store" style="width:88px">

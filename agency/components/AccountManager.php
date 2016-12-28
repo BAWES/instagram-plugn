@@ -40,7 +40,7 @@ class AccountManager extends Object
         $cacheDependency = Yii::createObject([
             'class' => 'yii\caching\DbDependency',
             'reusable' => true,
-            'sql' => 'SELECT '.Yii::$app->user->identity->agency_id.', COUNT(*) FROM agent_assignment WHERE agent_id='.Yii::$app->user->identity->agency_id,
+            'sql' => 'SELECT '.Yii::$app->user->identity->agency_id.', COUNT(*) FROM instagram_user WHERE agency_id='.Yii::$app->user->identity->agency_id,
             // we SELECT agent_id as well to make sure every cached sql statement is unique to this agent
             // don't want agents viewing the cached content of another agent
         ]);
@@ -48,7 +48,7 @@ class AccountManager extends Object
         $cacheDuration = 60*15; //15 minutes then delete from cache
 
         $this->_managedAccounts = InstagramUser::getDb()->cache(function($db) {
-            return Yii::$app->user->identity->accountsManaged;
+            return Yii::$app->user->identity->instagramUsers;
         }, $cacheDuration, $cacheDependency);
 
         parent::__construct($config);

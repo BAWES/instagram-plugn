@@ -4,7 +4,7 @@
 
 $this->title = 'Add Account';
 
-$instagramHomeUrl = Yii::$app->urlManagerFrontend->createUrl('site/login-via-agent');
+$instagramHomeUrl = "#";
 
 $this->registerJs("
 $('#addAccount').click(function(){
@@ -32,10 +32,6 @@ $('#addAccount').click(function(){
 
 				<p class="lead color-blue-grey-lighter">
 					You'll be able to manage an Instagram accounts comments<br/> once an account owner adds you as an agent
-				</p>
-
-				<p class="lead color-blue-grey-lighter">
-					Your agent id: <?= Yii::$app->user->identity->agent_email ?>
 				</p>
 
 				<a id='addAccount' href="<?= $instagramHomeUrl ?>" class="btn btn-inline btn-primary ladda-button" data-style="expand-left">
