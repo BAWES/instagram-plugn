@@ -13,7 +13,7 @@ use agency\components\InstagramAuthHandler;
 use agency\models\LoginForm;
 use agency\models\PasswordResetRequestForm;
 use agency\models\ResetPasswordForm;
-use common\models\Agent;
+use common\models\Agency;
 
 /**
  * Site controller
@@ -80,13 +80,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect(['agent/index']);
+        return $this->redirect(['agency/index']);
     }
 
     public function actionRegistration() {
         $this->layout = 'signup';
 
-        $model = new Agent();
+        $model = new Agency();
         $model->scenario = "manualSignup";
 
         if ($model->load(Yii::$app->request->post()))
@@ -106,23 +106,23 @@ class SiteController extends Controller
     /**
      * Email verification by clicking on link in email which includes the code that will verify
      * @param string $code Verification key that will verify your account
-     * @param int $verify Agent ID to verify
+     * @param int $verify Agency ID to verify
      * @throws NotFoundHttpException if the code is invalid
      */
     public function actionEmailVerify($code, $verify) {
         $this->layout = 'signup';
 
         //Code is his auth key, check if code is valid
-        $agent = Agent::findOne(['agent_auth_key' => $code, 'agent_id' => (int) $verify]);
-        if ($agent) {
+        $agency = Agency::findOne(['agency_auth_key' => $code, 'agency_id' => (int) $verify]);
+        if ($agency) {
             //If not verified
-            if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
-                //Verify this agents  email
-                $agent->agent_email_verified = Agent::EMAIL_VERIFIED;
-                $agent->save(false);
+            if ($agency->agency_email_verified == Agency::EMAIL_NOT_VERIFIED) {
+                //Verify this agency email
+                $agency->agency_email_verified = Agency::EMAIL_VERIFIED;
+                $agency->save(false);
 
                 //Log him in
-                Yii::$app->user->login($agent, 0);
+                Yii::$app->user->login($agency, 0);
             }
 
             //Render thanks for verifying + Button to go to his portal
@@ -182,13 +182,13 @@ class SiteController extends Controller
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            $agent = Agent::findOne([
-                        'agent_email' => $model->email,
+            $agency = Agency::findOne([
+                        'agency_email' => $model->email,
             ]);
 
-            if ($agent) {
+            if ($agency) {
                 //Check if this user sent an email in past few minutes (to limit email spam)
-                $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
+                $emailLimitDatetime = new \DateTime($agency->agency_limit_email);
                 date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
                 $currentDatetime = new \DateTime();
 
@@ -203,12 +203,12 @@ class SiteController extends Controller
                     ]);
 
                     Yii::$app->getSession()->setFlash('warning', $warningMessage);
-                } else if ($model->sendEmail($agent)) {
-                    Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'Password reset link sent, please check your email for further instructions.'));
+                } else if ($model->sendEmail($agency)) {
+                    Yii::$app->getSession()->setFlash('success', Yii::t('agency', 'Password reset link sent, please check your email for further instructions.'));
 
                     return $this->redirect(['login']);
                 } else {
-                    Yii::$app->getSession()->setFlash('error', Yii::t('agent', 'Sorry, we are unable to reset password for email provided.'));
+                    Yii::$app->getSession()->setFlash('error', Yii::t('agency', 'Sorry, we are unable to reset password for email provided.'));
                 }
             }
         }
@@ -228,7 +228,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'New password was saved.'));
+            Yii::$app->getSession()->setFlash('success', Yii::t('agency', 'New password was saved.'));
 
             return $this->redirect(['login']);
         }
@@ -246,14 +246,14 @@ class SiteController extends Controller
     public function actionResendVerification($id, $email) {
         $this->layout = 'signup';
 
-        $agent = Agent::findOne([
-                    'agent_id' => (int) $id,
-                    'agent_email' => $email,
+        $agency = Agency::findOne([
+                    'agency_id' => (int) $id,
+                    'agency_email' => $email,
         ]);
 
-        if ($agent) {
+        if ($agency) {
             //Check if this user sent an email in past few minutes (to limit email spam)
-            $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
+            $emailLimitDatetime = new \DateTime($agency->agency_limit_email);
             date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
             $currentDatetime = new \DateTime();
 
@@ -269,8 +269,8 @@ class SiteController extends Controller
 
                 Yii::$app->getSession()->setFlash('warning', $warningMessage);
 
-            } else if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
-                $agent->sendVerificationEmail();
+            } else if ($agency->agency_email_verified == Agency::EMAIL_NOT_VERIFIED) {
+                $agency->sendVerificationEmail();
                 Yii::$app->getSession()->setFlash('success', Yii::t('register', 'Please click on the link sent to you by email to verify your account'));
             }
         }
