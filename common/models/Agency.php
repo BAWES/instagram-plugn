@@ -49,10 +49,13 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['agency_fullname', 'agency_email', 'agency_auth_key'], 'required'],
+            [['agency_password_hash'], 'required', 'on'=>'manualSignup'],
+
             [['agency_email_verified', 'agency_status'], 'integer'],
             [['agency_fullname', 'agency_company', 'agency_email', 'agency_password_hash', 'agency_password_reset_token'], 'string', 'max' => 255],
             [['agency_auth_key'], 'string', 'max' => 32],
             [['agency_email'], 'unique'],
+            [['agency_email'], 'email'],
             [['agency_password_reset_token'], 'unique'],
         ];
     }
@@ -75,17 +78,17 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'agency_id' => 'Agency ID',
-            'agency_fullname' => 'Agency Fullname',
-            'agency_company' => 'Agency Company',
-            'agency_email' => 'Agency Email',
-            'agency_email_verified' => 'Agency Email Verified',
-            'agency_auth_key' => 'Agency Auth Key',
-            'agency_password_hash' => 'Agency Password Hash',
-            'agency_password_reset_token' => 'Agency Password Reset Token',
-            'agency_status' => 'Agency Status',
+            'agency_fullname' => 'Full Name',
+            'agency_company' => 'Company',
+            'agency_email' => 'Email',
+            'agency_email_verified' => 'Email Verified',
+            'agency_auth_key' => 'Auth Key',
+            'agency_password_hash' => 'Password',
+            'agency_password_reset_token' => 'Password Reset Token',
+            'agency_status' => 'Status',
             'agency_limit_email' => 'Limit Email',
-            'agency_created_at' => 'Agency Created At',
-            'agency_updated_at' => 'Agency Updated At',
+            'agency_created_at' => 'Created At',
+            'agency_updated_at' => 'Updated At',
         ];
     }
 
