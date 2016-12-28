@@ -3,7 +3,7 @@ namespace agency\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\Agent;
+use common\models\Agency;
 
 /**
  * Login form
@@ -15,9 +15,9 @@ class LoginForm extends Model
     public $rememberMe = true;
 
     /**
-     * @var \common\models\Agent
+     * @var \common\models\Agency
      */
-    private $_agent = false;
+    private $_agency = false;
 
 
     /**
@@ -59,42 +59,42 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $agent = $this->getAgent();
-            if (!$agent || !$agent->validatePassword($this->password)) {
+            $agency = $this->getAgency();
+            if (!$agency || !$agency->validatePassword($this->password)) {
                 $this->addError($attribute, Yii::t('app', 'Incorrect email or password.'));
             }
         }
     }
 
     /**
-     * Logs in an agent using the provided email and password.
+     * Logs in an agency using the provided email and password.
      *
-     * @return boolean whether the agent is logged in successfully
+     * @return boolean whether the agency is logged in successfully
      */
     public function login()
     {
         if ($this->validate()) {
 
-            //Check if Agent has verified their email
-            $agent = $this->getAgent();
-            if($agent){
-                if($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED){
+            //Check if Agency has verified their email
+            $agency = $this->getAgency();
+            if($agency){
+                if($agency->agency_email_verified == Agency::EMAIL_NOT_VERIFIED){
 
                     $resendLink = \yii\helpers\Url::to(["site/resend-verification",
-                        'id' => $agent->agent_id,
-                        'email' => $agent->agent_email,
+                        'id' => $agency->agency_id,
+                        'email' => $agency->agency_email,
                     ], true);
 
-                    $message = Yii::t('agent',"Please click the verification link sent to you by email to activate your account.", [
+                    $message = Yii::t('agency',"Please click the verification link sent to you by email to activate your account.", [
                             'resendLink' => $resendLink,
                         ]);
 
-                    //Set Flash that agent needs to verify his email + resend option
+                    //Set Flash that agency needs to verify his email + resend option
                     Yii::$app->session->setFlash("warning", $message);
 
                 }else{
                     //Log him in
-                    return Yii::$app->user->login($this->getAgent(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+                    return Yii::$app->user->login($this->getAgency(), $this->rememberMe ? 3600 * 24 * 30 : 0);
                 }
             }
         }
@@ -103,16 +103,16 @@ class LoginForm extends Model
     }
 
     /**
-     * Finds Agent by email
+     * Finds Agency by email
      *
-     * @return Agent|null
+     * @return Agency|null
      */
-    public function getAgent()
+    public function getAgency()
     {
-        if ($this->_agent === false) {
-            $this->_agent = Agent::findByEmail($this->email);
+        if ($this->_agency === false) {
+            $this->_agency = Agency::findByEmail($this->email);
         }
 
-        return $this->_agent;
+        return $this->_agency;
     }
 }

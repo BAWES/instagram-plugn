@@ -23,7 +23,7 @@ $this->registerCss(".help-block{margin-bottom:0}");
 <div style='text-align:center; margin-bottom:5px'>
     <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px; margin-bottom:20px;'>
     <h3 style='margin-bottom:3px;'>Create an Agency Account</h3>
-    <h4>Manage Instagram accounts and the agents assigned to them from one location</h4>
+    <h4>Manage Instagram accounts and the agents assigned to them</h4>
 </div>
 
 <?php $form = ActiveForm::begin(['id' => 'signup-form', 'errorCssClass' => 'form-group-error', 'options' => ['class' => 'sign-box']]); ?>

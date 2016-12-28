@@ -8,10 +8,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Agent Login';
+$this->title = 'Agency Login';
 $this->registerMetaTag([
       'name' => 'description',
-      'content' => 'Log in to your agent account on Plugn.io'
+      'content' => 'Log in to your agency account on Plugn.io'
 ]);
 $this->params['breadcrumbs'][] = $this->title;
 

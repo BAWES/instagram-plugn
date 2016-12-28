@@ -1,7 +1,7 @@
 <?php
 namespace agency\models;
 
-use common\models\Agent;
+use common\models\Agency;
 use yii\base\InvalidParamException;
 use yii\base\Model;
 use Yii;
@@ -14,9 +14,9 @@ class ResetPasswordForm extends Model
     public $password;
 
     /**
-     * @var \common\models\Agent
+     * @var \common\models\Agency
      */
-    private $_agent;
+    private $_agency;
 
 
     /**
@@ -31,8 +31,8 @@ class ResetPasswordForm extends Model
         if (empty($token) || !is_string($token)) {
             throw new InvalidParamException('Password reset token cannot be blank.');
         }
-        $this->_agent = Agent::findByPasswordResetToken($token);
-        if (!$this->_agent) {
+        $this->_agency = Agency::findByPasswordResetToken($token);
+        if (!$this->_agency) {
             throw new InvalidParamException('Wrong password reset token.');
         }
         parent::__construct($config);
@@ -66,10 +66,10 @@ class ResetPasswordForm extends Model
      */
     public function resetPassword()
     {
-        $agent = $this->_agent;
-        $agent->setPassword($this->password);
-        $agent->removePasswordResetToken();
+        $agency = $this->_agency;
+        $agency->setPassword($this->password);
+        $agency->removePasswordResetToken();
 
-        return $agent->save(false);
+        return $agency->save(false);
     }
 }

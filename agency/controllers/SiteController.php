@@ -80,7 +80,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect(['agency/index']);
+        return $this->redirect(['dashboard/index']);
     }
 
     public function actionRegistration() {
