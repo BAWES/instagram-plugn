@@ -64,6 +64,20 @@ $this->registerJs($analytics);
             <div class="site-header-content">
                 <div class="site-header-content-in">
                     <div class="site-header-shown">
+						<!-- App Download Links -->
+                        <div class="dropdown dropdown-lang">
+                            <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div>
+									<a class="dropdown-item" href="#"><span class="fa fa-apple"></span> iOS Application</a>
+                                    <a class="dropdown-item" href="#"><span class="fa fa-android"></span> Android Application</a>
+									<a class="dropdown-item" href="#"><span class="fa fa-chrome"></span> Web Application</a>
+                                </div>
+                            </div>
+                        </div>
+						<!-- End App Download Links -->
                         <?php /*
                         <div class="dropdown dropdown-lang">
                             <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -117,10 +131,22 @@ $this->registerJs($analytics);
     </header><!--.site-header-->
 
     <div class="mobile-menu-left-overlay"></div>
-    <nav class="side-menu">
+    <nav class="side-menu  side-menu-big-icon">
 		<section>
             <header class="side-menu-title">Accounts</header>
             <ul class="side-menu-list">
+				<?php
+				if($managedAccounts = Yii::$app->accountManager->managedAccounts){
+					foreach($managedAccounts as $account){?>
+						<li <?= $this->title==$account->user_name?" class='opened'":"" ?>>
+							<a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>" class="label-right">
+								<?= Html::img($account->user_profile_pic, ['width'=>32, 'height'=>32, 'style'=>'width:32px; height:32px; margin-bottom:5px']) ?>
+								<span class="lbl">@<?= $account->user_name ?></span>
+							</a>
+						</li>
+					<?php
+				}}
+				?>
                 <li>
                     <a href="<?= Yii::$app->urlManagerAgent->createUrl('site/index') ?>" target='_blank'>
                         <i class="font-icon font-icon-user"></i>
