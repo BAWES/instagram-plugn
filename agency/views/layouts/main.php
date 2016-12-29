@@ -165,7 +165,7 @@ $this->registerJs($analytics);
 	                </a>
 	            </li>
 	        </ul>
-		</section
+		</section>
         <section>
             <header class="side-menu-title">Agent Web Portal</header>
             <ul class="side-menu-list">
