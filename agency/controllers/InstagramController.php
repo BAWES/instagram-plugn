@@ -60,7 +60,8 @@ class InstagramController extends Controller
         // Above variable holds an Instagram Account's info on success
         if($igAccountModel instanceof \common\models\InstagramUser){
             // Redirect to that accounts management page
-            die("Returned Instagram User, process shit here maybe?");
+
+            //die("Returned Instagram User, process shit here maybe?");
         }
 
         return $this->goHome();

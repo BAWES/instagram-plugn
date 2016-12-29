@@ -34,9 +34,9 @@ class DashboardController extends \yii\web\Controller {
     {
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
-        if(isset($managedAccounts[0])){
-            return $this->redirect(['media/list' ,'accountId' => $managedAccounts[0]->user_id]);
-        }
+        // if(isset($managedAccounts[0])){
+        //     return $this->redirect(['media/list' ,'accountId' => $managedAccounts[0]->user_id]);
+        // }
         return $this->redirect(['dashboard/add-account']);
     }
 

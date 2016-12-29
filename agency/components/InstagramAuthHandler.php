@@ -45,78 +45,76 @@ class InstagramAuthHandler
         $followsCount = ArrayHelper::getValue($attributes, 'counts.follows');
         $followersCount = ArrayHelper::getValue($attributes, 'counts.followed_by');
 
-
         /** @var InstagramUser $user */
         $user = InstagramUser::find()->where([
             'user_instagram_id' => $id, //id in instagram
         ])->one();
 
-        if (Yii::$app->user->isGuest) {
-            if ($user) {
-                /**
-                 * Login: Update his details and Login
-                 */
-                $user->user_name = $username;
-                $user->agency_id = Yii::$app->user->identity->agency_id;
-                $user->user_fullname = $fullname;
-                $user->user_profile_pic = $profilePhoto;
-                $user->user_bio = $bio;
-                $user->user_website = $website;
-                $user->user_media_count = $mediaCount;
-                $user->user_following_count = $followsCount;
-                $user->user_follower_count = $followersCount;
-                $user->user_ig_access_token = $accessToken;
-                $user->user_status = InstagramUser::STATUS_ACTIVE;
+        if ($user) {
+            /**
+             * Login: Update his details and Login
+             */
+            $user->user_name = $username;
+            $user->agency_id = Yii::$app->user->identity->agency_id;
+            $user->user_fullname = $fullname;
+            $user->user_profile_pic = $profilePhoto;
+            $user->user_bio = $bio;
+            $user->user_website = $website;
+            $user->user_media_count = $mediaCount;
+            $user->user_following_count = $followsCount;
+            $user->user_follower_count = $followersCount;
+            $user->user_ig_access_token = $accessToken;
+            $user->user_status = InstagramUser::STATUS_ACTIVE;
 
 
-                if ($user->save()) {
-                    Yii::info("[Instagram Updated Token @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+            if ($user->save()) {
+                Yii::info("[Instagram Updated Token @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+
+                // Return the saved model
+                return $user;
+            }
+        } else {
+            /**
+             * Signup
+             */
+            if ($username !== null && InstagramUser::find()->where(['user_name' => $username])->exists()) {
+                Yii::$app->getSession()->setFlash('error', [
+                    Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
+                ]);
+            } else {
+                $user = new InstagramUser([
+                    'agency_id' => Yii::$app->user->identity->agency_id,
+                    'user_name' => $username,
+                    'user_fullname' => $fullname,
+                    'user_instagram_id' => $id,
+                    'user_profile_pic' => $profilePhoto,
+                    'user_bio' => $bio,
+                    'user_website' => $website,
+                    'user_media_count' => $mediaCount,
+                    'user_following_count' => $followsCount,
+                    'user_follower_count' => $followersCount,
+                    'user_ig_access_token' => $accessToken,
+
+                ]);
+                $user->generateAuthKey();
+
+                if (!$user->save()) {
+                    Yii::$app->getSession()->setFlash('error', [
+                        Yii::t('app', 'Unable to save user: {errors}', [
+                            'client' => $this->client->getTitle(),
+                            'errors' => json_encode($user->getErrors()),
+                        ]),
+                    ]);
+                }else{
+                    //Log new Instagram signup
+                    Yii::info("[New Instagram Signup @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
 
                     // Return the saved model
                     return $user;
                 }
-            } else {
-                /**
-                 * Signup
-                 */
-                if ($username !== null && InstagramUser::find()->where(['user_name' => $username])->exists()) {
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
-                    ]);
-                } else {
-                    $user = new InstagramUser([
-                        'agency_id' => Yii::$app->user->identity->agency_id,
-                        'user_name' => $username,
-                        'user_fullname' => $fullname,
-                        'user_instagram_id' => $id,
-                        'user_profile_pic' => $profilePhoto,
-                        'user_bio' => $bio,
-                        'user_website' => $website,
-                        'user_media_count' => $mediaCount,
-                        'user_following_count' => $followsCount,
-                        'user_follower_count' => $followersCount,
-                        'user_ig_access_token' => $accessToken,
-
-                    ]);
-                    $user->generateAuthKey();
-
-                    if (!$user->save()) {
-                        Yii::$app->getSession()->setFlash('error', [
-                            Yii::t('app', 'Unable to save user: {errors}', [
-                                'client' => $this->client->getTitle(),
-                                'errors' => json_encode($user->getErrors()),
-                            ]),
-                        ]);
-                    }else{
-                        //Log new Instagram signup
-                        Yii::info("[New Instagram Signup @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
-
-                        // Return the saved model
-                        return $user;
-                    }
-                }
             }
         }
+
     }
 
 }
