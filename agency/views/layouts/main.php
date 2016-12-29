@@ -167,7 +167,7 @@ $this->registerJs($analytics);
 	        </ul>
 		</section>
         <section>
-            <header class="side-menu-title">Agent Web Portal</header>
+            <header class="side-menu-title">Agent Access</header>
             <ul class="side-menu-list">
                 <li>
                     <a href="<?= Yii::$app->urlManagerAgent->createUrl('site/index') ?>" target='_blank'>
