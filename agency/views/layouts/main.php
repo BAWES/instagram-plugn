@@ -158,18 +158,6 @@ $this->registerJs($analytics);
 		<section>
 			<header class="side-menu-title">Settings</header>
 	        <ul class="side-menu-list">
-	            <li class="blue <?= Yii::$app->controller->id=="agent"?"opened":"" ?>">
-	                <a href="<?= Url::to(['agent/index']) ?>">
-	                    <i class="font-icon font-icon-users"></i>
-	                    <span class="lbl">Agents</span>
-	                </a>
-	            </li>
-	            <li class="pink-red <?= Yii::$app->controller->id=="activity"?"opened":"" ?>">
-	                <a href="<?= Url::to(['activity/index']) ?>">
-	                    <i class="font-icon font-icon-zigzag"></i>
-	                    <span class="lbl">Activity</span>
-	                </a>
-	            </li>
 	            <li class="aquamarine <?= Yii::$app->controller->id=="billing"?"opened":"" ?>">
 	                <a href="<?= Url::to(['billing/index']) ?>">
 	                    <i class="font-icon font-icon-build"></i>
