@@ -4,19 +4,7 @@
 
 $this->title = 'Add Account';
 
-$instagramHomeUrl = "#";
-
-$this->registerJs("
-$('#addAccount').click(function(){
-	$('body').append(\"<div style='display:none'><iframe id='iglog' src='https://instagram.com/accounts/logout/' width='0' height='0'></iframe></div>\");
-
-	$('#iglog').on('load', function(){
-		window.location='".$instagramHomeUrl."';
-	});
-
-	return false;
-});
-");
+$instagramHomeUrl = \yii\helpers\Url::to(["instagram/authorize"]);
 ?>
 
 <div class="container-fluid">

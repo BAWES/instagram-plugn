@@ -6,7 +6,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '/' => 'site/index',
-                'auth/<authclient:(instagram)>' => 'site/auth',
+                'auth/<authclient:(instagram)>' => 'instagram/auth',
             ],
         ],
         'urlManagerAgent' => [

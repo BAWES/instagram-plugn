@@ -19,6 +19,11 @@ class InstagramAuthHandler
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
+
+        // Die if Agency isn't logged in
+        if(Yii::$app->user->isGuest){
+            die("Must be logged in to add an Instagram account");
+        }
     }
 
     public function handle()
@@ -52,6 +57,7 @@ class InstagramAuthHandler
                  * Login: Update his details and Login
                  */
                 $user->user_name = $username;
+                $user->agency_id = Yii::$app->user->identity->agency_id;
                 $user->user_fullname = $fullname;
                 $user->user_profile_pic = $profilePhoto;
                 $user->user_bio = $bio;
@@ -64,7 +70,10 @@ class InstagramAuthHandler
 
 
                 if ($user->save()) {
-                    Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
+                    Yii::info("[Instagram Updated Token @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+
+                    // Return the saved model
+                    return $user;
                 }
             } else {
                 /**
@@ -76,6 +85,7 @@ class InstagramAuthHandler
                     ]);
                 } else {
                     $user = new InstagramUser([
+                        'agency_id' => Yii::$app->user->identity->agency_id,
                         'user_name' => $username,
                         'user_fullname' => $fullname,
                         'user_instagram_id' => $id,
@@ -98,10 +108,11 @@ class InstagramAuthHandler
                             ]),
                         ]);
                     }else{
-                        Yii::$app->user->login($user, Yii::$app->params['user.rememberMeDuration']);
-
-                        //Log agent signup
+                        //Log new Instagram signup
                         Yii::info("[New Instagram Signup @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+
+                        // Return the saved model
+                        return $user;
                     }
                 }
             }
