@@ -14,6 +14,8 @@ use yii\filters\AccessControl;
  */
 class ActivityController extends Controller
 {
+    public $layout = 'account';
+
     /**
      * @inheritdoc
      */
@@ -34,11 +36,14 @@ class ActivityController extends Controller
 
     /**
      * Display main view
+     * @param string $accountId the account id we're looking to manage
      * @return mixed
      */
-    public function actionIndex()
+    public function actionList($accountId)
     {
-        $activities = Yii::$app->user->identity->getActivities()->with('agent')->all();
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        $activities = $instagramAccount->getActivities()->with('agent')->all();
         $numActivities = count($activities);
 
 
@@ -46,6 +51,7 @@ class ActivityController extends Controller
         $viewToDisplay = $numActivities > 0 ? 'index' : 'index-noactivity';
 
         return $this->render($viewToDisplay, [
+            'account' => $instagramAccount,
             'activities' => $activities
         ]);
     }

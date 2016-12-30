@@ -12,18 +12,11 @@ $this->title = $account->user_name;
 //Pass Instagram Account to Layout for Rendering
 $this->params['instagramAccount'] = $account;
 ?>
-<header class="page-content-header">
-	<div class="container-fluid">
-		<div class="tbl">
-			<div class="tbl-row">
-				<div class="tbl-cell">
-					<h3><i class="font-icon font-icon-users"></i> Agents <small class="text-muted">who have access to manage your account</small></h3>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
 
+<h3>
+	<i class="font-icon font-icon-users"></i>
+	Agents <small class="text-muted">who have access to manage your account</small>
+</h3>
 
 <div class="container-fluid">
 

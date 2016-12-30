@@ -4,7 +4,10 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 
-$this->title = 'Activity';
+$this->title = $account->user_name;
+
+//Pass Instagram Account to Layout for Rendering
+$this->params['instagramAccount'] = $account;
 ?>
 
 <div class="container-fluid">

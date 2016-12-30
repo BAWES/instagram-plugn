@@ -53,8 +53,8 @@ $controllerName = $this->context->id;
 		</div>
 	</div>
 	<a href='http://instagram.com/<?= $account->user_name ?>' class="change-cover" target='_blank'>
-		<i class="font-icon font-icon-picture-double"></i>
-		Profile on Instagram
+		<?php /*<i class="font-icon font-icon-del"></i>*/ ?>
+		Remove Account
 	</a>
 </div><!--.profile-header-photo-->
 
@@ -65,23 +65,13 @@ $controllerName = $this->context->id;
 		<div class="tabs-section-nav tabs-section-nav-inline">
 			<ul class="nav" role="tablist">
 				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="media"?"active":"" ?>" href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>">
-						Media View
+					<a class="nav-link <?= $controllerName=="agent"?"active":"" ?>" href="<?= Url::to(['agent/list' ,'accountId' => $account->user_id]) ?>">
+						Agents
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="conversation"?"active":"" ?>" href="<?= Url::to(['conversation/list' ,'accountId' => $account->user_id]) ?>">
-						Conversation View
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="stats"?"active":"" ?>" href="<?= Url::to(['stats/index' ,'accountId' => $account->user_id]) ?>">
-						Statistics
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link <?= $controllerName=="activity"?"active":"" ?>" href="<?= Url::to(['activity/index' ,'accountId' => $account->user_id]) ?>">
-						Agent Activity
+					<a class="nav-link <?= $controllerName=="activity"?"active":"" ?>" href="<?= Url::to(['activity/list' ,'accountId' => $account->user_id]) ?>">
+						Activity
 					</a>
 				</li>
 			</ul>
