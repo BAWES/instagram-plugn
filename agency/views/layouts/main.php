@@ -133,7 +133,6 @@ $this->registerJs($analytics);
     <div class="mobile-menu-left-overlay"></div>
     <nav class="side-menu  side-menu-big-icon">
 		<section>
-            <header class="side-menu-title">Accounts</header>
             <ul class="side-menu-list">
 				<?php
 				if($managedAccounts = Yii::$app->accountManager->managedAccounts){
@@ -153,11 +152,6 @@ $this->registerJs($analytics);
 						<span class="lbl">Add Instagram Account</span>
                     </a>
                 </li>
-            </ul>
-        </section>
-		<section>
-			<header class="side-menu-title">Settings</header>
-	        <ul class="side-menu-list">
 	            <li class="aquamarine <?= Yii::$app->controller->id=="billing"?"opened":"" ?>">
 	                <a href="<?= Url::to(['billing/index']) ?>">
 	                    <i class="font-icon font-icon-build"></i>
