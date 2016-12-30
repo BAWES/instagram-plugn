@@ -52,7 +52,11 @@ $controllerName = $this->context->id;
 			</div>
 		</div>
 	</div>
-	<a href='http://instagram.com/<?= $account->user_name ?>' class="change-cover" target='_blank'>
+	<a href='http://instagram.com/<?= $account->user_name ?>'
+		class="change-cover"
+		data-method="post"
+		data-confirm="Remove @<?= $account->user_name ?> from your agency?"
+		target='_blank'>
 		<?php /*<i class="font-icon font-icon-del"></i>*/ ?>
 		Remove Account
 	</a>
