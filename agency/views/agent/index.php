@@ -17,7 +17,7 @@ $this->params['instagramAccount'] = $account;
 
 	<h3 style='margin-top:5px;'>
 		<i class="font-icon font-icon-users"></i>
-		Agents <small class="text-muted">that have access to manage the account</small>
+		Agents <small class="text-muted">that have access to manage @<?= $account->user_name ?></small>
 	</h3>
 
     <?= GridView::widget([
