@@ -15,38 +15,34 @@ $this->params['instagramAccount'] = $account;
 
 <div class="container-fluid">
 
-	<h3>
+	<h3 style='margin-top:5px;'>
 		<i class="font-icon font-icon-users"></i>
-		Agents <small class="text-muted">receive access to manage the account</small>
+		Agents <small class="text-muted">that receive access to manage @<?= $account->user_name ?></small>
 	</h3>
 
-	<div class="box-typical box-typical-padding" style='margin-top:1em;'>
-		<div class="add-customers-screen tbl">
-			<div class="add-customers-screen-in">
+	<div class='row'>
+		<div class='col-md-7'>
+			<p>
+				Send out an invite to someone you trust with your account.
+				Make sure to send one to yourself if you're also managing this account.
+			</p>
 
-				<h3>Invite an Agent</h3>
+			<?php $form = ActiveForm::begin(['errorCssClass' => 'form-group-error']); ?>
 
-				<?php $form = ActiveForm::begin(['errorCssClass' => 'form-group-error']); ?>
-					<div class='row'>
-						<div class='col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8'>
+                <?= $form->field($model, 'assignment_agent_email', [
+                    'template' => '<div class="form-control-wrapper form-control-icon-left">{input}<i class="font-icon font-icon-mail"></i></div>{error}',
 
-                            <?= $form->field($model, 'assignment_agent_email', [
-                                'template' => '<div class="form-control-wrapper form-control-icon-left">{input}<i class="font-icon font-icon-mail"></i></div>{error}',
+                ])->input('email', [
+                    'maxlength' => true,
+                    'placeholder' => "Agent's email address",
+                    'class' => 'form-control'
+                    ])->label(false) ?>
 
-                            ])->input('email', [
-                                'maxlength' => true,
-                                'placeholder' => "Agent's email address",
-                                'class' => 'form-control'
-                                ])->label(false) ?>
+				<?= Html::submitButton('Send Invite', ['class' => 'btn btn-primary', 'style'=>'margin-top:0']) ?>
+			<?php ActiveForm::end(); ?>
 
-						</div>
-					</div>
-
-					<?= Html::submitButton('Send Invite', ['class' => 'btn btn-primary', 'style'=>'margin-top:0']) ?>
-				<?php ActiveForm::end(); ?>
-
-			</div>
 		</div>
-	</div><!--.box-typical-->
+	</div>
+
 
 </div><!--.container-fluid-->

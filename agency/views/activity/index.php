@@ -22,9 +22,9 @@ $this->title = $account->user_name;
 $this->params['instagramAccount'] = $account;
 ?>
 
-
 <div class="container-fluid">
-	<h3>
+
+	<h3 style='margin-top:5px;'>
 		<i class="font-icon font-icon-zigzag"></i>
 		Account Activity
 	</h3>

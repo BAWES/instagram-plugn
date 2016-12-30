@@ -101,26 +101,27 @@ class AgentController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($assignmentId, $accountId)
+    public function actionDelete($id)
     {
-        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+        $assignmentModel = $this->findModel($id);
+        $account = Yii::$app->accountManager->getManagedAccount($assignmentModel->user_id);
 
-        $this->findModel($assignmentId, $instagramAccount->user_id)->delete();
+        // Make sure to only delete the model if it belongs to the current agency
+        $assignmentModel->delete();
 
-        return $this->redirect(['list']);
+        return $this->redirect(['list', 'accountId' => $account->user_id]);
     }
 
     /**
      * Finds the AgentAssignment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $assignmentId The agent assignment id
-     * @param integer $userId The Instagram user id
+     * @param integer $id The agent assignment id
      * @return AgentAssignment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($assignmentId, $userId)
+    protected function findModel($id)
     {
-        if (($model = AgentAssignment::findOne(['assignment_id' => $assignmentId, 'user_id' => $userId])) !== null) {
+        if (($model = AgentAssignment::findOne(['assignment_id' => $id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

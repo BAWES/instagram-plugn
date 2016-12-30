@@ -11,7 +11,7 @@ $this->params['instagramAccount'] = $account;
 ?>
 
 <div class="container-fluid">
-	<div class="box-typical box-typical-full-height">
+	<div class="box-typical">
 		<div class="add-customers-screen tbl">
 			<div class="add-customers-screen-in">
 
