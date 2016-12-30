@@ -23,13 +23,11 @@ $this->params['instagramAccount'] = $account;
 ?>
 
 
-<h3>
-	<i class="font-icon font-icon-zigzag"></i>
-	Account Activity <small class="text-muted"> by your assigned agents</small>
-</h3>
-
-
 <div class="container-fluid">
+	<h3>
+		<i class="font-icon font-icon-zigzag"></i>
+		Account Activity
+	</h3>
 
 	<table id="mytable" class="display table table-bordered" cellspacing="0" width="100%">
 		<thead>

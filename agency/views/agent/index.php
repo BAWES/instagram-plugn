@@ -13,12 +13,12 @@ $this->title = $account->user_name;
 $this->params['instagramAccount'] = $account;
 ?>
 
-<h3>
-	<i class="font-icon font-icon-users"></i>
-	Agents <small class="text-muted">who have access to manage your account</small>
-</h3>
-
 <div class="container-fluid">
+
+	<h3>
+		<i class="font-icon font-icon-users"></i>
+		Agents <small class="text-muted">who have access to manage the account</small>
+	</h3>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
