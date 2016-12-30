@@ -15,6 +15,8 @@ use yii\filters\AccessControl;
  */
 class AgentController extends Controller
 {
+    public $layout = 'account';
+
     /**
      * @inheritdoc
      */
@@ -40,13 +42,16 @@ class AgentController extends Controller
     }
 
     /**
-     * Lists all AgentAssignment models.
+     * Lists all AgentAssignment models for a specific account.
+     * @param string $accountId the account id we're looking to manage
      * @return mixed
      */
-    public function actionIndex()
+    public function actionList($accountId)
     {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
         $model = new AgentAssignment();
-        $model->user_id = Yii::$app->user->identity->user_id;
+        $model->user_id = $instagramAccount->user_id;
 
         if ($model->load(Yii::$app->request->post())) {
             if(!$model->save()){
@@ -60,30 +65,31 @@ class AgentController extends Controller
                 Yii::$app->mailer->compose([
                             'html' => 'agency/agentInvite',
                                 ], [
-                            'accountFullName' => Yii::$app->user->identity->user_fullname,
-                            'accountName' => Yii::$app->user->identity->user_name,
-                            'accountPhoto' => Yii::$app->user->identity->user_profile_pic,
+                            'accountFullName' => $instagramAccount->user_fullname,
+                            'accountName' => $instagramAccount->user_name,
+                            'accountPhoto' => $instagramAccount->user_profile_pic,
                         ])
                         ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
                         ->setTo($model->assignment_agent_email)
-                        ->setSubject("You've been invited to manage @".Yii::$app->user->identity->user_name)
+                        ->setSubject("You've been invited to manage @".$instagramAccount->user_name)
                         ->send();
 
                 //Send Slack notification of agent assignment
-                Yii::info("[Agent Invite sent by @".Yii::$app->user->identity->user_name."] Sent to ".$model->assignment_agent_email, __METHOD__);
+                Yii::info("[Agent Invite sent by @".$instagramAccount->user_name."] Sent to ".$model->assignment_agent_email, __METHOD__);
 
                 return $this->refresh();
             }
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Yii::$app->user->identity->getAgentAssignments(),
+            'query' => $instagramAccount->getAgentAssignments(),
         ]);
 
         //Change View Displayed based on number of agents this account has
         $viewToDisplay = $dataProvider->totalCount>0 ? 'index' : 'index-firstagent';
 
         return $this->render($viewToDisplay, [
+            'account' => $instagramAccount,
             'dataProvider' => $dataProvider,
             'model' => $model,
         ]);
@@ -95,23 +101,26 @@ class AgentController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($assignmentId, $accountId)
     {
-        $this->findModel($id)->delete();
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
-        return $this->redirect(['index']);
+        $this->findModel($assignmentId, $instagramAccount->user_id)->delete();
+
+        return $this->redirect(['list']);
     }
 
     /**
      * Finds the AgentAssignment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
+     * @param integer $assignmentId The agent assignment id
+     * @param integer $userId The Instagram user id
      * @return AgentAssignment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($assignmentId, $userId)
     {
-        if (($model = AgentAssignment::findOne(['assignment_id' => $id, 'user_id' => Yii::$app->user->identity->user_id])) !== null) {
+        if (($model = AgentAssignment::findOne(['assignment_id' => $assignmentId, 'user_id' => $userId])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

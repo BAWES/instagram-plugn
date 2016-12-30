@@ -7,7 +7,10 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Add yourself as an Agent';
+$this->title = $account->user_name;
+
+//Pass Instagram Account to Layout for Rendering
+$this->params['instagramAccount'] = $account;
 ?>
 
 <div class="container-fluid">
@@ -20,7 +23,10 @@ $this->title = 'Add yourself as an Agent';
 				</div>
 
 				<h2>Agents</h2>
-				<p class="lead color-blue-grey-lighter">Agents have access to manage your account<br/> Add yourself as an agent</p>
+				<p class="lead color-blue-grey-lighter">
+					Agents receive access to manage the account<br/>
+					Send an invite
+				</p>
 
 				<?php $form = ActiveForm::begin(['errorCssClass' => 'form-group-error']); ?>
 
@@ -32,7 +38,7 @@ $this->title = 'Add yourself as an Agent';
 
                             ])->input('email', [
                                 'maxlength' => true,
-                                'placeholder' => 'Your email address',
+                                'placeholder' => 'Email address',
                                 'class' => 'form-control'
                                 ])->label(false) ?>
 

@@ -7,7 +7,10 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Manage your Agent Assignments';
+$this->title = $account->user_name;
+
+//Pass Instagram Account to Layout for Rendering
+$this->params['instagramAccount'] = $account;
 ?>
 <header class="page-content-header">
 	<div class="container-fluid">
