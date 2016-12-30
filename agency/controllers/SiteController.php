@@ -62,7 +62,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect(['dashboard/index']);
+        return $this->redirect(['instagram/index']);
     }
 
     /**
@@ -114,7 +114,7 @@ class SiteController extends Controller
             //Render thanks for verifying + Button to go to his portal
             Yii::$app->getSession()->setFlash('success', '[You have verified your email] You may now use Plugn to manage your accounts');
 
-            return $this->redirect(['dashboard/index']);
+            return $this->redirect(['instagram/index']);
         } else {
             //inserted code is invalid
             throw new BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
@@ -135,7 +135,7 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['dashboard/index']);
+            return $this->redirect(['instagram/index']);
         } else {
             return $this->render('login', [
                 'model' => $model,

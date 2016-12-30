@@ -19,7 +19,7 @@ $instagramHomeUrl = \yii\helpers\Url::to(["instagram/authorize"]);
 				<h2>Add Instagram Account</h2>
 
 				<p class="lead color-blue-grey-lighter">
-					You'll be able to manage an Instagram accounts comments<br/> once an account owner adds you as an agent
+					You'll be able to assign agents to manage an Instagram accounts comments
 				</p>
 
 				<a id='addAccount' href="<?= $instagramHomeUrl ?>" class="btn btn-inline btn-primary ladda-button" data-style="expand-left">

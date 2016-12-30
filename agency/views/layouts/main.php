@@ -147,10 +147,10 @@ $this->registerJs($analytics);
 					<?php
 				}}
 				?>
-                <li>
-                    <a href="<?= Url::to(['dashboard/add-account']) ?>">
-                        <i class="font-icon font-icon-user"></i>
-                        <span class="lbl">Add Instagram Account</span>
+                <li <?= $this->title=="Add Account"?" class='opened'":"" ?>>
+                    <a href="<?= Url::to(['instagram/add-account']) ?>">
+						<?= Html::img(Url::to("@web/img/iglogo.png"), ['width'=>32, 'height'=>32, 'style'=>'width:32px; height:32px; margin-bottom:5px']) ?>
+						<span class="lbl">Add Instagram Account</span>
                     </a>
                 </li>
             </ul>
