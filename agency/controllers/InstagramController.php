@@ -140,5 +140,21 @@ class InstagramController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * Displays guide for user on how to fix his access token
+     * @param string $accountId the account id we're looking to fix
+     * @return mixed
+     */
+    public function actionInvalidAccessToken($accountId)
+    {
+        $this->layout = "account-error";
+        
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        return $this->render('invalidAccessToken',[
+            'account' => $instagramAccount,
+        ]);
+    }
+
 
 }

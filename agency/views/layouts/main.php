@@ -136,11 +136,27 @@ $this->registerJs($analytics);
             <ul class="side-menu-list">
 				<?php
 				if($managedAccounts = Yii::$app->accountManager->managedAccounts){
-					foreach($managedAccounts as $account){?>
+					foreach($managedAccounts as $account){
+						$accountLink = Url::to(['agent/list' ,'accountId' => $account->user_id]);
+						$errorMsg = false;
+
+						if($account->user_status == \common\models\InstagramUser::STATUS_DISABLED_NO_BILLING){
+							$errorMsg = "Expired";
+						}else if($account->user_status == \common\models\InstagramUser::STATUS_INVALID_ACCESS_TOKEN){
+							$errorMsg = "Fix me";
+							$accountLink = Url::to(['instagram/invalid-access-token' ,'accountId' => $account->user_id]);
+						}
+					?>
 						<li <?= $this->title==$account->user_name?" class='opened'":"" ?>>
-							<a href="<?= Url::to(['agent/list' ,'accountId' => $account->user_id]) ?>" class="label-right">
+							<a href="<?= $accountLink ?>" class="label-right">
 								<?= Html::img($account->user_profile_pic, ['width'=>32, 'height'=>32, 'style'=>'width:32px; height:32px; margin-bottom:5px']) ?>
 								<span class="lbl">@<?= $account->user_name ?></span>
+
+								<?php if($errorMsg){ ?>
+								<span class="label label-custom label-pill label-danger">
+									<?= $errorMsg ?>
+								</span>
+								<?php } ?>
 							</a>
 						</li>
 					<?php
