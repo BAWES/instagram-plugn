@@ -61,13 +61,19 @@ class InstagramController extends Controller
     {
         //Client is an Instance of Instagram/OAuth2/BaseOAuth classes
 
-        $igAccountModel = (new InstagramAuthHandler($client))->handle();
+        $instagramAccount = (new InstagramAuthHandler($client))->handle();
 
         // Above variable holds an Instagram Account's info on success
-        if($igAccountModel instanceof \common\models\InstagramUser){
-            // Redirect to that accounts management page
+        if($instagramAccount instanceof \common\models\InstagramUser){
+            // Add this agency's owner as an agent of this Instagram Account
+            $agentAssignment = new \common\models\AgentAssignment();
+            $agentAssignment->instagramAccountModel = $instagramAccount;
+            $agentAssignment->user_id = $instagramAccount->user_id;
+            $agentAssignment->assignment_agent_email = Yii::$app->user->identity->agency_email;
+            $agentAssignment->save();
 
-            //die("Returned Instagram User, process shit here maybe?");
+            // Redirect to that accounts management page
+            return $this->redirect(['agent/list' ,'accountId' => $instagramAccount->user_id]);
         }
 
         return $this->goHome();

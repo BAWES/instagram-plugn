@@ -52,6 +52,7 @@ class AgentController extends Controller
 
         $model = new AgentAssignment();
         $model->user_id = $instagramAccount->user_id;
+        $model->instagramAccountModel = $instagramAccount;
 
         if ($model->load(Yii::$app->request->post())) {
             if(!$model->save()){
@@ -61,22 +62,6 @@ class AgentController extends Controller
                     Yii::$app->getSession()->setFlash('error', "[Unable to Add Agent] ".$error);
                 }
             }else{
-                //Send Email to Agent notifying him that he got assigned
-                Yii::$app->mailer->compose([
-                            'html' => 'agency/agentInvite',
-                                ], [
-                            'accountFullName' => $instagramAccount->user_fullname,
-                            'accountName' => $instagramAccount->user_name,
-                            'accountPhoto' => $instagramAccount->user_profile_pic,
-                        ])
-                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
-                        ->setTo($model->assignment_agent_email)
-                        ->setSubject("You've been invited to manage @".$instagramAccount->user_name)
-                        ->send();
-
-                //Send Slack notification of agent assignment
-                Yii::info("[Agent Invite sent by @".$instagramAccount->user_name."] Sent to ".$model->assignment_agent_email, __METHOD__);
-
                 return $this->refresh();
             }
         }
