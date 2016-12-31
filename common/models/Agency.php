@@ -113,6 +113,10 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         $this->generateAuthKey();
 
         if ($this->save()) {
+            // Create an Agent account with similar access details as Agency
+            $this->createDuplicateAgentAccount();
+
+            // Send Verification Email
             $this->sendVerificationEmail();
 
             //Log agency signup
@@ -125,6 +129,31 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         return null;
+    }
+
+    /**
+     * Create an Agent account with similar access details as Agency
+     * if one doesn't already exist.
+     * @return mixed
+     */
+    public function createDuplicateAgentAccount(){
+        $agentExists = Agent::findOne(['agent_email' => $this->agency_email]);
+        if(!$agentExists){
+            // Create an Agent account for this agency
+            $agent = new Agent();
+            $agent->agent_name = $this->agency_fullname;
+            $agent->agent_email = $this->agency_email;
+            $agent->agent_email_verified = Agent::EMAIL_NOT_VERIFIED;
+            $agent->agent_auth_key = $this->agency_auth_key;
+            $agent->agent_password_hash = $this->agency_password_hash;
+            $agent->agent_password_reset_token = $this->agency_password_reset_token;
+            $agent->agent_limit_email = $this->agency_limit_email;
+            $agent->agent_created_at = $this->agency_created_at;
+            $agent->agent_updated_at = $this->agency_updated_at;
+            $agent->agent_status = Agent::STATUS_ACTIVE;
+            $agent->agent_email_preference = Agent::PREF_EMAIL_DAILY;
+            $agent->save(false);
+        }
     }
 
 

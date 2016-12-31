@@ -98,25 +98,35 @@ class SiteController extends Controller
     public function actionEmailVerify($code, $verify) {
         $this->layout = 'signup';
 
-        //Code is his auth key, check if code is valid
+        // Code is his auth key, check if code is valid
         $agency = Agency::findOne(['agency_auth_key' => $code, 'agency_id' => (int) $verify]);
         if ($agency) {
-            //If not verified
+            // If not verified
             if ($agency->agency_email_verified == Agency::EMAIL_NOT_VERIFIED) {
-                //Verify this agency email
+                // Verify this agency email
                 $agency->agency_email_verified = Agency::EMAIL_VERIFIED;
                 $agency->save(false);
 
-                //Log him in
+                // Verify the agents email with similar email as agency
+                $agentAccount = \common\models\Agent::findOne([
+                    'agent_email' => $agency->agency_email,
+                    'agent_email_verified' => \common\models\Agent::EMAIL_NOT_VERIFIED
+                ]);
+                if($agentAccount){
+                    $agentAccount->agent_email_verified = \common\models\Agent::EMAIL_VERIFIED;
+                    $agentAccount->save(false);
+                }
+
+                // Log him in
                 Yii::$app->user->login($agency, 0);
             }
 
-            //Render thanks for verifying + Button to go to his portal
+            // Render thanks for verifying + Button to go to his portal
             Yii::$app->getSession()->setFlash('success', '[You have verified your email] You may now use Plugn to manage your accounts');
 
             return $this->redirect(['instagram/index']);
         } else {
-            //inserted code is invalid
+            // Inserted code is invalid
             throw new BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
         }
     }
