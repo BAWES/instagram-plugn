@@ -30,6 +30,12 @@ class InstagramController extends Controller
                     ],
                 ],
             ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'remove' => ['POST'],
+                ],
+            ],
         ];
     }
 
@@ -96,9 +102,9 @@ class InstagramController extends Controller
     {
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
-        // if(isset($managedAccounts[0])){
-        //     return $this->redirect(['media/list' ,'accountId' => $managedAccounts[0]->user_id]);
-        // }
+        if(isset($managedAccounts[0])){
+            return $this->redirect(['agent/list' ,'accountId' => $managedAccounts[0]->user_id]);
+        }
         return $this->redirect(['add-account']);
     }
 
@@ -108,6 +114,22 @@ class InstagramController extends Controller
     public function actionAddAccount()
     {
         return $this->render('addAccount',[]);
+    }
+
+    /**
+     * Remove an Instagram account from the agency
+     * @param integer $id the instagram account id
+     * @return mixed
+     */
+    public function actionRemove($id)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($id);
+
+        // Remove the agency from this Instagram account
+        $instagramAccount->agency_id = null;
+        $instagramAccount->save(false);
+
+        return $this->redirect(['index']);
     }
 
 

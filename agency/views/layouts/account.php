@@ -52,11 +52,10 @@ $controllerName = $this->context->id;
 			</div>
 		</div>
 	</div>
-	<a href='http://instagram.com/<?= $account->user_name ?>'
+	<a href='<?= Url::to(['instagram/remove', 'id' => $account->user_id]) ?>'
 		class="change-cover"
 		data-method="post"
-		data-confirm="Remove @<?= $account->user_name ?> from your agency?"
-		target='_blank'>
+		data-confirm="Remove @<?= $account->user_name ?> from your agency?">
 		<?php /*<i class="font-icon font-icon-del"></i>*/ ?>
 		Remove Account
 	</a>
