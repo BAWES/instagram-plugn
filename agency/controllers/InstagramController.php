@@ -127,6 +127,8 @@ class InstagramController extends Controller
 
         // Remove the agency from this Instagram account
         $instagramAccount->agency_id = null;
+        // Set account as Inactive to stop crawling data & stop deducting trial days
+        $instagramAccount->user_status = \common\models\InstagramUser::STATUS_INACTIVE;
         $instagramAccount->save(false);
 
         return $this->redirect(['index']);

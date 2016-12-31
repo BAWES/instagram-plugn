@@ -64,11 +64,14 @@ class InstagramAuthHandler
             $user->user_following_count = $followsCount;
             $user->user_follower_count = $followersCount;
             $user->user_ig_access_token = $accessToken;
-            $user->user_status = InstagramUser::STATUS_ACTIVE;
+            $user->user_status = InstagramUser::STATUS_INACTIVE;
 
 
             if ($user->save()) {
                 Yii::info("[Instagram Updated Token @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
+
+                // Disable account if trial/billing not setup
+                $user->activateAccountIfPossible();
 
                 // Return the saved model
                 return $user;
@@ -94,7 +97,7 @@ class InstagramAuthHandler
                     'user_following_count' => $followsCount,
                     'user_follower_count' => $followersCount,
                     'user_ig_access_token' => $accessToken,
-
+                    'user_status' => InstagramUser::STATUS_INACTIVE
                 ]);
                 $user->generateAuthKey();
 
@@ -109,6 +112,9 @@ class InstagramAuthHandler
                     //Log new Instagram signup
                     Yii::info("[New Instagram Signup @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
 
+                    // Disable account if trial/billing not setup
+                    $user->activateAccountIfPossible();
+                    
                     // Return the saved model
                     return $user;
                 }
