@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
  * @property string $agency_password_reset_token
  * @property string $agency_limit_email
  * @property integer $agency_status
+ * @property integer $agency_trial_days
  * @property string $agency_created_at
  * @property string $agency_updated_at
  *
@@ -89,6 +90,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             'agency_password_reset_token' => 'Password Reset Token',
             'agency_status' => 'Status',
             'agency_limit_email' => 'Limit Email',
+            'agency_trial_days' => 'Trial Days Left',
             'agency_created_at' => 'Created At',
             'agency_updated_at' => 'Updated At',
         ];
