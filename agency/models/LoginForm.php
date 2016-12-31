@@ -85,7 +85,7 @@ class LoginForm extends Model
                         'email' => $agency->agency_email,
                     ], true);
 
-                    $message = Yii::t('agency',"Please click the verification link sent to you by email to activate your account.", [
+                    $message = Yii::t('agency',"Please click the verification link sent to you by email to activate your account. <br/><br/><a href=\'{resendLink}\'>Resend Verification Email</a>", [
                             'resendLink' => $resendLink,
                         ]);
 
