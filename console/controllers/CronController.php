@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Console;
 use yii\db\Expression;
 use common\models\InstagramUser;
+use common\models\Agency;
 
 /**
  * All Cron actions related to this project
@@ -34,9 +35,8 @@ class CronController extends \yii\console\Controller {
      * Used for testing only
      */
     public function actionIndex(){
-        $this->stdout("Testing Instagram Query \n", Console::FG_RED, Console::BOLD);
-
-
+        $this->stdout("Testing Agency Trial Deductions \n", Console::FG_RED, Console::BOLD);
+        //Agency::deductTrialDayFromAllActiveAgencies();
     }
 
     /**

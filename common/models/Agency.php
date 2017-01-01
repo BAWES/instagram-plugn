@@ -33,6 +33,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_BANNED = 5;
     const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 20; // Billing / Trial Expired
 
     //Email verification values for `agency_email_verified`
     const EMAIL_VERIFIED = 1;
@@ -206,6 +207,68 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
 
 
     /**
+     * Check if this agency has a valid active trial
+     * @return boolean
+     */
+    public function hasActiveTrial(){
+        if($this->agency_email_verified == Agency::EMAIL_VERIFIED
+            && $this->agency_status == Agency::STATUS_ACTIVE
+            && $this->agency_trial_days > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Deducts a day from the active trial
+     * @return mixed
+     */
+    public function deductTrialDay(){
+        if($this->hasActiveTrial()){
+            // Deduct a day from trial days
+            $this->agency_trial_days = $this->agency_trial_days - 1;
+
+            // Disable if no days left
+            if($this->agency_trial_days == 0){
+                $this->_disableAgencyAndManagedAccounts();
+            }else{
+                $this->save(false);
+            }
+        }
+    }
+
+    /**
+     * Deducts a trial day from all active agencies
+     */
+    public static function deductTrialDayFromAllActiveAgencies()
+    {
+        $activeTrialAgencies = static::find()->validTrial();
+        foreach($activeTrialAgencies->each(50) as $agency){
+            $agency->deductTrialDay();
+        }
+    }
+
+
+    /**
+     * Disable the active ig accounts when an agency account expires
+     * either by end of trial or expired billing
+     * @return mixed
+     */
+    private function _disableAgencyAndManagedAccounts(){
+        // Deactivate IG accounts that are already active within this agency
+        InstagramUser::updateAll([
+            'user_status' => InstagramUser::STATUS_DISABLED_NO_BILLING
+        ],[// Where
+            'agency_id' => $this->agency_id,
+            'user_status' => InstagramUser::STATUS_ACTIVE
+        ]);
+
+        $this->agency_status = Agency::STATUS_INACTIVE;
+        $this->save(false);
+    }
+
+
+    /**
      * Start of IdentityInterface Methods
      */
 
@@ -339,6 +402,7 @@ class AgencyQuery extends ActiveQuery
     public function validTrial()
     {
         return $this->andWhere(['agency_email_verified' => Agency::EMAIL_VERIFIED])
-                ->andWhere(['>', 'agency_trial_days', 0]);
+        ->andWhere(['agency_status' => Agency::STATUS_ACTIVE])
+        ->andWhere(['>', 'agency_trial_days', 0]);
     }
 }
