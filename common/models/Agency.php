@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\web\IdentityInterface;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "agency".
@@ -43,6 +44,11 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return 'agency';
+    }
+
+    public static function find()
+    {
+        return new AgencyQuery(get_called_class());
     }
 
     /**
@@ -322,5 +328,17 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function removePasswordResetToken() {
         $this->agency_password_reset_token = null;
+    }
+}
+
+/**
+ * Custom queries for easier management of selection
+ */
+class AgencyQuery extends ActiveQuery
+{
+    public function validTrial()
+    {
+        return $this->andWhere(['agency_email_verified' => Agency::EMAIL_VERIFIED])
+                ->andWhere(['>', 'agency_trial_days', 0]);
     }
 }
