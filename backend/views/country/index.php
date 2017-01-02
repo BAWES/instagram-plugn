@@ -22,16 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'country_id',
             'country_name',
             'country_iso_code_2',
             'country_iso_code_3',
-            'country_zipstate_required',
+            // 'country_zipstate_required',
             // 'country_addrline2_required',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}{update}'],
         ],
     ]); ?>
 </div>
