@@ -55,6 +55,7 @@ AppAsset::register($this);
                 ['label' => 'Media', 'url' => ['/media/index']],
                 ['label' => 'Comments', 'url' => ['/comment/index']],
                 ['label' => 'Notes', 'url' => ['/note/index']],
+                ['label' => 'Activity', 'url' => ['/activity/index']],
             ]
         ];
         $menuItems[] = [
