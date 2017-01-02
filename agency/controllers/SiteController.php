@@ -62,6 +62,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        // If billing has expired for this user, redirect to billing page
+        if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
+            return $this->redirect(['billing/index']);
+        }
+
+        // Redirect to Instagram management page
         return $this->redirect(['instagram/index']);
     }
 
