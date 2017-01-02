@@ -41,15 +41,15 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'billing_currency') ?>
 
-    <?php // echo $form->field($model, '2co_token') ?>
+    <?php // echo $form->field($model, 'twoco_token') ?>
 
-    <?php // echo $form->field($model, '2co_order_num') ?>
+    <?php // echo $form->field($model, 'twoco_order_num') ?>
 
-    <?php // echo $form->field($model, '2co_transaction_id') ?>
+    <?php // echo $form->field($model, 'twoco_transaction_id') ?>
 
-    <?php // echo $form->field($model, '2co_response_code') ?>
+    <?php // echo $form->field($model, 'twoco_response_code') ?>
 
-    <?php // echo $form->field($model, '2co_response_msg') ?>
+    <?php // echo $form->field($model, 'twoco_response_msg') ?>
 
     <?php // echo $form->field($model, 'billing_datetime') ?>
 

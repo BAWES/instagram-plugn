@@ -19,7 +19,7 @@ class BillingSearch extends Billing
     {
         return [
             [['billing_id', 'user_id', 'pricing_id', 'country_id'], 'integer'],
-            [['billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip_code', 'billing_address_line1', 'billing_address_line2', 'billing_currency', '2co_token', '2co_order_num', '2co_transaction_id', '2co_response_code', '2co_response_msg', 'billing_datetime'], 'safe'],
+            [['billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip_code', 'billing_address_line1', 'billing_address_line2', 'billing_currency', 'twoco_token', 'twoco_order_num', 'twoco_transaction_id', 'twoco_response_code', 'twoco_response_msg', 'billing_datetime'], 'safe'],
             [['billing_total'], 'number'],
         ];
     }
@@ -76,11 +76,11 @@ class BillingSearch extends Billing
             ->andFilterWhere(['like', 'billing_address_line1', $this->billing_address_line1])
             ->andFilterWhere(['like', 'billing_address_line2', $this->billing_address_line2])
             ->andFilterWhere(['like', 'billing_currency', $this->billing_currency])
-            ->andFilterWhere(['like', '2co_token', $this->2co_token])
-            ->andFilterWhere(['like', '2co_order_num', $this->2co_order_num])
-            ->andFilterWhere(['like', '2co_transaction_id', $this->2co_transaction_id])
-            ->andFilterWhere(['like', '2co_response_code', $this->2co_response_code])
-            ->andFilterWhere(['like', '2co_response_msg', $this->2co_response_msg]);
+            ->andFilterWhere(['like', 'twoco_token', $this->twoco_token])
+            ->andFilterWhere(['like', 'twoco_order_num', $this->twoco_order_num])
+            ->andFilterWhere(['like', 'twoco_transaction_id', $this->twoco_transaction_id])
+            ->andFilterWhere(['like', 'twoco_response_code', $this->twoco_response_code])
+            ->andFilterWhere(['like', 'twoco_response_msg', $this->twoco_response_msg]);
 
         return $dataProvider;
     }

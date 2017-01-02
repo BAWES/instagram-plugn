@@ -22,11 +22,11 @@ use yii\db\Expression;
  * @property string $billing_address_line2
  * @property string $billing_total
  * @property string $billing_currency
- * @property string $2co_token
- * @property string $2co_order_num
- * @property string $2co_transaction_id
- * @property string $2co_response_code
- * @property string $2co_response_msg
+ * @property string $twoco_token
+ * @property string $twoco_order_num
+ * @property string $twoco_transaction_id
+ * @property string $twoco_response_code
+ * @property string $twoco_response_msg
  * @property string $billing_datetime
  *
  * @property Country $country
@@ -120,11 +120,11 @@ class Billing extends \yii\db\ActiveRecord
             'billing_address_line2' => 'Address Line 2',
             'billing_total' => 'Total',
             'billing_currency' => 'Currency',
-            '2co_token' => '2co Token',
-            '2co_order_num' => '2co Order Num',
-            '2co_transaction_id' => '2co Transaction ID',
-            '2co_response_code' => '2co Response Code',
-            '2co_response_msg' => '2co Response Msg',
+            'twoco_token' => '2co Token',
+            'twoco_order_num' => '2co Order Num',
+            'twoco_transaction_id' => '2co Transaction ID',
+            'twoco_response_code' => '2co Response Code',
+            'twoco_response_msg' => '2co Response Msg',
             'billing_datetime' => 'Billing Datetime',
         ];
     }
