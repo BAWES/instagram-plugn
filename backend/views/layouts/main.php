@@ -63,6 +63,8 @@ AppAsset::register($this);
             'label' => 'Billing',
             'items' => [
                 ['label' => 'Countries', 'url' => ['/country/index']],
+                ['label' => 'Pricing', 'url' => ['/pricing/index']],
+                ['label' => 'Billing', 'url' => ['/billing/index']],
             ]
         ];
         $menuItems[] = [
