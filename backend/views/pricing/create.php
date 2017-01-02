@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Pricing */
 
-$this->title = 'Create Pricing';
+$this->title = 'Create Price Option';
 $this->params['breadcrumbs'][] = ['label' => 'Pricings', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

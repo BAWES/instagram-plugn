@@ -47,11 +47,11 @@ class Pricing extends \yii\db\ActiveRecord
     {
         return [
             'pricing_id' => 'Pricing ID',
-            'pricing_title' => 'Pricing Title',
-            'pricing_features' => 'Pricing Features',
-            'pricing_price' => 'Pricing Price',
-            'pricing_created_at' => 'Pricing Created At',
-            'pricing_updated_at' => 'Pricing Updated At',
+            'pricing_title' => 'Title',
+            'pricing_features' => 'Features',
+            'pricing_price' => 'Price',
+            'pricing_created_at' => 'Created At',
+            'pricing_updated_at' => 'Updated At',
         ];
     }
 
