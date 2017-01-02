@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'country_zipstate_required',
             // 'country_addrline2_required',
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}{update}'],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
         ],
     ]); ?>
 </div>
