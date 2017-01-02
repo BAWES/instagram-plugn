@@ -11,6 +11,7 @@ use yii\db\Expression;
  *
  * @property string $billing_id
  * @property integer $user_id
+ * @property integer $pricing_id
  * @property integer $country_id
  * @property string $billing_name
  * @property string $billing_email
@@ -29,6 +30,7 @@ use yii\db\Expression;
  * @property string $billing_datetime
  *
  * @property Country $country
+ * @property Pricing $pricing
  * @property InstagramUser $user
  */
 class Billing extends \yii\db\ActiveRecord
@@ -107,6 +109,7 @@ class Billing extends \yii\db\ActiveRecord
         return [
             'billing_id' => 'Billing ID',
             'user_id' => 'User ID',
+            'pricing_id' => 'Pricing ID',
             'country_id' => 'Country',
             'billing_name' => 'Name',
             'billing_email' => 'Email',
@@ -124,6 +127,14 @@ class Billing extends \yii\db\ActiveRecord
             '2co_response_msg' => '2co Response Msg',
             'billing_datetime' => 'Billing Datetime',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPricing()
+    {
+        return $this->hasOne(Pricing::className(), ['pricing_id' => 'pricing_id']);
     }
 
     /**
