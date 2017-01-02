@@ -60,6 +60,12 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
+            'label' => 'Billing',
+            'items' => [
+                ['label' => 'Countries', 'url' => ['/country/index']],
+            ]
+        ];
+        $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->admin_name . ')',
             'url' => ['/site/logout'],
             'linkOptions' => ['data-method' => 'post']
