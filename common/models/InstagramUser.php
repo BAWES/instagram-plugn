@@ -213,7 +213,15 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
      */
     public function activateAccountIfPossible(){
         $billingActive = true;
-        $agencyTrialActive = true;
+
+        // Check if Parent Agency has a Trial Active
+        $agencyTrialActive = false;
+        if($this->agency){
+            if($this->agency->agency_trial_days > 0){
+                $agencyTrialActive = true;
+            }
+        }
+
 
         // If billing or trials are valid, fully activate the account
         if($billingActive || $agencyTrialActive){

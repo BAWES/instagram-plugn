@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use agency\assets\TemplateAsset;
 use common\widgets\Alert;
+use common\models\Agency;
 
 TemplateAsset::register($this);
 
@@ -135,21 +136,40 @@ $this->registerJs($analytics);
 
 		<section>
 			<?php
+			$showMessage = false;
+			$messageTitle = $messageContent = $messageUrl = "";
+
+			// Trial Check
 			$trialDaysLeft = Yii::$app->user->identity->agency_trial_days;
 			$isTrial = $trialDaysLeft > 0 ? true : false;
+
+			if($isTrial){
+				// Account under trial
+				$showMessage = true;
+				$messageUrl = Url::to(['billing/index']);
+				$messageTitle = "Trial";
+				$messageContent = Yii::t('agency', '{daysLeft,plural,=0{No days} =1{1 day} other{# days}} left', [
+					'daysLeft' => $trialDaysLeft
+					]);
+			}else if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
+				// Account Disabled (usually because trial or billing expired)
+				$showMessage = true;
+				$messageUrl = Url::to(['billing/index']);
+				$messageTitle = "Account Disabled";
+				$messageContent = "Please set up billing to activate your account";
+			}
 			?>
-			<?php if($isTrial){ ?>
-			<div class="side-menu-avatar" style='
-				background:#FF5252;
-				padding: 18px 0;
-				text-align:center;'>
-				<a style='color:white' href='<?= Url::to(['billing/index']) ?>'>
-					<b>Trial</b>
-					<?= Yii::t('agency', '{daysLeft,plural,=0{No days} =1{1 day} other{# days}} left', [
-						'daysLeft' => $trialDaysLeft
-						]) ?>
-				</a>
-			</div>
+
+			<?php if($showMessage){ ?>
+				<div class="side-menu-avatar" style='
+					background:#FF5252;
+					padding: 18px 0;
+					text-align:center;'>
+					<a style='color:white' href='<?= $messageUrl ?>'>
+						<b><?= $messageTitle ?></b>
+						<?= $messageContent ?>
+					</a>
+				</div>
 			<?php } ?>
 
             <ul class="side-menu-list" style="<?= $isTrial?"margin-top:0;":"" ?>">
@@ -159,9 +179,7 @@ $this->registerJs($analytics);
 						$accountLink = Url::to(['agent/list' ,'accountId' => $account->user_id]);
 						$errorMsg = false;
 
-						if($account->user_status == \common\models\InstagramUser::STATUS_DISABLED_NO_BILLING){
-							$errorMsg = "Expired";
-						}else if($account->user_status == \common\models\InstagramUser::STATUS_INVALID_ACCESS_TOKEN){
+						if($account->user_status == \common\models\InstagramUser::STATUS_INVALID_ACCESS_TOKEN){
 							$errorMsg = "Fix me";
 							$accountLink = Url::to(['instagram/invalid-access-token' ,'accountId' => $account->user_id]);
 						}
