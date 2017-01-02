@@ -218,6 +218,17 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         }
         return false;
     }
+    
+    /**
+     * Deducts a trial day from all active agencies
+     */
+    public static function deductTrialDayFromAllActiveAgencies()
+    {
+        $activeTrialAgencies = static::find()->validTrial();
+        foreach($activeTrialAgencies->each(50) as $agency){
+            $agency->deductTrialDay();
+        }
+    }
 
     /**
      * Deducts a day from the active trial
@@ -234,17 +245,6 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             }else{
                 $this->save(false);
             }
-        }
-    }
-
-    /**
-     * Deducts a trial day from all active agencies
-     */
-    public static function deductTrialDayFromAllActiveAgencies()
-    {
-        $activeTrialAgencies = static::find()->validTrial();
-        foreach($activeTrialAgencies->each(50) as $agency){
-            $agency->deductTrialDay();
         }
     }
 
@@ -265,6 +265,8 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
 
         $this->agency_status = Agency::STATUS_INACTIVE;
         $this->save(false);
+
+        // Send an email that trial or billing has expired?
     }
 
 

@@ -132,8 +132,27 @@ $this->registerJs($analytics);
 
     <div class="mobile-menu-left-overlay"></div>
     <nav class="side-menu  side-menu-big-icon">
+
 		<section>
-            <ul class="side-menu-list">
+			<?php
+			$trialDaysLeft = Yii::$app->user->identity->agency_trial_days;
+			$isTrial = $trialDaysLeft > 0 ? true : false;
+			?>
+			<?php if($isTrial){ ?>
+			<div class="side-menu-avatar" style='
+				background:#FF5252;
+				padding: 18px 0;
+				text-align:center;'>
+				<a style='color:white' href='<?= Url::to(['billing/index']) ?>'>
+					<b>Trial</b>
+					<?= Yii::t('agency', '{daysLeft,plural,=0{No days} =1{1 day} other{# days}} left', [
+						'daysLeft' => $trialDaysLeft
+						]) ?>
+				</a>
+			</div>
+			<?php } ?>
+
+            <ul class="side-menu-list" style="<?= $isTrial?"margin-top:0;":"" ?>">
 				<?php
 				if($managedAccounts = Yii::$app->accountManager->managedAccounts){
 					foreach($managedAccounts as $account){
