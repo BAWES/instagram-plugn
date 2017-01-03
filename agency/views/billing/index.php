@@ -31,20 +31,22 @@ $this->title = 'Billing';
 				<header class="prices-page-title">Affordable pricing. No long term contract.</header>
 				<p class="prices-page-subtitle">Try free for 14 days with no obligation.</p>
 
-				<article class="price-card">
-					<header class="price-card-header">Enterprise</header>
-					<div class="price-card-body">
-						<div class="price-card-amount">$499</div>
-						<div class="price-card-amount-lbl">per month</div>
-						<ul class="price-card-list">
-							<li style='text-align:center'>
-								up to <span style='font-size:1.1em; font-weight:bold'>5</span> Instagram accounts
-							</li>
-						</ul>
-						<div class="clear"></div>
-						<a href="<?= Url::to(['billing/setup']) ?>" class="btn btn-rounded">Buy now</a>
-					</div>
-				</article>
+				<?php foreach($availablePriceOptions as $pricing){ ?>
+					<article class="price-card">
+						<header class="price-card-header"><?= $pricing->pricing_title ?></header>
+						<div class="price-card-body">
+							<div class="price-card-amount">$<?= (int) $pricing->pricing_price ?></div>
+							<div class="price-card-amount-lbl">per month</div>
+							<ul class="price-card-list">
+								<li style='text-align:center'>
+									<?= $pricing->pricing_features ?>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<a href="<?= Url::to(['billing/setup', 'package' => $pricing->pricing_id]) ?>" class="btn btn-rounded">Buy now</a>
+						</div>
+					</article>
+				<?php } ?>
 
 				<div class="prices-page-bottom">
 					<p>Larger plans available upon request.</p>

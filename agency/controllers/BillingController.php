@@ -44,9 +44,11 @@ class BillingController extends Controller
      */
     public function actionIndex()
     {
+        $availablePriceOptions = \common\models\Pricing::find()->orderBy('pricing_price')->all();
 
-
-        return $this->render('index', []);
+        return $this->render('index', [
+            'availablePriceOptions' => $availablePriceOptions
+        ]);
     }
 
     /**
