@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "pricing".
@@ -29,13 +31,27 @@ class Pricing extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'pricing_created_at',
+                'updatedAtAttribute' => 'pricing_updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['pricing_title', 'pricing_price', 'pricing_created_at', 'pricing_updated_at'], 'required'],
+            [['pricing_title', 'pricing_price'], 'required'],
             [['pricing_features'], 'string'],
             [['pricing_price'], 'number'],
-            [['pricing_created_at', 'pricing_updated_at'], 'safe'],
             [['pricing_title'], 'string', 'max' => 255],
         ];
     }

@@ -48,7 +48,7 @@ $this->title = 'Billing';
 
 				<div class="prices-page-bottom">
 					<p>Larger plans available upon request.</p>
-					<p><a href="https://plugn.io/contact/">Contact us</a> for more information.</p>
+					<p><a href="https://plugn.io/contact/" target='_blank'>Contact us</a> for more information.</p>
 				</div>
 			</div>
 		</div>
