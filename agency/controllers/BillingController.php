@@ -39,10 +39,21 @@ class BillingController extends Controller
     }
 
     /**
-     * Display main view
+     * Display Billing Summary / Options
      * @return mixed
      */
     public function actionIndex()
+    {
+
+
+        return $this->render('index', []);
+    }
+
+    /**
+     * Setup a Recurring Billing Package
+     * @return mixed
+     */
+    public function actionSetup()
     {
         $model = new Billing();
 
@@ -126,7 +137,7 @@ class BillingController extends Controller
             ->where(['country_addrline2_required' => 1])->asArray()->all();
 
 
-        return $this->render('index', [
+        return $this->render('setup', [
             // Form
             'model' => $model,
             'zipStateCountries' => json_encode($zipStateCountries),
