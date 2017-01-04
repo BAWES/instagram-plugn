@@ -75,10 +75,14 @@ class BillingController extends Controller
             return $this->redirect(['billing/index']);
         }
 
+        // Setup new billing model
         $model = new Billing();
-        $model->billing_currency = "USD";
+        $model->agency_id = Yii::$app->user->identity->agency_id;
+        $model->pricing_id = $pricing->pricing_id;
+        $model->billing_total = $pricing->pricing_price;
         $model->billing_email = Yii::$app->user->identity->agency_email;
         $model->billing_name = Yii::$app->user->identity->agency_fullname;
+        $model->billing_currency = "USD";
 
         // Handle AJAX Validation
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
@@ -88,7 +92,7 @@ class BillingController extends Controller
 
         if($model->load(Yii::$app->request->post())){
             // Token returned from 2CO after creditcard input
-            if(Yii::$app->request->post('token') && $model->save()){
+            if($model->twoco_token = Yii::$app->request->post('token') && $model->save()){
                 $token = Yii::$app->request->post('token');
 
                 // Your sellerId(account number) and privateKey are required to make the Payment API Authorization call.
