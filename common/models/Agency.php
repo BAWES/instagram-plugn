@@ -25,6 +25,7 @@ use yii\db\ActiveQuery;
  * @property string $agency_created_at
  * @property string $agency_updated_at
  *
+ * @property Billing[] $billings
  * @property InstagramUser[] $instagramUsers
  */
 class Agency extends \yii\db\ActiveRecord implements IdentityInterface
@@ -101,6 +102,14 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             'agency_created_at' => 'Created At',
             'agency_updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBillings()
+    {
+        return $this->hasMany(Billing::className(), ['agency_id' => 'agency_id']);
     }
 
     /**
@@ -218,7 +227,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         }
         return false;
     }
-    
+
     /**
      * Deducts a trial day from all active agencies
      */

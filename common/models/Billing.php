@@ -10,7 +10,7 @@ use yii\db\Expression;
  * This is the model class for table "billing".
  *
  * @property string $billing_id
- * @property integer $user_id
+ * @property integer $agency_id
  * @property integer $pricing_id
  * @property integer $country_id
  * @property string $billing_name
@@ -108,7 +108,7 @@ class Billing extends \yii\db\ActiveRecord
     {
         return [
             'billing_id' => 'Billing ID',
-            'user_id' => 'User ID',
+            'agency_id' => 'Agency ID',
             'pricing_id' => 'Pricing ID',
             'country_id' => 'Country',
             'billing_name' => 'Name',
@@ -148,8 +148,8 @@ class Billing extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getAgency()
     {
-        return $this->hasOne(InstagramUser::className(), ['user_id' => 'user_id']);
+        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
     }
 }
