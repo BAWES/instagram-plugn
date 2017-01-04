@@ -174,7 +174,6 @@ $this->title = 'Billing';
 
 			  <div>
 				  <?= $form->field($model, 'billing_name')->textInput(['placeholder' => 'Your name', 'required' => 'required']) ?>
-				  <?= $form->field($model, 'billing_email')->input('email', ['placeholder' => 'email@company.com', 'required' => 'required']) ?>
 
 				  <?= $form->field($model, 'country_id',[
 		                'template' => $selectTemplate,

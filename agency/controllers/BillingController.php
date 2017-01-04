@@ -76,6 +76,9 @@ class BillingController extends Controller
         }
 
         $model = new Billing();
+        $model->billing_currency = "USD";
+        $model->billing_email = Yii::$app->user->identity->agency_email;
+        $model->billing_name = Yii::$app->user->identity->agency_fullname;
 
         // Handle AJAX Validation
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
@@ -103,36 +106,36 @@ class BillingController extends Controller
                 // Use the token to create a sale
                 try {
                     $charge = Twocheckout_Charge::auth([
-                        "merchantOrderId" => "123",
+                        "merchantOrderId" => $model->billing_id,
                         "token" => $token,
-                        "currency" => 'USD',
-                        "total" => '10.00',
+                        "currency" => $model->billing_currency,
+                        "total" => $pricing->pricing_price,
                         "billingAddr" => [
                             // Card holder’s name. (128 characters max)
-                            "name" => 'Jasem the weird',
+                            "name" => $model->billing_name,
                             // Card holder’s street address. (64 characters max) Required
-                            "addrLine1" => '123 Test St',
+                            "addrLine1" => $model->billing_address_line1,
                             // Card holder’s street address line 2. (64 characters max)
                             // Required if “country” value is: CHN, JPN, RUS - Optional for all other “country” values.
-                            "addrLine2" => '123213',
+                            "addrLine2" => $model->billing_address_line1? $model->billing_address_line1:"",
                             // Card holder’s city. (64 characters max) Required
-                            "city" => 'Columbus',
+                            "city" => $model->billing_city,
                             /**
                              *  Card holder’s state. (64 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP,
                              *  EGY, FRA, IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR,
                              *   GBR, USA - Optional for all other “country” values.
                              */
-                            "state" => 'OH',
+                            "state" => $model->billing_state? $model->billing_state:"",
                             /**
                              * Card holder’s zip. (16 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP, EGY, FRA,
                              *  IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR, GBR,
                              *  USA - Optional for all other “country” values.
                              */
-                            "zipCode" => '43123',
+                            "zipCode" => $model->billing_zip_code? $model->billing_zip_code:"",
                             // Card holder’s country. (64 characters max) Required
-                            "country" => 'USA',
+                            "country" => $model->country->country_iso_code_3,
                             // Card holder’s email. (64 characters max) Required
-                            "email" => 'testingtester@2co.com',
+                            "email" => $model->billing_email,
                             // Card holder’s phone. (16 characters max) Optional
                             // "phoneNumber" => '555-555-5555'
                         ]
