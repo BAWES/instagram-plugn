@@ -113,7 +113,6 @@ class BillingController extends Controller
                         "merchantOrderId" => $model->billing_id,
                         "token" => $token,
                         "currency" => $model->billing_currency,
-                        "total" => $pricing->pricing_price,
                         "billingAddr" => [
                             // Card holder’s name. (128 characters max)
                             "name" => $model->billing_name,
@@ -142,6 +141,18 @@ class BillingController extends Controller
                             "email" => $model->billing_email,
                             // Card holder’s phone. (16 characters max) Optional
                             // "phoneNumber" => '555-555-5555'
+                        ],
+                        "lineItems" => [
+                            [
+                                "type" => "product",
+                                "name" => "Plugn ".$pricing->pricing_title." Plan",
+                                "price" => $pricing->pricing_price,
+                                "tangible" => "N",
+                                "productId" => $pricing->pricing_id,
+                                "recurrence" => "1 Month",
+                                "duration" => "Forever",
+                                //"startupFee" => "" //on discount
+                            ]
                         ]
                     ]);
 
