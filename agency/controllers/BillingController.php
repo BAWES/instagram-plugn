@@ -70,7 +70,7 @@ class BillingController extends Controller
         $planLimit = $pricing->pricing_account_quantity;
         if($planLimit < $currentAccountCount){
             Yii::$app->getSession()
-            ->setFlash('warning', "[You have $currentAccountCount accounts. Selected plan has a limit of $planLimit] You may remove accounts by navigating to them and clicking the <b>Remove</b> button");
+            ->setFlash('warning', "[You have $currentAccountCount accounts. Selected plan has a limit of $planLimit] You may remove accounts by navigating to their management page and clicking the <b>Remove</b> button");
 
             return $this->redirect(['billing/index']);
         }
@@ -162,6 +162,9 @@ class BillingController extends Controller
             'model' => $model,
             'zipStateCountries' => json_encode($zipStateCountries),
             'addrCountries' => json_encode($addrCountries),
+
+            // Pricing
+            'pricing' => $pricing,
 
             // 2 CO
             'processFormUrl' => Url::to(['billing/process']),

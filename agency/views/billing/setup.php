@@ -169,7 +169,7 @@ $this->title = 'Billing';
         ]);
         ?>
 		  <!-- Card Holder Info -->
-		  <div class='col-md-6'>
+		  <div class='col-md-5'>
 			  <h4>Card Holder</h4>
 
 			  <div>
@@ -200,8 +200,8 @@ $this->title = 'Billing';
 		  </div>
 
 			<!-- Card Info -->
-			<div class='col-md-6'>
-				<h4>Creditcard</h4>
+			<div class='col-md-4'>
+				<h4>Credit Card</h4>
 
 				<input name="token" type="hidden" value="" />
 				<div>
@@ -230,24 +230,29 @@ $this->title = 'Billing';
 					</label>
 				</div>
 
-				<img src='https://www.2checkout.com/upload/images/paymentlogoshorizontal.png' alt='payment options'/>
+				<img style='max-width:100%'
+				src='https://www.2checkout.com/upload/images/paymentlogoshorizontal.png' alt='payment options'/>
 
+
+		  	</div>
+
+			<div class='col-md-3'>
 				<article class="price-card">
 					<header class="price-card-header">Payment Summary</header>
 					<div class="price-card-body">
-						<div class="price-card-amount">$7.99</div>
+						<div class="price-card-amount">$<?= (int) $pricing->pricing_price ?></div>
 						<div class="price-card-amount-lbl">per month</div>
+						<ul class="price-card-list">
+							<li style='text-align:center'>
+								<?= $pricing->pricing_features ?>
+							</li>
+						</ul>
 						<div class="clear"></div>
 						<input id='submitBtn' class="btn btn-primary" type="submit" value="Confirm Payment"/>
 					</div>
 				</article>
-		  	</div>
 
-			<?php /*
-			<div class='col-sm-12' style='text-align:center; margin-top:20px;'>
-				<!--<input id='submitBtn' class="btn btn-primary" type="submit" value="Subscribe at $7.99 a month"/>-->
 			</div>
-			*/ ?>
 
 
 		<?php ActiveForm::end(); ?>
