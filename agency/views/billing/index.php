@@ -43,7 +43,7 @@ $this->title = 'Billing';
 								</li>
 							</ul>
 							<div class="clear"></div>
-							<a href="<?= Url::to(['billing/setup', 'package' => $pricing->pricing_id]) ?>" class="btn btn-rounded">Buy now</a>
+							<a href="<?= Url::to(['billing/setup', 'plan' => $pricing->pricing_id]) ?>" class="btn btn-rounded">Buy now</a>
 						</div>
 					</article>
 				<?php } ?>

@@ -40,6 +40,11 @@ class ActivityController extends Controller
      */
     public function actionList($accountId)
     {
+        // If billing has expired for this user, set params to notify
+        if(Yii::$app->user->identity->agency_status == \common\models\Agency::STATUS_INACTIVE){
+            Yii::$app->params['billingExpired'] = true;
+        }
+        
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
 
         $activities = $instagramAccount->getActivities()->with('agent')->all();

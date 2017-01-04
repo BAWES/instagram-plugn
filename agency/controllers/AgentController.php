@@ -48,9 +48,9 @@ class AgentController extends Controller
      */
     public function actionList($accountId)
     {
-        // If billing has expired for this user, redirect to billing page
+        // If billing has expired for this user, set params to notify
         if(Yii::$app->user->identity->agency_status == \common\models\Agency::STATUS_INACTIVE){
-            return $this->redirect(['billing/index']);
+            Yii::$app->params['billingExpired'] = true;
         }
 
         $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);

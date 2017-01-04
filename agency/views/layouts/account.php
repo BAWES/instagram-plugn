@@ -64,6 +64,12 @@ $controllerName = $this->context->id;
 
 <div class="container-fluid">
 
+	<?php if(isset(Yii::$app->params['billingExpired'])){ ?>
+	<a style="color:#FF5252; text-align:center;" href="<?= Url::to(['billing/index']) ?>">
+		<b>Account Disabled. Click here to set up billing</b>
+	</a>
+	<?php } ?>
+
 	<section class="tabs-section">
 		<div class="tabs-section-nav tabs-section-nav-inline">
 			<ul class="nav" role="tablist">

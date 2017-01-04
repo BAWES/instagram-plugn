@@ -13,6 +13,7 @@ use yii\db\Expression;
  * @property string $pricing_title
  * @property string $pricing_features
  * @property string $pricing_price
+ * @property integer $pricing_account_quantity
  * @property string $pricing_created_at
  * @property string $pricing_updated_at
  *
@@ -51,7 +52,7 @@ class Pricing extends \yii\db\ActiveRecord
         return [
             [['pricing_title', 'pricing_price'], 'required'],
             [['pricing_features'], 'string'],
-            [['pricing_price'], 'number'],
+            [['pricing_price', 'pricing_account_quantity'], 'number'],
             [['pricing_title'], 'string', 'max' => 255],
         ];
     }
@@ -66,6 +67,7 @@ class Pricing extends \yii\db\ActiveRecord
             'pricing_title' => 'Title',
             'pricing_features' => 'Features',
             'pricing_price' => 'Price',
+            'pricing_account_quantity' => 'Number of Accounts',
             'pricing_created_at' => 'Created At',
             'pricing_updated_at' => 'Updated At',
         ];

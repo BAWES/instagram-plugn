@@ -142,6 +142,7 @@ $this->registerJs($analytics);
 			// Trial Check
 			$trialDaysLeft = Yii::$app->user->identity->agency_trial_days;
 			$isTrial = $trialDaysLeft > 0 ? true : false;
+			$billingExpired = false;
 
 			if($isTrial){
 				// Account under trial
@@ -153,7 +154,7 @@ $this->registerJs($analytics);
 					]);
 			}else if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
 				// Account Disabled (usually because trial or billing expired)
-				$showMessage = true;
+				$showMessage = $billingExpired = true;
 				$messageUrl = Url::to(['billing/index']);
 				$messageTitle = "Account Disabled";
 				$messageContent = "Please set up billing to activate your account";

@@ -53,10 +53,28 @@ class BillingController extends Controller
 
     /**
      * Setup a Recurring Billing Package
+     * @param  integer $plan The Pricing Option ID to subscribe to
      * @return mixed
      */
-    public function actionSetup()
+    public function actionSetup($plan)
     {
+        // Find the Pricing Option the user wants to setup
+        $pricing = \common\models\Pricing::findOne($plan);
+        if(!$pricing){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        // If user is attempting to setup a package which is for less than
+        // the number of accounts he has attached, show error and redirect to billing
+        $currentAccountCount = count(Yii::$app->accountManager->managedAccounts);
+        $planLimit = $pricing->pricing_account_quantity;
+        if($planLimit < $currentAccountCount){
+            Yii::$app->getSession()
+            ->setFlash('warning', "[You have $currentAccountCount accounts. Selected plan has a limit of $planLimit] You may remove accounts by navigating to them and clicking the <b>Remove</b> button");
+
+            return $this->redirect(['billing/index']);
+        }
+
         $model = new Billing();
 
         // Handle AJAX Validation
