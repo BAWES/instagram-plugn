@@ -106,6 +106,11 @@ class InstagramController extends Controller
      */
     public function actionIndex()
     {
+        // If billing has expired for this user, redirect to billing page
+        if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
+            return $this->redirect(['billing/index']);
+        }
+        
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
         if(isset($managedAccounts[0])){
@@ -123,7 +128,7 @@ class InstagramController extends Controller
         if(Yii::$app->user->identity->agency_status == \common\models\Agency::STATUS_INACTIVE){
             return $this->redirect(['billing/index']);
         }
-        
+
         return $this->render('addAccount',[]);
     }
 
