@@ -81,24 +81,31 @@ class BillingController extends Controller
             return $this->redirect(['billing/index']);
         }
 
-        // Setup new billing model
-        $model = new Billing();
-        $model->agency_id = Yii::$app->user->identity->agency_id;
-        $model->pricing_id = $pricing->pricing_id;
-        $model->billing_total = $pricing->pricing_price;
-        $model->billing_email = Yii::$app->user->identity->agency_email;
-        $model->billing_name = Yii::$app->user->identity->agency_fullname;
-        $model->billing_currency = "USD";
-
-        // Handle AJAX Validation
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return \yii\widgets\ActiveForm::validate($model);
+        // Calculate Discount if Available
+        $discount = 0;
+        if($isTrial){
+            // Give 30% discount for trial users
+            $discount = ($pricing->pricing_price - round($pricing->pricing_price * 0.7)) * -1;
         }
 
-        if($model->load(Yii::$app->request->post())){
+        // Setup new billing model
+        $billingModel = new Billing();
+        $billingModel->agency_id = Yii::$app->user->identity->agency_id;
+        $billingModel->pricing_id = $pricing->pricing_id;
+        $billingModel->billing_total = $pricing->pricing_price + $discount; // Store initial billed amount
+        $billingModel->billing_email = Yii::$app->user->identity->agency_email;
+        $billingModel->billing_name = Yii::$app->user->identity->agency_fullname;
+        $billingModel->billing_currency = "USD";
+
+        // Handle AJAX Validation
+        if (Yii::$app->request->isAjax && $billingModel->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return \yii\widgets\ActiveForm::validate($billingModel);
+        }
+
+        if($billingModel->load(Yii::$app->request->post())){
             // Token returned from 2CO after creditcard input
-            if($model->twoco_token = Yii::$app->request->post('token') && $model->save()){
+            if($billingModel->twoco_token = Yii::$app->request->post('token') && $billingModel->save()){
                 $token = Yii::$app->request->post('token');
 
                 // Your sellerId(account number) and privateKey are required to make the Payment API Authorization call.
@@ -112,45 +119,39 @@ class BillingController extends Controller
                 // To use your sandbox account set sandbox to true
                 Twocheckout::sandbox(Yii::$app->params['2co.isSandbox']);
 
-                $discount = false;
-                if($isTrial){
-                    // Give 30% discount for trial users
-                    $discount = ($pricing->pricing_price - round($pricing->pricing_price * 0.7)) * -1;
-                }
-
 
                 // Use the token to create a sale
                 try {
                     $charge = Twocheckout_Charge::auth([
-                        "merchantOrderId" => $model->billing_id,
+                        "merchantOrderId" => $billingModel->billing_id,
                         "token" => $token,
-                        "currency" => $model->billing_currency,
+                        "currency" => $billingModel->billing_currency,
                         "billingAddr" => [
                             // Card holder’s name. (128 characters max)
-                            "name" => $model->billing_name,
+                            "name" => $billingModel->billing_name,
                             // Card holder’s street address. (64 characters max) Required
-                            "addrLine1" => $model->billing_address_line1,
+                            "addrLine1" => $billingModel->billing_address_line1,
                             // Card holder’s street address line 2. (64 characters max)
                             // Required if “country” value is: CHN, JPN, RUS - Optional for all other “country” values.
-                            "addrLine2" => $model->billing_address_line1? $model->billing_address_line1:"",
+                            "addrLine2" => $billingModel->billing_address_line1? $billingModel->billing_address_line1:"",
                             // Card holder’s city. (64 characters max) Required
-                            "city" => $model->billing_city,
+                            "city" => $billingModel->billing_city,
                             /**
                              *  Card holder’s state. (64 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP,
                              *  EGY, FRA, IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR,
                              *   GBR, USA - Optional for all other “country” values.
                              */
-                            "state" => $model->billing_state? $model->billing_state:"",
+                            "state" => $billingModel->billing_state? $billingModel->billing_state:"",
                             /**
                              * Card holder’s zip. (16 characters max) Required if “country” value is ARG, AUS, BGR, CAN, CHN, CYP, EGY, FRA,
                              *  IND, IDN, ITA, JPN, MYS, MEX, NLD, PAN, PHL, POL, ROU, RUS, SRB, SGP, ZAF, ESP, SWE, THA, TUR, GBR,
                              *  USA - Optional for all other “country” values.
                              */
-                            "zipCode" => $model->billing_zip_code? $model->billing_zip_code:"",
+                            "zipCode" => $billingModel->billing_zip_code? $billingModel->billing_zip_code:"",
                             // Card holder’s country. (64 characters max) Required
-                            "country" => $model->country->country_iso_code_3,
+                            "country" => $billingModel->country->country_iso_code_3,
                             // Card holder’s email. (64 characters max) Required
-                            "email" => $model->billing_email,
+                            "email" => $billingModel->billing_email,
                             // Card holder’s phone. (16 characters max) Optional
                             // "phoneNumber" => '555-555-5555'
                         ],
@@ -168,12 +169,9 @@ class BillingController extends Controller
                         ]
                     ]);
 
-                    // Die with response from 2co server
-                    die(print_r($charge));
-
+                    $billingModel->processTwoCheckoutSuccess($charge);
                 } catch (Twocheckout_Error $e) {
-                    die(print_r($e->getMessage()));
-                    // Log error to slack maybe?
+                    $billingModel->processTwoCheckoutError($e);
                 }
             }
         }
@@ -189,7 +187,7 @@ class BillingController extends Controller
 
         return $this->render('setup', [
             // Form
-            'model' => $model,
+            'model' => $billingModel,
             'zipStateCountries' => json_encode($zipStateCountries),
             'addrCountries' => json_encode($addrCountries),
 

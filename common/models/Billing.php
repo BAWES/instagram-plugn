@@ -152,4 +152,21 @@ class Billing extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
     }
+
+    /**
+     * [processTwoCheckoutSuccess description]
+     * @return [type] [description]
+     */
+    public function processTwoCheckoutSuccess($charge){
+        die(print_r($charge));
+    }
+
+    /**
+     * [processTwoCheckoutSuccess description]
+     * @return [type] [description]
+     */
+    public function processTwoCheckoutError($e){
+        die(print_r($e->getMessage()));
+        // Log error to slack maybe?
+    }
 }
