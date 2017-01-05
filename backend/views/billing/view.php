@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\Billing */
 
-$this->title = $model->billing_id;
+$this->title = $model->billing_name;
 $this->params['breadcrumbs'][] = ['label' => 'Billings', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -29,9 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'billing_id',
-            'user_id',
-            'pricing_id',
-            'country_id',
+            'agency.agency_company',
+            'pricing.pricing_price:currency',
+            'country.country_name',
             'billing_name',
             'billing_email:email',
             'billing_city',

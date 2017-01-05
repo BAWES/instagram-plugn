@@ -18,7 +18,7 @@ class BillingSearch extends Billing
     public function rules()
     {
         return [
-            [['billing_id', 'user_id', 'pricing_id', 'country_id'], 'integer'],
+            [['billing_id', 'agency_id', 'pricing_id', 'country_id'], 'integer'],
             [['billing_name', 'billing_email', 'billing_city', 'billing_state', 'billing_zip_code', 'billing_address_line1', 'billing_address_line2', 'billing_currency', 'twoco_token', 'twoco_order_num', 'twoco_transaction_id', 'twoco_response_code', 'twoco_response_msg', 'billing_datetime'], 'safe'],
             [['billing_total'], 'number'],
         ];
@@ -61,7 +61,7 @@ class BillingSearch extends Billing
         // grid filtering conditions
         $query->andFilterWhere([
             'billing_id' => $this->billing_id,
-            'user_id' => $this->user_id,
+            'agency_id' => $this->agency_id,
             'pricing_id' => $this->pricing_id,
             'country_id' => $this->country_id,
             'billing_total' => $this->billing_total,
