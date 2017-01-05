@@ -82,6 +82,7 @@ class Alert extends \yii\base\Widget
 
                     $js = "
                     swal({
+                        html: true,
                         title: '$title',
                         text: '$message',
                         type: '$type',

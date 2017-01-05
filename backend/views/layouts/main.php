@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'StartApp',
+        'brandLabel' => 'Plugn',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -43,13 +43,30 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => 'Accounts',
             'items' => [
-                ['label' => 'IG Users', 'url' => ['/instagram-user/index']],
-                ['label' => 'IG Agents', 'url' => ['/agent/index']],
+                ['label' => 'Instagram', 'url' => ['/instagram-user/index']],
+                ['label' => 'Agencies', 'url' => ['/agency/index']],
+                ['label' => 'Agents', 'url' => ['/agent/index']],
                 ['label' => 'Admins', 'url' => ['/admin/index']],
             ]
         ];
-        $menuItems[] = ['label' => 'Media', 'url' => ['/media/index']];
-        $menuItems[] = ['label' => 'Comments', 'url' => ['/comment/index']];
+        $menuItems[] = [
+            'label' => 'Data',
+            'items' => [
+                ['label' => 'Media', 'url' => ['/media/index']],
+                ['label' => 'Comments', 'url' => ['/comment/index']],
+                ['label' => 'Notes', 'url' => ['/note/index']],
+                ['label' => 'Stats Record', 'url' => ['/record/index']],
+                ['label' => 'Activity', 'url' => ['/activity/index']],
+            ]
+        ];
+        $menuItems[] = [
+            'label' => 'Billing',
+            'items' => [
+                ['label' => 'Countries', 'url' => ['/country/index']],
+                ['label' => 'Price Options', 'url' => ['/pricing/index']],
+                ['label' => 'Billing', 'url' => ['/billing/index']],
+            ]
+        ];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->admin_name . ')',
             'url' => ['/site/logout'],

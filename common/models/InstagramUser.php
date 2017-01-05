@@ -15,6 +15,7 @@ use common\models\Comment;
  * InstagramUser model
  *
  * @property integer $user_id
+ * @property string $agency_id
  * @property string $user_name
  * @property string $user_fullname
  * @property string $user_auth_key
@@ -33,20 +34,32 @@ use common\models\Comment;
  * @property integer $user_api_post_requests_this_hour
  * @property integer $user_api_delete_requests_this_hour
  * @property integer $user_initially_crawled
+ * @property integer $user_trial_days
  *
  * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
  * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
+ * @property Agency $agency
  * @property Media[] $media
  * @property Record[] $records
  */
 class InstagramUser extends ActiveRecord implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
+    // Valid token and billing or trial. Will be crawled
+    // Trial days for active accounts will be deducted if its parent has no billing setup
     const STATUS_ACTIVE = 10;
-    const STATUS_INVALID_ACCESS_TOKEN = 20;
+
+    // Account is no longer assigned to any agency
+    const STATUS_INACTIVE = 20;
+
+    // Agency owning the account hasnt paid +
+    // their trial ran out OR trial for this account ended
+    const STATUS_DISABLED_NO_BILLING = 25;
+
+    // Disabled for Invalid Access Token, user needs to relog on this account
+    const STATUS_INVALID_ACCESS_TOKEN = 30;
 
     /**
      * @inheritdoc
@@ -86,8 +99,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             [['user_instagram_id'], 'required'],
             [['user_bio'], 'string'],
             ['user_status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['user_api_rolling_datetime', 'default', 'value' => new Expression('NOW()')],
-            ['user_status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_INVALID_ACCESS_TOKEN]],
+            ['user_api_rolling_datetime', 'default', 'value' => new Expression('NOW()')]
         ];
     }
 
@@ -98,6 +110,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return [
             'user_id' => 'User ID',
+            'agency_id' => 'Agency ID',
             'user_name' => 'User Name',
             'user_fullname' => 'User Fullname',
             'user_auth_key' => 'User Auth Key',
@@ -116,6 +129,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             'user_api_post_requests_this_hour' => 'POST Requests This Hour',
             'user_api_delete_requests_this_hour' => 'Delete Requests This Hour',
             'user_initially_crawled' => 'Initially Crawled?',
+            'user_trial_days' => 'Trial Days Left'
         ];
     }
 
@@ -136,6 +150,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Agent::className(), ['agent_id' => 'agent_id'])
                     ->via('agentAssignments');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgency()
+    {
+        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
     }
 
     /**
@@ -183,6 +205,30 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Record::className(), ['user_id' => 'user_id'])
                     ->orderBy("record_date DESC");
+    }
+
+    /**
+     * Attempts to activate this Instagram account for crawling if possible.
+     *
+     */
+    public function activateAccountIfPossible(){
+        $billingActive = true;
+
+        // Check if Parent Agency has a Trial Active
+        $agencyTrialActive = false;
+        if($this->agency){
+            if($this->agency->agency_trial_days > 0){
+                $agencyTrialActive = true;
+            }
+        }
+
+
+        // If billing or trials are valid, fully activate the account
+        if($billingActive || $agencyTrialActive){
+            $this->user_status = self::STATUS_ACTIVE;
+        }else $this->user_status = self::STATUS_DISABLED_NO_BILLING;
+
+        $this->save(false);
     }
 
     /**
