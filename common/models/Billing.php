@@ -35,6 +35,20 @@ use yii\db\Expression;
  */
 class Billing extends \yii\db\ActiveRecord
 {
+    // Possible errors that may arrise from 2Checkout payment processing
+    public $errorCodes = [
+        "300" => "[Unauthorized] Incorrect private key or invalid token, please refresh and try again",
+        "200" => "[Unable to process the request] Incorrect attributes or malformed JSON object",
+        "400" => "[Bad request - parameter error] Missing required attributes or invalid token",
+        "600" => "[Authorization Failed] Credit Card failed to authorize",
+        "601" => "[Invalid Expiration Date] Please update your cards expiration date and try again, or try another payment method",
+        "602" => "[Payment Authorization Failed] Please verify your Credit Card details are entered correctly and try again, or try another payment method",
+        "603" => "[Invalid Currency for card type] Your credit card has been declined because of the currency you are attempting to pay in.  Please change the currency of the transaction or use a different card and try again.",
+        "604" => "[Payment Authorization Failed] Credit is not enabled on this type of card, please contact your bank for more information or try another payment method.",
+        "605" => "[Payment Authorization Failed] Invalid transaction type for this credit card, please use a different card and try submitting the payment again, or contact your bank for more information.",
+        "606" => "[Payment Authorization Failed] Please use a different credit card or payment method and try again, or contact your bank for more information.",
+        "607" => "[Payment Authorization Failed] Please verify your information and try again, or try another payment method.",
+    ];
     /**
      * @inheritdoc
      */
@@ -154,19 +168,29 @@ class Billing extends \yii\db\ActiveRecord
     }
 
     /**
-     * [processTwoCheckoutSuccess description]
-     * @return [type] [description]
+     * Success response from a 2Checkout Billing Attempt
+     * https://www.2checkout.com/documentation/payment-api/create-sale
      */
     public function processTwoCheckoutSuccess($charge){
         die(print_r($charge));
+
     }
 
     /**
-     * [processTwoCheckoutSuccess description]
-     * @return [type] [description]
+     * Error response from a 2Checkout Billing Attempt
+     * https://www.2checkout.com/documentation/payment-api/create-sale
      */
     public function processTwoCheckoutError($e){
-        die(print_r($e->getMessage()));
-        // Log error to slack maybe?
+        $this->twoco_response_code = $e->getCode();
+        $this->twoco_response_msg = $this->errorCodes[$this->twoco_response_code] ? $this->errorCodes[$this->twoco_response_code] : $e->getMessage();
+        $this->save(false);
+
+        // Display Error Message via Session Flash
+        Yii::$app->getSession()->setFlash('error', $this->twoco_response_msg);
+
+        // Log The Error
+        Yii::error("[Failed Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
+        Yii::error($this->twoco_response_msg, __METHOD__);
+
     }
 }
