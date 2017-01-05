@@ -105,7 +105,10 @@ class BillingController extends Controller
 
         if($billingModel->load(Yii::$app->request->post())){
             // Token returned from 2CO after creditcard input
-            if($billingModel->twoco_token = Yii::$app->request->post('token') && $billingModel->save()){
+            $billingModel->twoco_token = Yii::$app->request->post('token');
+
+            // If Token exists and record of bill is saved
+            if($billingModel->twoco_token && $billingModel->save()){
                 $token = Yii::$app->request->post('token');
 
                 // Your sellerId(account number) and privateKey are required to make the Payment API Authorization call.

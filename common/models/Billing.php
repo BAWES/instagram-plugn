@@ -172,7 +172,21 @@ class Billing extends \yii\db\ActiveRecord
      * https://www.2checkout.com/documentation/payment-api/create-sale
      */
     public function processTwoCheckoutSuccess($charge){
-        die(print_r($charge));
+        //die(print_r($charge['response']));
+
+        $this->twoco_response_code = $charge['response']['responseCode'];
+        $this->twoco_response_msg = $charge['response']['responseMsg'];
+        $this->twoco_order_num = $charge['response']['orderNumber'];
+        $this->twoco_transaction_id = $charge['response']['transactionId'];
+        $this->save(false);
+
+        // Display Thank You Message via Session Flash
+        Yii::$app->getSession()->setFlash('success', "[".$this->twoco_response_code."] ".$this->twoco_response_msg);
+
+        // Log The Success
+        Yii::info("[Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email.
+            " \ Initial Payment: $".$this->billing_total, __METHOD__);
+        Yii::info("[".$this->twoco_response_code."] ".$this->twoco_response_msg, __METHOD__);
 
     }
 
