@@ -239,7 +239,22 @@ $this->title = 'Billing';
 				<article class="price-card">
 					<header class="price-card-header">Payment Summary</header>
 					<div class="price-card-body">
-						<div class="price-card-amount">$<?= (int) $pricing->pricing_price ?></div>
+						<div class="price-card-amount">
+							$<?= $isTrial? round($pricing->pricing_price * 0.7) : (int) $pricing->pricing_price ?>
+
+							<?php if($isTrial){ ?>
+								<br/>
+								<span style='font-size:0.45em;'>
+									for the first month, then
+								</span>
+								<br/>
+								<span style='font-size:0.8em'>
+									$<?= (int) $pricing->pricing_price ?>
+								</span>
+
+							<?php } ?>
+
+						</div>
 						<div class="price-card-amount-lbl">per month</div>
 						<ul class="price-card-list">
 							<li style='text-align:center'>

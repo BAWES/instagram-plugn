@@ -46,8 +46,11 @@ class BillingController extends Controller
     {
         $availablePriceOptions = \common\models\Pricing::find()->orderBy('pricing_price')->all();
 
+        $isTrial = Yii::$app->user->identity->agency_trial_days > 0? true: false;
+
         return $this->render('index', [
-            'availablePriceOptions' => $availablePriceOptions
+            'availablePriceOptions' => $availablePriceOptions,
+            'isTrial' => $isTrial
         ]);
     }
 
@@ -63,6 +66,9 @@ class BillingController extends Controller
         if(!$pricing){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        // Check if is trial
+        $isTrial = Yii::$app->user->identity->agency_trial_days > 0? true: false;
 
         // If user is attempting to setup a package which is for less than
         // the number of accounts he has attached, show error and redirect to billing
@@ -105,6 +111,12 @@ class BillingController extends Controller
                 Twocheckout::verifySSL(Yii::$app->params['2co.sandbox.verifySSL']);  // this is set to true by default
                 // To use your sandbox account set sandbox to true
                 Twocheckout::sandbox(Yii::$app->params['2co.isSandbox']);
+
+                $discount = false;
+                if($isTrial){
+                    // Give 30% discount for trial users
+                    $discount = ($pricing->pricing_price - round($pricing->pricing_price * 0.7)) * -1;
+                }
 
 
                 // Use the token to create a sale
@@ -151,7 +163,7 @@ class BillingController extends Controller
                                 "productId" => $pricing->pricing_id,
                                 "recurrence" => "1 Month",
                                 "duration" => "Forever",
-                                //"startupFee" => "" //on discount
+                                "startupFee" => $discount?$discount:""
                             ]
                         ]
                     ]);
@@ -183,6 +195,7 @@ class BillingController extends Controller
 
             // Pricing
             'pricing' => $pricing,
+            'isTrial' => $isTrial,
 
             // 2 CO
             'processFormUrl' => Url::to(['billing/process']),

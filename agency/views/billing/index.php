@@ -29,13 +29,31 @@ $this->title = 'Billing';
 		<div class="box-typical-center">
 			<div class="box-typical-center-in prices-page">
 				<header class="prices-page-title">Affordable pricing. No long term contract.</header>
-				<p class="prices-page-subtitle">Try free for 14 days with no obligation.</p>
+
+				<?php if($isTrial){ ?>
+					<p class="prices-page-subtitle"><u>Up to 30% Discount</u> on the <i>first month</i> when setting up billing during the trial period.</p>
+				<?php } ?>
 
 				<?php foreach($availablePriceOptions as $pricing){ ?>
 					<article class="price-card">
 						<header class="price-card-header"><?= $pricing->pricing_title ?></header>
 						<div class="price-card-body">
-							<div class="price-card-amount">$<?= (int) $pricing->pricing_price ?></div>
+							<div class="price-card-amount">
+								$<?= $isTrial? round($pricing->pricing_price * 0.7) : (int) $pricing->pricing_price ?>
+
+								<?php if($isTrial){ ?>
+									<br/>
+									<span style='font-size:0.45em;'>
+										for the first month, then
+									</span>
+									<br/>
+									<span style='font-size:0.8em'>
+										$<?= (int) $pricing->pricing_price ?>
+									</span>
+
+								<?php } ?>
+
+							</div>
 							<div class="price-card-amount-lbl">per month</div>
 							<ul class="price-card-list">
 								<li style='text-align:center'>
