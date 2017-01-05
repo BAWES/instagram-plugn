@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use common\models\Agency;
 use agency\components\InstagramAuthHandler;
 
 /**
@@ -110,7 +111,7 @@ class InstagramController extends Controller
         if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
             return $this->redirect(['billing/index']);
         }
-        
+
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
         if(isset($managedAccounts[0])){
