@@ -36,22 +36,29 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
+        Yii::info("[INS] 0", __METHOD__);
+
         $model = new \common\models\BillingNotification();
         $model->scenario = "newNotification";
 
+        Yii::info("[INS] 1", __METHOD__);
+
         // Load POST'd data from INS into model via massive assignment
         if ($model->load(Yii::$app->request->post())) {
+            Yii::info("[INS] 2", __METHOD__);
             $model->billing_id = $model->vendor_order_id;
             $model->pricing_id = $model->item_id_1;
 
             if(!$model->save()){
+                Yii::info("[INS] 3", __METHOD__);
                 // Log to Slack that INS has failed to save.
                 if($model->hasErrors()){
+                    Yii::info("[INS] 4", __METHOD__);
                     $errors = \yii\helpers\Html::encode(print_r($model->errors, true));
                     Yii::error("[INS Save Error] ".$errors, __METHOD__);
                 }
             }
-        }*/
+        }
     }
 
 }
