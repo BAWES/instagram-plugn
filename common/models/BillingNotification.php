@@ -39,6 +39,12 @@ use Yii;
  */
 class BillingNotification extends \yii\db\ActiveRecord
 {
+    // Hash used for validating authenticity of request
+    public $md5_hash;
+
+    // Secret word used for INS Hash Validation
+    private $_secretWord = "builtawesome";
+
     /**
      * @inheritdoc
      */
