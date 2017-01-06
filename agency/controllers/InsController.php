@@ -3,6 +3,7 @@ namespace agency\controllers;
 
 use Yii;
 use yii\web\Controller;
+use yii\filters\VerbFilter;
 use common\models\Agency;
 
 /**
@@ -13,6 +14,22 @@ class InsController extends Controller
     public $enableCsrfValidation = false;
 
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    // Only Accept POST requests
+                    'notification' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Accepts and processes all 2Checkout INS Notifications
      *
      * @return mixed
@@ -20,6 +37,8 @@ class InsController extends Controller
     public function actionNotification()
     {
         Yii::info('[INS Rec] ZERO', __METHOD__);
+
+        echo "should have logged to slack";
         /*
         $model = new \common\models\BillingNotification();
         $model->scenario = "newNotification";
