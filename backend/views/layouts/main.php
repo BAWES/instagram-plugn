@@ -65,6 +65,7 @@ AppAsset::register($this);
                 ['label' => 'Countries', 'url' => ['/country/index']],
                 ['label' => 'Price Options', 'url' => ['/pricing/index']],
                 ['label' => 'Billing', 'url' => ['/billing/index']],
+                ['label' => 'INS Notifs', 'url' => ['/billing-notification/index']],
             ]
         ];
         $menuItems[] = [

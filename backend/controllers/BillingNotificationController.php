@@ -3,17 +3,17 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Billing;
-use common\models\BillingSearch;
+use common\models\BillingNotification;
+use common\models\BillingNotificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * BillingController implements the CRUD actions for Billing model.
+ * BillingNotificationController implements the CRUD actions for BillingNotification model.
  */
-class BillingController extends Controller
+class BillingNotificationController extends Controller
 {
     /**
      * @inheritdoc
@@ -40,12 +40,12 @@ class BillingController extends Controller
     }
 
     /**
-     * Lists all Billing models.
+     * Lists all BillingNotification models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new BillingSearch();
+        $searchModel = new BillingNotificationSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -55,7 +55,7 @@ class BillingController extends Controller
     }
 
     /**
-     * Displays a single Billing model.
+     * Displays a single BillingNotification model.
      * @param string $id
      * @return mixed
      */
@@ -67,16 +67,16 @@ class BillingController extends Controller
     }
 
     /**
-     * Creates a new Billing model.
+     * Creates a new BillingNotification model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Billing();
+        $model = new BillingNotification();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->billing_id]);
+            return $this->redirect(['view', 'id' => $model->notification_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,7 +85,7 @@ class BillingController extends Controller
     }
 
     /**
-     * Updates an existing Billing model.
+     * Updates an existing BillingNotification model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -95,7 +95,7 @@ class BillingController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->billing_id]);
+            return $this->redirect(['view', 'id' => $model->notification_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -104,7 +104,7 @@ class BillingController extends Controller
     }
 
     /**
-     * Deletes an existing Billing model.
+     * Deletes an existing BillingNotification model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -117,15 +117,15 @@ class BillingController extends Controller
     }
 
     /**
-     * Finds the Billing model based on its primary key value.
+     * Finds the BillingNotification model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Billing the loaded model
+     * @return BillingNotification the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Billing::findOne($id)) !== null) {
+        if (($model = BillingNotification::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
