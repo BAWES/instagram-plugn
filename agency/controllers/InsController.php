@@ -23,7 +23,7 @@ class InsController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     // Only Accept POST requests
-                    'notification' => ['POST'],
+                    'notificationzz' => ['POST'],
                 ],
             ],
         ];
