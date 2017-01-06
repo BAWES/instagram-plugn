@@ -36,6 +36,8 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
+        Yii::info('[INS Rec] ZERO', __METHOD__);
+        /*
         $model = new \common\models\BillingNotification();
         $model->scenario = "newNotification";
 
@@ -55,7 +57,7 @@ class InsController extends Controller
                     Yii::error("[INS Save Error] ".$errors, __METHOD__);
                 }
             }
-        }
+        }*/
     }
 
 }
