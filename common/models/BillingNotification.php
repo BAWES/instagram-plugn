@@ -1,0 +1,152 @@
+<?php
+
+namespace common\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "billing_notification".
+ *
+ * @property string $notification_id
+ * @property string $billing_id
+ * @property integer $pricing_id
+ * @property integer $message_id
+ * @property string $message_type
+ * @property string $message_description
+ * @property integer $vendor_id
+ * @property integer $sale_id
+ * @property string $sale_date_placed
+ * @property string $vendor_order_id
+ * @property integer $invoice_id
+ * @property string $payment_type
+ * @property string $auth_exp
+ * @property string $invoice_status
+ * @property string $fraud_status
+ * @property string $invoice_usd_amount
+ * @property string $customer_ip
+ * @property string $customer_ip_country
+ * @property string $item_id_1
+ * @property string $item_name_1
+ * @property string $item_usd_amount_1
+ * @property string $item_type_1
+ * @property string $item_rec_status_1
+ * @property string $item_rec_date_next_1
+ * @property integer $item_rec_install_billed_1
+ * @property string $timestamp
+ *
+ * @property Billing $billing
+ * @property Pricing $pricing
+ */
+class BillingNotification extends \yii\db\ActiveRecord
+{
+    // Hash sent by 2CO to validate every notification
+    public $md5_hash;
+
+    // Secret word used to validate md5 hash
+    private $_secretWord = "builtawesome";
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'billing_notification';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['billing_id', 'pricing_id', 'message_id', 'vendor_id', 'sale_id', 'invoice_id', 'item_rec_install_billed_1'], 'integer'],
+            [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
+            [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
+            [['message_type', 'vendor_order_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
+            [['message_description', 'customer_ip', 'customer_ip_country', 'item_name_1'], 'string', 'max' => 128],
+            [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
+            [['pricing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pricing::className(), 'targetAttribute' => ['pricing_id' => 'pricing_id']],
+
+            // Validate MD5 Hash on new Notification
+            ['md5_hash', 'required', 'on' => 'newNotification'],
+            ['md5_hash', 'validateHash', 'on' => 'newNotification'],
+        ];
+    }
+
+    /**
+     * Validate the Md5 Hash Sent from 2Checkout
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateHash($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $sellerId = Yii::$app->params['2co.sellerId'];
+
+            $saleId = $this->sale_id;
+            $invoiceId = $this->invoice_id;
+
+            $stringToHash = strtoupper(md5($saleId . $sellerId . $invoiceId . $this->_secretWord));
+
+            if ($stringToHash != $this->md5_hash) {
+                // Log error. The supplied hash is invalid
+                $this->addError($attribute, 'Invalid MD5 Hash');
+                Yii::error("[INS Hash Validation] Failed to validate the hash", __METHOD__);
+            }
+
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'notification_id' => 'Notification ID',
+            'billing_id' => 'Billing ID',
+            'pricing_id' => 'Pricing ID',
+            'message_id' => 'Message ID',
+            'message_type' => 'Message Type',
+            'message_description' => 'Message Description',
+            'vendor_id' => 'Vendor ID',
+            'sale_id' => 'Sale ID',
+            'sale_date_placed' => 'Sale Date Placed',
+            'vendor_order_id' => 'Vendor Order ID',
+            'invoice_id' => 'Invoice ID',
+            'payment_type' => 'Payment Type',
+            'auth_exp' => 'Auth Exp',
+            'invoice_status' => 'Invoice Status',
+            'fraud_status' => 'Fraud Status',
+            'invoice_usd_amount' => 'Invoice Usd Amount',
+            'customer_ip' => 'Customer Ip',
+            'customer_ip_country' => 'Customer Ip Country',
+            'item_id_1' => 'Item Id 1',
+            'item_name_1' => 'Item Name 1',
+            'item_usd_amount_1' => 'Item Usd Amount 1',
+            'item_type_1' => 'Item Type 1',
+            'item_rec_status_1' => 'Item Rec Status 1',
+            'item_rec_date_next_1' => 'Item Rec Date Next 1',
+            'item_rec_install_billed_1' => 'Item Rec Install Billed 1',
+            'timestamp' => 'Timestamp',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBilling()
+    {
+        return $this->hasOne(Billing::className(), ['billing_id' => 'billing_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPricing()
+    {
+        return $this->hasOne(Pricing::className(), ['pricing_id' => 'pricing_id']);
+    }
+}

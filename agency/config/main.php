@@ -9,7 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-agency',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'common\components\TwoCheckoutConfig'],
     'controllerNamespace' => 'agency\controllers',
     'components' => [
         'user' => [

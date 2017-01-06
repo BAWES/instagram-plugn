@@ -112,13 +112,13 @@ class BillingController extends Controller
                 $token = Yii::$app->request->post('token');
 
                 // Your sellerId(account number) and privateKey are required to make the Payment API Authorization call.
-                Twocheckout::privateKey(Yii::$app->params['2co.sandbox.privateKey']);
-                Twocheckout::sellerId(Yii::$app->params['2co.sandbox.sellerId']);
+                Twocheckout::privateKey(Yii::$app->params['2co.privateKey']);
+                Twocheckout::sellerId(Yii::$app->params['2co.sellerId']);
                 // Your username and password are required to make any Admin API call.
-                Twocheckout::username(Yii::$app->params['2co.sandbox.username']);
-                Twocheckout::password(Yii::$app->params['2co.sandbox.password']);
+                Twocheckout::username(Yii::$app->params['2co.username']);
+                Twocheckout::password(Yii::$app->params['2co.password']);
                 // If you want to turn off SSL verification (Please don't do this in your production environment)
-                Twocheckout::verifySSL(Yii::$app->params['2co.sandbox.verifySSL']);  // this is set to true by default
+                Twocheckout::verifySSL(Yii::$app->params['2co.verifySSL']);  // this is set to true by default
                 // To use your sandbox account set sandbox to true
                 Twocheckout::sandbox(Yii::$app->params['2co.isSandbox']);
 
@@ -200,9 +200,9 @@ class BillingController extends Controller
 
             // 2 CO
             'processFormUrl' => Url::to(['billing/process']),
-            'environment' => Yii::$app->params['2co.sandbox.environment'],
-            'sellerId' => Yii::$app->params['2co.sandbox.sellerId'],
-            'publishableKey' => Yii::$app->params['2co.sandbox.publishableKey'],
+            'environment' => Yii::$app->params['2co.environment'],
+            'sellerId' => Yii::$app->params['2co.sellerId'],
+            'publishableKey' => Yii::$app->params['2co.publishableKey'],
         ]);
     }
 
