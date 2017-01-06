@@ -3,7 +3,6 @@ namespace agency\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use common\models\Agency;
 
 /**
@@ -14,34 +13,18 @@ class InsController extends Controller
     public $enableCsrfValidation = false;
 
     /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    // Only Accept POST requests
-                    'notificationzz' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Accepts and processes all 2Checkout INS Notifications
      *
      * @return mixed
      */
     public function actionNotification()
     {
-        Yii::info("[INS] 0", __METHOD__);
-
         $model = new \common\models\BillingNotification();
         $model->scenario = "newNotification";
 
-        Yii::info("[INS] 1", __METHOD__);
+        //Delete this
+        $output = \yii\helpers\Html::encode(print_r(Yii::$app->request->post(), true));
+        Yii::info("[INS POST] $output", __METHOD__);
 
         // Load POST'd data from INS into model via massive assignment
         if ($model->load(Yii::$app->request->post())) {
