@@ -3,7 +3,6 @@ namespace agency\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 use common\models\Agency;
 
 /**
@@ -12,22 +11,6 @@ use common\models\Agency;
 class InsController extends Controller
 {
     public $enableCsrfValidation = false;
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    // Only Accept POST requests
-                    'notification' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Accepts and processes all 2Checkout INS Notifications
