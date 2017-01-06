@@ -36,8 +36,22 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
-        // Redirect to Instagram management page
-        return $this->redirect(['instagram/index']);
+        $billingNotification = new \common\models\BillingNotification();
+        $billingNotification->scenario = "newNotification";
+
+        // Load POST'd data from INS into model via massive assignment
+        if ($model->load(Yii::$app->request->post())) {
+            $model->billing_id = $model->vendor_order_id;
+            $model->pricing_id = $model->item_id_1;
+
+            if(!$model->save()){
+                // Log to Slack that INS has failed to save.
+                if($model->hasErrors()){
+                    $errors = \yii\helpers\Html::encode(print_r($model->errors, true));
+                    Yii::error("[INS Save Error] ".$error, __METHOD__);
+                }
+            }
+        }
     }
 
 }
