@@ -36,8 +36,8 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
-        $billingNotification = new \common\models\BillingNotification();
-        $billingNotification->scenario = "newNotification";
+        $model = new \common\models\BillingNotification();
+        $model->scenario = "newNotification";
 
         // Load POST'd data from INS into model via massive assignment
         if ($model->load(Yii::$app->request->post())) {
