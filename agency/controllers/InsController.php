@@ -23,7 +23,7 @@ class InsController extends Controller
         $model->scenario = "newNotification";
 
         //Delete this
-        $output = \yii\helpers\Html::encode(print_r(Yii::$app->request->post(), true));
+        $output = \yii\helpers\Html::encode(print_r(Yii::$app->request->post('message_description'), true));
         Yii::info("[INS POST] $output", __METHOD__);
 
         // Load POST'd data from INS into model via massive assignment
