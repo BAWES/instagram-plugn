@@ -11,15 +11,15 @@ class m170106_150352_add_billing_notification extends Migration
             'billing_id' => $this->bigInteger()->unsigned()->notNull(), // which bill this belongs to
             'pricing_id' => $this->integer()->notNull(), // which pricing this belongs to
 
-            'message_id' => $this->integer()->unsigned(),
+            'message_id' => $this->string(64),
             'message_type' => $this->string(64)->notNull(),
             'message_description' => $this->string(128)->notNull(),
 
-            'vendor_id' => $this->integer()->unsigned(),
-            'sale_id' => $this->integer()->unsigned(),
+            'vendor_id' => $this->string(64),
+            'sale_id' => $this->string(64),
             'sale_date_placed' => $this->date(),
             'vendor_order_id' => $this->string(64),
-            'invoice_id' => $this->integer()->unsigned(),
+            'invoice_id' => $this->string(64),
             'payment_type' => $this->string(64),
             'auth_exp' => $this->date(),
             'invoice_status' => $this->string(64),

@@ -10,14 +10,14 @@ use Yii;
  * @property string $notification_id
  * @property string $billing_id
  * @property integer $pricing_id
- * @property integer $message_id
+ * @property string $message_id
  * @property string $message_type
  * @property string $message_description
- * @property integer $vendor_id
- * @property integer $sale_id
+ * @property string $vendor_id
+ * @property string $sale_id
  * @property string $sale_date_placed
  * @property string $vendor_order_id
- * @property integer $invoice_id
+ * @property string $invoice_id
  * @property string $payment_type
  * @property string $auth_exp
  * @property string $invoice_status
@@ -39,12 +39,6 @@ use Yii;
  */
 class BillingNotification extends \yii\db\ActiveRecord
 {
-    // Hash sent by 2CO to validate every notification
-    public $md5_hash;
-
-    // Secret word used to validate md5 hash
-    private $_secretWord = "builtawesome";
-
     /**
      * @inheritdoc
      */
@@ -60,10 +54,10 @@ class BillingNotification extends \yii\db\ActiveRecord
     {
         return [
             [['billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
-            [['billing_id', 'pricing_id', 'message_id', 'vendor_id', 'sale_id', 'invoice_id', 'item_rec_install_billed_1'], 'integer'],
+            [['billing_id', 'pricing_id', 'item_rec_install_billed_1'], 'integer'],
             [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
-            [['message_type', 'vendor_order_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
+            [['message_id', 'message_type', 'vendor_id', 'sale_id', 'vendor_order_id', 'invoice_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
             [['message_description', 'customer_ip', 'customer_ip_country', 'item_name_1'], 'string', 'max' => 128],
             [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
             [['pricing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pricing::className(), 'targetAttribute' => ['pricing_id' => 'pricing_id']],
