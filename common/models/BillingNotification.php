@@ -90,7 +90,7 @@ class BillingNotification extends \yii\db\ActiveRecord
 
             $stringToHash = strtoupper(md5($saleId . $sellerId . $invoiceId . $this->_secretWord));
 
-            if ($stringToHash == $this->md5_hash) {
+            if ($stringToHash != $this->md5_hash) {
                 // Log error. The supplied hash is invalid
                 $this->addError($attribute, 'Invalid MD5 Hash');
                 Yii::error("[INS Hash Validation] Failed to validate the hash", __METHOD__);
