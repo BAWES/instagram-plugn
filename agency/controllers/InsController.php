@@ -52,7 +52,7 @@ class InsController extends Controller
                 // Log to Slack that INS has failed to save.
                 if($model->hasErrors()){
                     $errors = \yii\helpers\Html::encode(print_r($model->errors, true));
-                    Yii::error("[INS Save Error] ".$error, __METHOD__);
+                    Yii::error("[INS Save Error] ".$errors, __METHOD__);
                 }
             }
         }
