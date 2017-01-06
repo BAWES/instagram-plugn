@@ -31,15 +31,13 @@ class InsController extends Controller
         //Yii::info("[INS POST] $output", __METHOD__);
 
         if(!$model->save()){
-            Yii::info("[INS] 3", __METHOD__);
             // Log to Slack that INS has failed to save.
             if($model->hasErrors()){
-                Yii::info("[INS] 4", __METHOD__);
                 $errors = \yii\helpers\Html::encode(print_r($model->errors, true));
                 Yii::error("[INS Save Error] ".$errors, __METHOD__);
             }
         }
-        
+
     }
 
 }
