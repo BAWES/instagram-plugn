@@ -8,7 +8,7 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
         'formatter' => [
-            'currencyCode' => '$',
+            'currencyCode' => 'USD',
             'defaultTimeZone' => 'Asia/Kuwait',
         ],
         'assetManager' => [
