@@ -22,10 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'agency_id',
             'agency_email:email',
-            [
-                'label' => 'Email Verified',
-                'value' => $model->agency_email_verified ? "Yes" : "No",
-            ],
+            'agency_email_verified:boolean',
             //'agency_auth_key',
             //'agency_password_hash',
             //'agency_password_reset_token',

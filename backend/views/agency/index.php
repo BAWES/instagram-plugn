@@ -22,23 +22,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'agency_id',
             'agency_fullname',
             'agency_company',
             'agency_email:email',
-            'agency_email_verified:email',
+            'agency_email_verified:boolean',
             // 'agency_auth_key',
             // 'agency_password_hash',
             // 'agency_password_reset_token',
             // 'agency_limit_email:email',
-            // 'agency_status',
+            'agency_status',
+            'status',
             // 'agency_trial_days',
-            // 'agency_created_at',
+            'agency_created_at',
             // 'agency_updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
         ],
     ]); ?>
 </div>
