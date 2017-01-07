@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * BillingController implements the CRUD actions for Billing model.
@@ -61,8 +62,18 @@ class BillingController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        // Data Provider to display invoices
+        $query = \common\models\Invoice::find();
+        $query->where(['billing_id' => $model->billing_id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

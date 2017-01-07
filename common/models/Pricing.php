@@ -67,7 +67,7 @@ class Pricing extends \yii\db\ActiveRecord
             'pricing_id' => 'Pricing ID',
             'pricing_title' => 'Title',
             'pricing_features' => 'Features',
-            'pricing_price' => 'Price',
+            'pricing_price' => 'Base Price',
             'pricing_account_quantity' => 'Number of Accounts',
             'pricing_created_at' => 'Created At',
             'pricing_updated_at' => 'Updated At',

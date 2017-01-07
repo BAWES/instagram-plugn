@@ -133,7 +133,7 @@ class Billing extends \yii\db\ActiveRecord
             'billing_zip_code' => 'Zip Code',
             'billing_address_line1' => 'Street Address',
             'billing_address_line2' => 'Address Line 2',
-            'billing_total' => 'Total',
+            'billing_total' => 'Total Paid',
             'billing_currency' => 'Currency',
             'twoco_token' => '2co Token',
             'twoco_order_num' => 'Sale ID',
