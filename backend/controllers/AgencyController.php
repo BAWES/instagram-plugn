@@ -67,24 +67,6 @@ class AgencyController extends Controller
     }
 
     /**
-     * Creates a new Agency model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Agency();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->agency_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Updates an existing Agency model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
