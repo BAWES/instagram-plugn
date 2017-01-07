@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use common\models\Agency;
 use common\models\Invoice;
+use common\models\Billing;
 
 /**
  * 2Checkout INS controller
@@ -23,6 +24,7 @@ class InsController extends Controller
         $invoiceId = Yii::$app->request->post('invoice_id');
         if(!$invoiceId){
             Yii::error("[INS Error] Notification url called without an invoice_id", __METHOD__);
+            die();
         }
 
         // Create New vs Update Existing Invoice?
@@ -35,9 +37,13 @@ class InsController extends Controller
         $model->billing_id = $model->vendor_order_id;
         $model->pricing_id = $model->item_id_1;
 
-        //Delete this
-        //$output = \yii\helpers\Html::encode(print_r(Yii::$app->request->post(), true));
-        //Yii::info("[INS POST] $output", __METHOD__);
+        // Find the Bill belonging to this invoice
+        $billing = Billing::findOne(['billing_id' => $model->billing_id]);
+        if(!$billing){
+            Yii::error("[INS Error] Unable to find the billing record associated with this notification", __METHOD__);
+            die();
+        }
+        $model->agency_id = $billing->agency_id;
 
         if(!$model->save()){
             // Log to Slack that INS has failed to save.
