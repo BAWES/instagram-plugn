@@ -81,8 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'pricing_id',
                 //'agency.agency_company',
                 // 'message_id',
-                'message_type',
-                'message_description',
+
                 // 'vendor_id',
                 'sale_id',
                 'invoice_usd_amount',
@@ -91,6 +90,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'auth_exp',
                 'invoice_status',
                 'fraud_status',
+                'message_type',
+                // 'message_description',
                 // 'customer_ip',
                 // 'customer_ip_country',
                 // 'item_id_1',
