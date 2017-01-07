@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * AgentController implements the CRUD actions for Agent model.
@@ -61,8 +62,24 @@ class AgentController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        // Get Activity
+        $activityQuery = $model->getActivities();
+        $activityDataProvider = new ActiveDataProvider([
+            'query' => $activityQuery,
+        ]);
+
+        // Get Assigned Accounts
+        $managedAccountsQuery = $model->getAccountsManaged();
+        $accountsDataProvider = new ActiveDataProvider([
+            'query' => $managedAccountsQuery,
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'activityDataProvider' => $activityDataProvider,
+            'accountsDataProvider' => $accountsDataProvider
         ]);
     }
 
