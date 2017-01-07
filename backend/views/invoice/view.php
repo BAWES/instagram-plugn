@@ -23,18 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'model' => $model,
             'attributes' => [
                 'sale_id',
-                'billing_id',
-                'pricing_id',
-
-                'vendor_id',
-
-                'sale_date_placed:date',
-                'vendor_order_id',
                 'payment_type',
-                'auth_exp:date',
                 'invoice_status',
                 'fraud_status',
                 'invoice_usd_amount:currency',
+                'sale_date_placed:date',
                 'timestamp:datetime',
             ],
         ]) ?>
@@ -66,12 +59,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= DetailView::widget([
             'model' => $model,
             'attributes' => [
-                'item_id_1',
                 'item_name_1',
                 'item_usd_amount_1',
                 'item_type_1',
                 'item_rec_status_1',
-                'item_rec_date_next_1',
+                'item_rec_date_next_1:date',
                 'item_rec_install_billed_1',
             ],
         ]) ?>
