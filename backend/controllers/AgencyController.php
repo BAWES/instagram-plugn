@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * AgencyController implements the CRUD actions for Agency model.
@@ -61,8 +62,33 @@ class AgencyController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        // Get Managed Accounts
+        $managedAccountsQuery = $model->getInstagramUsers();
+        $accountsDataProvider = new ActiveDataProvider([
+            'query' => $managedAccountsQuery,
+        ]);
+
+        // Data Provider to display invoices
+        $invoiceQuery = \common\models\Invoice::find();
+        $invoiceQuery->where(['agency_id' => $model->agency_id]);
+        $invoiceDataProvider = new ActiveDataProvider([
+            'query' => $invoiceQuery,
+        ]);
+
+        // Data Provider to display billing attempts
+        $billingQuery = \common\models\Billing::find();
+        $billingQuery->where(['agency_id' => $model->agency_id]);
+        $billingDataProvider = new ActiveDataProvider([
+            'query' => $billingQuery,
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'accountsDataProvider' => $accountsDataProvider,
+            'invoiceDataProvider' => $invoiceDataProvider,
+            'billingDataProvider' => $billingDataProvider,
         ]);
     }
 

@@ -207,6 +207,30 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                     ->orderBy("record_date DESC");
     }
 
+
+    /**
+     * Returns String value of current status
+     * @return string
+     */
+    public function getStatus(){
+        switch($this->user_status){
+            case self::STATUS_ACTIVE:
+                return "Active";
+                break;
+            case self::STATUS_INACTIVE:
+                return "Inactive (No longer assigned to agency)";
+                break;
+            case self::STATUS_DISABLED_NO_BILLING:
+                return "No billing/Trial Ended";
+                break;
+            case self::STATUS_INVALID_ACCESS_TOKEN:
+                return "Invalid Access Token";
+                break;
+        }
+
+        return "Couldnt find a status";
+    }
+
     /**
      * Attempts to activate this Instagram account for crawling if possible.
      *
