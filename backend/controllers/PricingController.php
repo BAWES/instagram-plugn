@@ -103,18 +103,6 @@ class PricingController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing Pricing model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Pricing model based on its primary key value.
