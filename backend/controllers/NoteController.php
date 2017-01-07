@@ -67,24 +67,6 @@ class NoteController extends Controller
     }
 
     /**
-     * Creates a new Note model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Note();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->note_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
      * Updates an existing Note model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
