@@ -29,6 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'invoice_usd_amount:currency',
                 'sale_date_placed:date',
                 'timestamp:datetime',
+                'invoice_created_at:datetime',
+                'invoice_updated_at:datetime',
             ],
         ]) ?>
 

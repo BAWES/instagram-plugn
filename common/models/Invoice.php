@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "invoice".
@@ -33,6 +35,8 @@ use Yii;
  * @property string $item_rec_date_next_1
  * @property integer $item_rec_install_billed_1
  * @property string $timestamp
+ * @property string $invoice_created_at
+ * @property string $invoice_updated_at
  *
  * @property Agency $agency
  * @property Billing $billing
@@ -72,6 +76,17 @@ class Invoice extends \yii\db\ActiveRecord
 
             // Validate MD5 Hash on new Notification
             ['md5_hash', 'validateHash'],
+        ];
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'invoice_created_at',
+                'updatedAtAttribute' => 'invoice_updated_at',
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
 
@@ -132,6 +147,8 @@ class Invoice extends \yii\db\ActiveRecord
             'item_rec_date_next_1' => 'Date of next recurring installment',
             'item_rec_install_billed_1' => '# of successful recurring installments',
             'timestamp' => 'Timestamp',
+            'invoice_created_at' => 'Created',
+            'invoice_updated_at' => 'Last Updated',
         ];
     }
 
