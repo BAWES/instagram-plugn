@@ -83,5 +83,20 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
     </div>
 
+    <div class='col-md-12'>
+        <h3>Agent Activity</h3>
+
+        <?= GridView::widget([
+            'dataProvider' => $activityDataProvider,
+            'columns' => [
+                'agent.agent_name',
+                'activity_detail:ntext',
+                'activity_datetime:datetime',
+
+                ['class' => 'yii\grid\ActionColumn', 'template' => '{view}', 'controller'=>'activity'],
+            ],
+        ]); ?>
+    </div>
+
 
 </div>

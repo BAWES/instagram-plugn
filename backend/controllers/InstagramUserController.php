@@ -73,10 +73,17 @@ class InstagramUserController extends Controller
             'query' => $agentsQuery,
         ]);
 
+        // Get Activity
+        $activityQuery = $model->getActivities();
+        $activityDataProvider = new ActiveDataProvider([
+            'query' => $activityQuery,
+        ]);
+
         return $this->render('view', [
             'model' => $model,
             'agency' => $agency,
-            'agentsDataProvider' => $agentsDataProvider
+            'agentsDataProvider' => $agentsDataProvider,
+            'activityDataProvider' => $activityDataProvider
         ]);
     }
 
