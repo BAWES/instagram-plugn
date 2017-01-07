@@ -105,6 +105,29 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Returns String value of current agency status
+     * @return string
+     */
+    public function getStatus(){
+        switch($this->agency_status){
+            case self::STATUS_ACTIVE:
+                return "Active";
+                break;
+            case self::STATUS_INACTIVE:
+                return "Inactive (Billing or Trial Expired)";
+                break;
+            case self::STATUS_BANNED:
+                return "Banner";
+                break;
+            case self::STATUS_DELETED:
+                return "Deleted";
+                break;
+        }
+
+        return "Couldnt find a status";
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getBillings()
