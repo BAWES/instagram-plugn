@@ -136,10 +136,10 @@ class Billing extends \yii\db\ActiveRecord
             'billing_total' => 'Total',
             'billing_currency' => 'Currency',
             'twoco_token' => '2co Token',
-            'twoco_order_num' => '2co Order Num',
-            'twoco_transaction_id' => '2co Transaction ID',
-            'twoco_response_code' => '2co Response Code',
-            'twoco_response_msg' => '2co Response Msg',
+            'twoco_order_num' => 'Order Num',
+            'twoco_transaction_id' => 'Transaction ID',
+            'twoco_response_code' => 'Response Code',
+            'twoco_response_msg' => 'Response Msg',
             'billing_datetime' => 'Billing Datetime',
         ];
     }
