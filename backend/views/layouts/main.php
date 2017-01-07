@@ -64,7 +64,7 @@ AppAsset::register($this);
             'items' => [
                 ['label' => 'Countries', 'url' => ['/country/index']],
                 ['label' => 'Price Options', 'url' => ['/pricing/index']],
-                ['label' => 'Billing', 'url' => ['/billing/index']],
+                ['label' => 'Billing Attempts', 'url' => ['/billing/index']],
                 ['label' => 'Invoices', 'url' => ['/invoice/index']],
             ]
         ];
