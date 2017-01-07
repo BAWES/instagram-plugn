@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -25,5 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'record_date:date',
         ],
     ]) ?>
+
+    <a target='_blank'
+    href='<?= Url::to(['instagram-user/view', 'id' => $model->user->user_id]) ?>' class='btn btn-lg btn-primary'>
+        Go to Account (@<?=$model->user->user_name ?>)</a>
 
 </div>
