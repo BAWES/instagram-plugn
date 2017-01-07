@@ -4,6 +4,7 @@ namespace agency\controllers;
 use Yii;
 use yii\web\Controller;
 use common\models\Agency;
+use common\models\Invoice;
 
 /**
  * 2Checkout INS controller
@@ -19,8 +20,16 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
-        $model = new \common\models\Invoice();
-        $model->scenario = "newNotification";
+        $invoiceId = Yii::$app->request->post('invoice_id');
+        if(!$invoiceId){
+            Yii::error("[INS Error] Notification url called without an invoice_id", __METHOD__);
+        }
+
+        // Create New vs Update Existing Invoice?
+        $model = Invoice::findOne(['invoice_id' => $invoiceId]);
+        if(!$model){
+            $model = new Invoice();
+        }
 
         $model->attributes = Yii::$app->request->post();
         $model->billing_id = $model->vendor_order_id;

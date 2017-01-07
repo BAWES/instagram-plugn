@@ -60,7 +60,7 @@ class Invoice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['md5_hash', 'invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
             [['billing_id', 'pricing_id', 'item_rec_install_billed_1'], 'integer'],
             [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
@@ -71,8 +71,7 @@ class Invoice extends \yii\db\ActiveRecord
             [['pricing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pricing::className(), 'targetAttribute' => ['pricing_id' => 'pricing_id']],
 
             // Validate MD5 Hash on new Notification
-            ['md5_hash', 'required', 'on' => 'newNotification'],
-            ['md5_hash', 'validateHash', 'on' => 'newNotification'],
+            ['md5_hash', 'validateHash'],
         ];
     }
 
