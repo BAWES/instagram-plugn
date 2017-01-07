@@ -546,6 +546,11 @@ class Instagram extends \kotchuprik\authclient\Instagram
             $errorType = ArrayHelper::getValue($metaResponse, 'meta.error_type', "Not set");
             $errorMessage = ArrayHelper::getValue($metaResponse, 'meta.error_message', "Not set");
 
+            if($errorCode == "???" && $errorType == "Not set" && $errorType == "Not set"){
+                // Ignore this error as Facebook might have some issues
+                return false;
+            }
+
 
             Yii::error("[Fatal Error] $errorCode Error - $errorType: $errorMessage", __METHOD__);
 
