@@ -19,7 +19,7 @@ class InsController extends Controller
      */
     public function actionNotification()
     {
-        $model = new \common\models\BillingNotification();
+        $model = new \common\models\Invoice();
         $model->scenario = "newNotification";
 
         $model->attributes = Yii::$app->request->post();

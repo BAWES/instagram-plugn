@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model common\models\BillingNotification */
+/* @var $model common\models\Invoice */
 
-$this->title = 'Create Billing Notification';
-$this->params['breadcrumbs'][] = ['label' => 'Billing Notifications', 'url' => ['index']];
+$this->title = 'Create Invoice';
+$this->params['breadcrumbs'][] = ['label' => 'Invoices', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="billing-notification-create">
+<div class="invoice-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

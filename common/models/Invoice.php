@@ -5,11 +5,12 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "billing_notification".
+ * This is the model class for table "invoice".
  *
- * @property string $notification_id
+ * @property integer $invoice_id
  * @property string $billing_id
  * @property integer $pricing_id
+ * @property string $agency_id
  * @property string $message_id
  * @property string $message_type
  * @property string $message_description
@@ -17,7 +18,6 @@ use Yii;
  * @property string $sale_id
  * @property string $sale_date_placed
  * @property string $vendor_order_id
- * @property string $invoice_id
  * @property string $payment_type
  * @property string $auth_exp
  * @property string $invoice_status
@@ -34,10 +34,11 @@ use Yii;
  * @property integer $item_rec_install_billed_1
  * @property string $timestamp
  *
+ * @property Agency $agency
  * @property Billing $billing
  * @property Pricing $pricing
  */
-class BillingNotification extends \yii\db\ActiveRecord
+class Invoice extends \yii\db\ActiveRecord
 {
     // Hash used for validating authenticity of request
     public $md5_hash;
@@ -50,7 +51,7 @@ class BillingNotification extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'billing_notification';
+        return 'invoice';
     }
 
     /**
@@ -59,12 +60,13 @@ class BillingNotification extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
             [['billing_id', 'pricing_id', 'item_rec_install_billed_1'], 'integer'],
             [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
-            [['message_id', 'message_type', 'vendor_id', 'sale_id', 'vendor_order_id', 'invoice_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
+            [['message_id', 'message_type', 'vendor_id', 'sale_id', 'vendor_order_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
             [['message_description', 'customer_ip', 'customer_ip_country', 'item_name_1'], 'string', 'max' => 128],
+            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::className(), 'targetAttribute' => ['agency_id' => 'agency_id']],
             [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
             [['pricing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pricing::className(), 'targetAttribute' => ['pricing_id' => 'pricing_id']],
 
@@ -105,9 +107,10 @@ class BillingNotification extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'notification_id' => 'Notification ID',
+            'invoice_id' => 'Invoice ID',
             'billing_id' => 'Billing ID',
             'pricing_id' => 'Pricing ID',
+            'agency_id' => 'Agency ID',
             'message_id' => 'Message ID',
             'message_type' => 'Message Type',
             'message_description' => 'Message Description',
@@ -115,7 +118,6 @@ class BillingNotification extends \yii\db\ActiveRecord
             'sale_id' => 'Sale ID',
             'sale_date_placed' => 'Sale Date Placed',
             'vendor_order_id' => 'Vendor Order ID',
-            'invoice_id' => 'Invoice ID',
             'payment_type' => 'Payment Type',
             'auth_exp' => 'Auth Exp',
             'invoice_status' => 'Invoice Status',
@@ -132,6 +134,14 @@ class BillingNotification extends \yii\db\ActiveRecord
             'item_rec_install_billed_1' => 'Item Rec Install Billed 1',
             'timestamp' => 'Timestamp',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgency()
+    {
+        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
     }
 
     /**

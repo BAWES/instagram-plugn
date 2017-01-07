@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\BillingNotification */
+/* @var $model common\models\Invoice */
 
-$this->title = $model->notification_id;
-$this->params['breadcrumbs'][] = ['label' => 'Billing Notifications', 'url' => ['index']];
+$this->title = $model->invoice_id;
+$this->params['breadcrumbs'][] = ['label' => 'Invoices', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="billing-notification-view">
+<div class="invoice-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->notification_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->notification_id], [
+        <?= Html::a('Update', ['update', 'id' => $model->invoice_id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->invoice_id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -28,9 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'notification_id',
+            'invoice_id',
             'billing_id',
             'pricing_id',
+            'agency_id',
             'message_id',
             'message_type',
             'message_description',
@@ -38,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'sale_id',
             'sale_date_placed',
             'vendor_order_id',
-            'invoice_id',
             'payment_type',
             'auth_exp',
             'invoice_status',

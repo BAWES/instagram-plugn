@@ -6,10 +6,11 @@ class m170106_150352_add_billing_notification extends Migration
 {
     public function up()
     {
-        $this->createTable('billing_notification', [
-            'notification_id' => $this->bigPrimaryKey()->unsigned(),
+        $this->createTable('invoice', [
+            'invoice_id' => $this->bigPrimaryKey()->unsigned(),
             'billing_id' => $this->bigInteger()->unsigned()->notNull(), // which bill this belongs to
             'pricing_id' => $this->integer()->notNull(), // which pricing this belongs to
+            'agency_id' => $this->bigInteger()->unsigned()->notNull(), // which agency this belongs to
 
             'message_id' => $this->string(64),
             'message_type' => $this->string(64)->notNull(),
@@ -19,7 +20,6 @@ class m170106_150352_add_billing_notification extends Migration
             'sale_id' => $this->string(64),
             'sale_date_placed' => $this->date(),
             'vendor_order_id' => $this->string(64),
-            'invoice_id' => $this->string(64),
             'payment_type' => $this->string(64),
             'auth_exp' => $this->date(),
             'invoice_status' => $this->string(64),
@@ -40,23 +40,38 @@ class m170106_150352_add_billing_notification extends Migration
             'timestamp' => $this->datetime(),
         ]);
 
+        // creates index for column `agency_id`
+        $this->createIndex(
+            'idx-invoice-agency_id',
+            'invoice',
+            'agency_id'
+        );
         // creates index for column `billing_id`
         $this->createIndex(
-            'idx-billing_notification-billing_id',
-            'billing_notification',
+            'idx-invoice-billing_id',
+            'invoice',
             'billing_id'
         );
         // creates index for column `pricing_id`
         $this->createIndex(
-            'idx-billing_notification-pricing_id',
-            'billing_notification',
+            'idx-invoice-pricing_id',
+            'invoice',
             'pricing_id'
         );
 
+        // add foreign key for table `agency`
+        $this->addForeignKey(
+            'fk-invoice-agency_id',
+            'invoice',
+            'agency_id',
+            'agency',
+            'agency_id',
+            'CASCADE'
+        );
         // add foreign key for table `billing`
         $this->addForeignKey(
-            'fk-billing_notification-billing_id',
-            'billing_notification',
+            'fk-invoice-billing_id',
+            'invoice',
             'billing_id',
             'billing',
             'billing_id',
@@ -64,8 +79,8 @@ class m170106_150352_add_billing_notification extends Migration
         );
         // add foreign key for table `pricing`
         $this->addForeignKey(
-            'fk-billing_notification-pricing_id',
-            'billing_notification',
+            'fk-invoice-pricing_id',
+            'invoice',
             'pricing_id',
             'pricing',
             'pricing_id',
@@ -80,24 +95,32 @@ class m170106_150352_add_billing_notification extends Migration
     {
         // drops foreign keys
         $this->dropForeignKey(
-            'fk-billing_notification-billing_id',
-            'billing_notification'
+            'fk-invoice-billing_id',
+            'invoice'
         );
         $this->dropForeignKey(
-            'fk-billing_notification-pricing_id',
-            'billing_notification'
+            'fk-invoice-pricing_id',
+            'invoice'
+        );
+        $this->dropForeignKey(
+            'fk-invoice-agency_id',
+            'invoice'
         );
 
         // Drop indexes
         $this->dropIndex(
-            'idx-billing_notification-billing_id',
-            'billing_notification'
+            'idx-invoice-agency_id',
+            'invoice'
         );
         $this->dropIndex(
-            'idx-billing_notification-pricing_id',
-            'billing_notification'
+            'idx-invoice-billing_id',
+            'invoice'
+        );
+        $this->dropIndex(
+            'idx-invoice-pricing_id',
+            'invoice'
         );
 
-        $this->dropTable('billing_notification');
+        $this->dropTable('invoice');
     }
 }
