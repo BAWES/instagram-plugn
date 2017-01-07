@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * InstagramUserController implements the CRUD actions for User model.
@@ -61,8 +62,21 @@ class InstagramUserController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        // Get Agency
+        $agency = $model->agency;
+
+        // Get Agents Managing
+        $agentsQuery = $model->getAgents();
+        $agentsDataProvider = new ActiveDataProvider([
+            'query' => $agentsQuery,
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'agency' => $agency,
+            'agentsDataProvider' => $agentsDataProvider
         ]);
     }
 
