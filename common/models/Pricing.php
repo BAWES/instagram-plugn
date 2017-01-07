@@ -18,6 +18,7 @@ use yii\db\Expression;
  * @property string $pricing_updated_at
  *
  * @property Billing[] $billings
+ * @property Invoice[] $invoices
  */
 class Pricing extends \yii\db\ActiveRecord
 {
@@ -79,5 +80,13 @@ class Pricing extends \yii\db\ActiveRecord
     public function getBillings()
     {
         return $this->hasMany(Billing::className(), ['pricing_id' => 'pricing_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['pricing_id' => 'pricing_id']);
     }
 }

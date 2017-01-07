@@ -29,9 +29,10 @@ use yii\db\Expression;
  * @property string $twoco_response_msg
  * @property string $billing_datetime
  *
+ * @property Agency $agency
  * @property Country $country
  * @property Pricing $pricing
- * @property InstagramUser $user
+ * @property Invoice[] $invoices
  */
 class Billing extends \yii\db\ActiveRecord
 {
@@ -165,6 +166,14 @@ class Billing extends \yii\db\ActiveRecord
     public function getAgency()
     {
         return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['billing_id' => 'billing_id']);
     }
 
     /**
