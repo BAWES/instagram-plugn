@@ -252,6 +252,23 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
                 ->send();
     }
 
+    /**
+     * Sets the new date for the deadline.
+     * It can be set to both future and past dates
+     * Function should check if billing is active after setting the new date then
+     * act accordingly
+     * @param  string $deadlineDate Date when the next payment is due
+     * @return mixed
+     */
+    public function updateBillingActiveDeadline($deadlineDate){
+        $this->agency_billing_active_until = $deadlineDate;
+        $this->save(false);
+
+        // Check if billing is active with the new date
+        // Agency::_disableAgencyAndManagedAccounts() / InstagramUser::activateAccountIfPossible()
+        // or maybe ENABLE AGENCY if its a new billing / deadline?
+    }
+
 
     /**
      * Check if this agency has a valid active trial

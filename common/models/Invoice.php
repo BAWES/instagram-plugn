@@ -182,7 +182,10 @@ class Invoice extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
 
-        // New Invoice Record Created.
+        // Update Agency Billing Deadline based on INS output
+        $this->agency->updateBillingActiveDeadline($this->item_rec_date_next_1);
+
+        // When a new invoice is created
         if($insert){
             // Refresh to get latest data from db (such as datetime NOW)
             $this->refresh();
