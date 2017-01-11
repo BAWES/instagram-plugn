@@ -1,6 +1,7 @@
 <?php
 return [
     'adminEmail' => 'hello@plugn.io',
+    'billingEmail' => 'hello@plugn.io',
     'supportEmail' => 'hello@plugn.io',
     'instagram.numberOfPastPostsToCrawl' => 20,
     'instagram.endpointHourlyRateLimit' => 60, //30 per hour for sandbox, 60 per hour for live

@@ -175,4 +175,17 @@ class Invoice extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Pricing::className(), ['pricing_id' => 'pricing_id']);
     }
+
+    /**
+     * After Save
+     */
+    public function afterSave($insert, $changedAttributes) {
+        parent::afterSave($insert, $changedAttributes);
+
+        // New Invoice Record Created.
+        if($insert){
+            // Send invoice via email to both admin and customer
+            
+        }
+    }
 }
