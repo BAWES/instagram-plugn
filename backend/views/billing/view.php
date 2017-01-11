@@ -100,7 +100,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'item_rec_status_1',
                 // 'item_rec_date_next_1',
                 // 'item_rec_install_billed_1',
-                'timestamp:datetime',
+                // 'timestamp:datetime',
+                'invoice_created_at:datetime',
                 //'sale_date_placed',
 
                 ['class' => 'yii\grid\ActionColumn', 'template' => '{view}', 'controller'=>'invoice'],
