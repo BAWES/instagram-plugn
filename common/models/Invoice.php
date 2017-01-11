@@ -191,6 +191,36 @@ class Invoice extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * BeforeSave
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+
+            /**
+             * Send Slack update about this invoice
+             */
+            $customerName = $this->billing->billing_name;
+            $pricePlanName = $this->item_name_1;
+            $paymentAmount = Yii::$app->formatter->asCurrency($this->item_usd_amount_1);
+            $country = $this->customer_ip_country;
+            $expiresOn = Yii::$app->formatter->asDate($this->item_rec_date_next_1);
+
+            $logMessage = "[".$this->message_description.". Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
+
+            if($this->message_type == "REFUND_ISSUED" || $this->message_type == "FRAUD_STATUS_CHANGED" || $this->message_type == "RECURRING_RESTARTED"){
+                Yii::warning($logMessage, __METHOD__);
+            }else if($this->message_type == "RECURRING_STOPPED" || $this->message_type == "RECURRING_COMPLETE" || $this->message_type == "RECURRING_INSTALLMENT_FAILED"){
+                Yii::error($logMessage, __METHOD__);
+            }else{
+                Yii::info($logMessage, __METHOD__);
+            }
+
+
+            return true;
+        }
+    }
+
 
     /**
      * Send the invoice to the agency customer via email
