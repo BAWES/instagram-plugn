@@ -22,6 +22,7 @@ use yii\db\ActiveQuery;
  * @property string $agency_limit_email
  * @property integer $agency_status
  * @property integer $agency_trial_days
+ * @property string $agency_billing_active_until
  * @property string $agency_created_at
  * @property string $agency_updated_at
  *
@@ -99,6 +100,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             'agency_status' => 'Status',
             'agency_limit_email' => 'Limit Email',
             'agency_trial_days' => 'Trial Days Left',
+            'agency_billing_active_until' => 'Billing Active Until',
             'agency_created_at' => 'Created At',
             'agency_updated_at' => 'Updated At',
         ];
@@ -141,6 +143,19 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public function getInstagramUsers()
     {
         return $this->hasMany(InstagramUser::className(), ['agency_id' => 'agency_id']);
+    }
+
+    /**
+     * BeforeSave
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if($insert){
+                $this->agency_billing_active_until = new Expression('NOW()');
+            }
+
+            return true;
+        }
     }
 
     /**
