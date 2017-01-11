@@ -184,8 +184,26 @@ class Invoice extends \yii\db\ActiveRecord
 
         // New Invoice Record Created.
         if($insert){
-            // Send invoice via email to both admin and customer
-            
+            // Refresh to get latest data from db (such as datetime NOW)
+            $this->refresh();
+            // Send invoice via email to customer
+            $this->emailInvoiceToCustomer();
         }
+    }
+
+
+    /**
+     * Send the invoice to the agency customer via email
+     */
+    public function emailInvoiceToCustomer(){
+        return Yii::$app->mailer->compose([
+                    'html' => 'billing/invoice',
+                        ], [
+                    'invoice' => $this,
+                ])
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                ->setTo($this->billing->billing_email)
+                ->setSubject('Thanks for your payment. You are making Plugn possible!')
+                ->send();
     }
 }

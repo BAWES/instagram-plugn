@@ -5,15 +5,15 @@
 use yii\helpers\Url;
 
 $supportEmail = Yii::$app->params['supportEmail'];
-$invoiceNumber = "123";
-$invoiceDate = "20th December, 2016";
-$customerName = "Khalid Al-Mutawa";
-$customerEmail = "khalid@bawes.net";
+$invoiceNumber = $invoice->invoice_id;
+$invoiceDate = Yii::$app->formatter->asDate($invoice->invoice_created_at);
+$customerName = $invoice->billing->billing_name;
+$customerEmail = $invoice->billing->billing_email;
 
-$planName = "Basic";
-$planStartDate = "December 20, 2016";
-$planEndDate = "January 20, 2017";
-$planPrice = "$10.00";
+$planName = $invoice->item_name_1;
+$planStartDate = Yii::$app->formatter->asDate($invoice->invoice_created_at);
+$planEndDate = Yii::$app->formatter->asDate($invoice->item_rec_date_next_1);
+$planPrice = Yii::$app->formatter->asCurrency($invoice->invoice_usd_amount);
 ?>
 
 <!doctype html>
@@ -79,7 +79,7 @@ $planPrice = "$10.00";
           <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
       <![endif]--><div style="margin:0px auto;max-width:700px;background:white;"><table role="presentation" cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:white;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;direction:ltr;font-size:0px;padding:20px 0px;padding-bottom:0px;padding-top:10px;"><!--[if mso | IE]>
       <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:top;width:270px;">
-      <![endif]--><div aria-labelledby="mj-column-px-270" class="mj-column-px-270 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:180px;"><img alt="" title="" height="auto" src="img/logo-trans.png" style="border:none;border-radius:;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="180"></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
+      <![endif]--><div aria-labelledby="mj-column-px-270" class="mj-column-px-270 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:180px;"><img alt="" title="" height="auto" src="<?= $message->embed(Url::to("@web/img/logo-trans.png", true)); ?>" style="border:none;border-radius:;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="180"></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
@@ -117,7 +117,7 @@ $planPrice = "$10.00";
                   <th style="padding: 0 15px;">Amount</th>
                 </tr>
                 <tr>
-                  <td style="padding: 0 15px 0 0;"><?= $planName ?> <?= $planStartDate ?> <?= $planEndDate ?></td>
+                  <td style="padding: 0 15px 0 0;"><?= $planName ?>. <?= $planStartDate ?> to <?= $planEndDate ?></td>
                   <td style="padding: 0 15px;"><?= $planPrice ?></td>
                 </tr>
               </table></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#333;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;text-align:left;">
