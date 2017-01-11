@@ -260,7 +260,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      * @param  string $deadlineDate Date when the next payment is due
      * @return mixed
      */
-    public function updateBillingActiveDeadline($deadlineDate){
+    public function updateBillingDeadline($deadlineDate){
         $this->agency_billing_active_until = $deadlineDate;
         $this->save(false);
 
