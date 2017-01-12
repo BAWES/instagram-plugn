@@ -46,6 +46,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'agency_updated_at:datetime',
             ],
         ]) ?>
+
+        <p>
+            <?= Html::a('Cancel Billing Plan',
+            ['cancel-billing-plan', 'id' => $model->agency_id],
+            [
+                'class' => 'btn btn-danger',
+                'data-confirm' => "Are you sure you want to cancel billing?",
+                'data-method' => "post"
+            ]) ?>
+        </p>
     </div>
 
     <div class='col-md-6'>

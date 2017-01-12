@@ -35,6 +35,7 @@ class AgencyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'cancel-billing-plan' => ['POST'],
                 ],
             ],
         ];
@@ -109,6 +110,31 @@ class AgencyController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Cancels the currently active billing plan
+     * @param string $id
+     */
+    public function actionCancelBillingPlan($id){
+        $model = $this->findModel($id);
+
+        // Redirect back to billing page if doesnt have a plan active
+        $isBillingActive = $model->getBillingDaysLeft();
+        if(!$isBillingActive){
+            die("Agency doesnt have billing active");
+        }
+
+        $customerName = $model->agency_fullname;
+        $latestInvoice = $model->getInvoices()->orderBy('invoice_created_at DESC')->limit(1)->one();
+
+        if($latestInvoice){
+            Yii::error("[Admin Cancel Recurring Billing #".$latestInvoice->billing->twoco_order_num."] Customer: $customerName", __METHOD__);
+            // Cancel the recurring plan
+            $latestInvoice->billing->cancelRecurring();
+        }
+
+        return $this->redirect(['agency/view', 'id' => $id]);
     }
 
     /**
