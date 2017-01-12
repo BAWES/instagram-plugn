@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use Twocheckout;
+use Twocheckout_Sale;
+use Twocheckout_Error;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -177,6 +180,27 @@ class Billing extends \yii\db\ActiveRecord
     }
 
     /**
+     * Cancel Active Recurring Subscription within this Bill
+     */
+    public function cancelRecurring(){
+        Twocheckout::privateKey(Yii::$app->params['2co.privateKey']);
+        Twocheckout::sellerId(Yii::$app->params['2co.sellerId']);
+        Twocheckout::username(Yii::$app->params['2co.username']);
+        Twocheckout::password(Yii::$app->params['2co.password']);
+        Twocheckout::verifySSL(Yii::$app->params['2co.verifySSL']);
+        Twocheckout::sandbox(Yii::$app->params['2co.isSandbox']);
+
+        try {
+            // Stop Recurring for this Billing Plan
+            $result = Twocheckout_Sale::stop(['sale_id' => $this->twoco_order_num]);
+            Yii::info("[Disabled Recurring on Billing #".$this->twoco_order_num."] ".print_r($result, true) , __METHOD__);
+        } catch (Twocheckout_Error $e) {
+            $message = $e->getMessage();
+            Yii::error("[Error when canceling Billing #".$this->twoco_order_num."] $message", __METHOD__);
+        }
+    }
+
+    /**
      * Success response from a 2Checkout Billing Attempt
      * https://www.2checkout.com/documentation/payment-api/create-sale
      */
@@ -196,7 +220,6 @@ class Billing extends \yii\db\ActiveRecord
         Yii::info("[Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email.
             " \ Initial Payment: $".$this->billing_total, __METHOD__);
         Yii::info("[".$this->twoco_response_code."] ".$this->twoco_response_msg, __METHOD__);
-
     }
 
     /**
@@ -214,6 +237,5 @@ class Billing extends \yii\db\ActiveRecord
         // Log The Error
         Yii::error("[Failed Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
         Yii::error($this->twoco_response_msg, __METHOD__);
-
     }
 }

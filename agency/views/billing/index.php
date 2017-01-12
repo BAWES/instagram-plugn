@@ -31,7 +31,10 @@ $this->title = 'Billing';
 				You're currently paying <b><?= Yii::$app->formatter->asCurrency($invoices[0]->invoice_usd_amount) ?> per month</b> on the <?= $invoices[0]->item_name_1 ?>.
 			</p>
 
-			<button type="button" data-confirm="Cancel your current billing plan? The remaining days will be added to your account under trial mode." class="btn btn-inline btn-danger-outline">Cancel Plan</button>
+			<a href='<?= Url::to(['billing/cancel-plan']) ?>'
+				data-method='post'
+				data-confirm="Cancel your current billing plan? The remaining days will be added to your account under trial mode."
+				class="btn btn-inline btn-danger-outline">Cancel Plan</a>
 
 			<p style='margin-top:10px; margin-bottom:0;'>
 				<b>Looking to upgrade?</b>

@@ -11,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use common\models\Billing;
 
 /**
@@ -35,6 +36,12 @@ class BillingController extends Controller
                     ],
                 ],
             ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'cancel-plan' => ['POST'],
+                ],
+            ],
         ];
     }
 
@@ -57,6 +64,28 @@ class BillingController extends Controller
             'isBillingActive' => $isBillingActive,
             'invoices' => $invoices
         ]);
+    }
+
+    /**
+     * Cancels the current active plan
+     */
+    public function actionCancelPlan(){
+        // Redirect back to billing page if doesnt have a plan active
+        $isBillingActive = Yii::$app->user->identity->getBillingDaysLeft();
+        if(!$isBillingActive){
+            return $this->redirect(['billing/index']);
+        }
+
+        $customerName = Yii::$app->user->identity->agency_fullname;
+        $latestInvoice = Yii::$app->user->identity->getInvoices()->orderBy('invoice_created_at DESC')->limit(1)->one();
+
+        if($latestInvoice){
+            Yii::error("[Requested Cancel Billing #".$latestInvoice->billing->twoco_order_num."] Customer: $customerName", __METHOD__);
+            // Cancel the recurring plan
+            $latestInvoice->billing->cancelRecurring();
+        }
+
+        return $this->redirect(['billing/index']);
     }
 
     /**
