@@ -25,6 +25,26 @@ $this->title = 'Billing';
 <div class="container-fluid">
 	<section class="box-typical box-typical-padding">
 
+		<?php if($isBillingActive){ ?>
+			<h4>Current Plan: Up to <?= $invoices[0]->pricing->pricing_account_quantity ?> Instagram Accounts</h4>
+			<p>
+				You're currently paying <b><?= Yii::$app->formatter->asCurrency($invoices[0]->invoice_usd_amount) ?> per month</b> on the <?= $invoices[0]->item_name_1 ?>.
+			</p>
+
+			<button type="button" data-confirm="Cancel your current billing plan? The remaining days will be added to your account under trial mode." class="btn btn-inline btn-danger-outline">Cancel Plan</button>
+
+			<p style='margin-top:10px; margin-bottom:0;'>
+				<b>Looking to upgrade?</b>
+				You'll need to cancel your current plan to upgrade for more Instagram accounts.
+				<br/>
+				<a href='https://plugn.io/pricing' target='_blank'>
+					Browse Available Plans
+				</a>
+			</p>
+		<?php } ?>
+
+
+		<?php if(!$isBillingActive){ ?>
 		<!-- Pricing Tables -->
 		<div class="box-typical-center">
 			<div class="box-typical-center-in prices-page">
@@ -73,6 +93,7 @@ $this->title = 'Billing';
 			</div>
 		</div>
 		<!-- END Pricing Tables -->
+		<?php } ?>
 
 
 
