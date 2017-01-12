@@ -37,8 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'Status',
                     'value' => $model->status,
                 ],
-                'agency_trial_days',
                 'agency_billing_active_until:date',
+                'billingDaysLeft',
+                'agency_trial_days',
+
                 'agency_limit_email:datetime',
                 'agency_created_at:datetime',
                 'agency_updated_at:datetime',
@@ -92,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'item_rec_status_1',
                 // 'item_rec_date_next_1',
                 // 'item_rec_install_billed_1',
-                'timestamp:datetime',
+                'invoice_updated_at:datetime',
                 //'sale_date_placed',
 
                 ['class' => 'yii\grid\ActionColumn', 'template' => '{view}', 'controller'=>'invoice'],

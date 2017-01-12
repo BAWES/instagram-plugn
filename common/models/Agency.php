@@ -269,6 +269,28 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         // or maybe ENABLE AGENCY if its a new billing / deadline?
     }
 
+    /**
+     * Return the number of days left on his billing plan payment (if any)
+     * @return integer
+     */
+    public function getBillingDaysLeft(){
+        $expiresOn = new \DateTime($this->agency_billing_active_until);
+        $today = new \DateTime();
+
+        $daysLeft = $expiresOn->diff($today)->days;
+
+        if($expiresOn > $today){
+            return $daysLeft + 1;
+        }
+
+        // Allow 24 hours additional for user to sort out billing issues
+        if($daysLeft == 0){
+            return 1;
+        }
+
+        return 0;
+    }
+
 
     /**
      * Check if this agency has a valid active trial
