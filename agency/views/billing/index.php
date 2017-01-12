@@ -77,4 +77,36 @@ $this->title = 'Billing';
 
 
 	</section><!--.box-typical-->
+
+
+	<section class="box-typical box-typical-max-280">
+		<header class="box-typical-header">
+			<div class="tbl-row">
+				<div class="tbl-cell tbl-cell-title">
+					<h3>Invoices</h3>
+				</div>
+			</div>
+		</header>
+		<div class="box-typical-body">
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<tbody>
+						<tr>
+							<td>
+								Jan 12, 2017
+							</td>
+							<td>
+								<a href="#">#9093733462853</a>
+							</td>
+							<td>Plugn Medium Plan. Jan 12, 2017 to Feb 15, 2017</td>
+							<td style='font-weight:bold;'>
+								USD 20.00
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div><!--.box-typical-body-->
+	</section><!--.box-typical-->
+
 </div><!--.container-fluid-->
