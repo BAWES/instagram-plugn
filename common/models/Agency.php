@@ -27,6 +27,7 @@ use yii\db\ActiveQuery;
  * @property string $agency_updated_at
  *
  * @property Billing[] $billings
+ * @property Invoice[] $invoices
  * @property InstagramUser[] $instagramUsers
  */
 class Agency extends \yii\db\ActiveRecord implements IdentityInterface
@@ -135,6 +136,14 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public function getBillings()
     {
         return $this->hasMany(Billing::className(), ['agency_id' => 'agency_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['agency_id' => 'agency_id']);
     }
 
     /**

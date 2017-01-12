@@ -78,7 +78,7 @@ $this->title = 'Billing';
 
 	</section><!--.box-typical-->
 
-
+	<?php if($invoices){ ?>
 	<section class="box-typical box-typical-max-280">
 		<header class="box-typical-header">
 			<div class="tbl-row">
@@ -91,22 +91,28 @@ $this->title = 'Billing';
 			<div class="table-responsive">
 				<table class="table table-hover">
 					<tbody>
+						<?php foreach($invoices as $invoice){ ?>
 						<tr>
 							<td>
-								Jan 12, 2017
+								<?= Yii::$app->formatter->asDate($invoice->invoice_created_at) ?>
 							</td>
 							<td>
-								<a href="#">#9093733462853</a>
+								<a target='_blank'
+									href="<?= Url::to(['billing/invoice', 'id' => $invoice->invoice_id]) ?>">
+									#<?= $invoice->invoice_id ?>
+								</a>
 							</td>
-							<td>Plugn Medium Plan. Jan 12, 2017 to Feb 15, 2017</td>
+							<td><?=$invoice->item_name_1?>. <?= Yii::$app->formatter->asDate($invoice->invoice_created_at) ?> to <?= Yii::$app->formatter->asDate($invoice->item_rec_date_next_1) ?></td>
 							<td style='font-weight:bold;'>
-								USD 20.00
+								<?= Yii::$app->formatter->asCurrency($invoice->invoice_usd_amount) ?>
 							</td>
 						</tr>
+						<?php } ?>
 					</tbody>
 				</table>
 			</div>
 		</div><!--.box-typical-body-->
 	</section><!--.box-typical-->
+	<?php } ?>
 
 </div><!--.container-fluid-->

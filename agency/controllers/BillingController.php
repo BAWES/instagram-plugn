@@ -46,11 +46,32 @@ class BillingController extends Controller
     {
         $availablePriceOptions = \common\models\Pricing::find()->orderBy('pricing_price')->all();
 
-        $isTrial = Yii::$app->user->identity->agency_trial_days > 0? true: false;
+        $isTrialActive = Yii::$app->user->identity->hasActiveTrial();
+        $isBillingActive = Yii::$app->user->identity->getBillingDaysLeft();
+
+        $invoices = Yii::$app->user->identity->getInvoices()->orderBy('invoice_created_at DESC')->all();
 
         return $this->render('index', [
             'availablePriceOptions' => $availablePriceOptions,
-            'isTrial' => $isTrial
+            'isTrial' => $isTrialActive,
+            'isBillingActive' => $isBillingActive,
+            'invoices' => $invoices
+        ]);
+    }
+
+    /**
+     * Display invoice for printing
+     * @param  integer $id The Invoice ID
+     * @return mixed
+     */
+    public function actionInvoice($id){
+        $invoice = Yii::$app->user->identity->getInvoices()
+                        ->where(['invoice_id' => (int) $id])->one();
+
+        if(!$invoice) die("Invoice not found");
+
+        return $this->renderPartial('invoice', [
+            'invoice' => $invoice
         ]);
     }
 
