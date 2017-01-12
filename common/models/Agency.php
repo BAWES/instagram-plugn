@@ -269,6 +269,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         if($billingDaysLeft){
             $this->agency_trial_days = 0;
         }
+        $this->save(false);
 
         // Disable Agency and its accounts if both billing and trial ran out
         // OTHERWISE Enable Agency and its accounts if not already enabled.
