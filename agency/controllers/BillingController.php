@@ -82,6 +82,12 @@ class BillingController extends Controller
      */
     public function actionSetup($plan)
     {
+        // Redirect back to billing page if already has a plan active
+        $isBillingActive = Yii::$app->user->identity->getBillingDaysLeft();
+        if($isBillingActive){
+            return $this->redirect(['billing/index']);
+        }
+
         // Find the Pricing Option the user wants to setup
         $pricing = \common\models\Pricing::findOne($plan);
         if(!$pricing){
