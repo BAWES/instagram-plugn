@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' => $model->status,
                 ],
                 'agency_trial_days',
-                'agency_billing_active_until:datetime',
+                'agency_billing_active_until:date',
                 'agency_limit_email:datetime',
                 'agency_created_at:datetime',
                 'agency_updated_at:datetime',
