@@ -119,7 +119,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
                 return "Inactive (Billing or Trial Expired)";
                 break;
             case self::STATUS_BANNED:
-                return "Banner";
+                return "Banned";
                 break;
             case self::STATUS_DELETED:
                 return "Deleted";
@@ -262,11 +262,21 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function updateBillingDeadline($deadlineDate){
         $this->agency_billing_active_until = $deadlineDate;
-        $this->save(false);
 
-        // Check if billing is active with the new date
-        // Agency::_disableAgencyAndManagedAccounts() / InstagramUser::activateAccountIfPossible()
-        // or maybe ENABLE AGENCY if its a new billing / deadline?
+        $billingDaysLeft = $this->getBillingDaysLeft();
+
+        // Disable Trial If Billing is Active
+        if($billingDaysLeft){
+            $this->agency_trial_days = 0;
+        }
+
+        // Disable Agency and its accounts if both billing and trial ran out
+        // OTHERWISE Enable Agency and its accounts if not already enabled.
+        if(!$billingDaysLeft && !$this->hasActiveTrial()){
+            $this->_disableAgencyAndManagedAccounts();
+        }else{
+            $this->_enableAgencyAndManagedAccounts();
+        }
     }
 
     /**
@@ -341,18 +351,34 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      * @return mixed
      */
     private function _disableAgencyAndManagedAccounts(){
-        // Deactivate IG accounts that are already active within this agency
-        InstagramUser::updateAll([
-            'user_status' => InstagramUser::STATUS_DISABLED_NO_BILLING
-        ],[// Where
-            'agency_id' => $this->agency_id,
-            'user_status' => InstagramUser::STATUS_ACTIVE
-        ]);
+        // Do nothing if already disabled
+        if($this->agency_status == Agency::STATUS_INACTIVE) return;
+
+        // Update the status of the IG accounts within this agency
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
 
         $this->agency_status = Agency::STATUS_INACTIVE;
         $this->save(false);
+    }
 
-        // Send an email that trial or billing has expired?
+    /**
+     * Enable the active ig accounts when an agency account is reactivated
+     * either by new trial or billing
+     * @return mixed
+     */
+    private function _enableAgencyAndManagedAccounts(){
+        // Do nothing if already enabled
+        if($this->agency_status == Agency::STATUS_ACTIVE) return;
+
+        // Update the status of the IG accounts within this agency
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
+
+        $this->agency_status = Agency::STATUS_ACTIVE;
+        $this->save(false);
     }
 
 
