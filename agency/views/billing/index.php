@@ -54,7 +54,8 @@ $this->title = 'Billing';
 				<header class="prices-page-title">Affordable pricing. No long term contract.</header>
 
 				<?php if($isTrial){ ?>
-					<p class="prices-page-subtitle"><u>Up to 30% Discount</u> on the <i>first month</i> when setting up billing during the trial period.</p>
+					<p class="prices-page-subtitle" style='padding-bottom:15px;'><u>Up to 30% Discount</u> on the <i>first month</i> when setting up billing during the trial period.</p>
+					<p>Note: trial will be deactivated once you subscribe.</p>
 				<?php } ?>
 
 				<?php foreach($availablePriceOptions as $pricing){ ?>
