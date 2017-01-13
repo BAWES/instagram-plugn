@@ -51,6 +51,7 @@ class InstagramAuthHandler
         ])->one();
 
         if ($user) {
+            $oldAgencyId = $user->agency_id;
             /**
              * Login: Update his details and Login
              */
@@ -65,6 +66,11 @@ class InstagramAuthHandler
             $user->user_follower_count = $followersCount;
             $user->user_ig_access_token = $accessToken;
             $user->user_status = InstagramUser::STATUS_INACTIVE;
+
+            // Check and log if this is an agency change
+            if($oldAgencyId && ($oldAgencyId != $user->agency_id)){
+                Yii::warning("[Instagram account @".$user->user_name." moved to new agency account] It was previously in Agency #$oldAgencyId", __METHOD__);
+            }
 
 
             if ($user->save()) {
@@ -114,7 +120,7 @@ class InstagramAuthHandler
 
                     // Disable account if trial/billing not setup
                     $user->activateAccountIfPossible();
-                    
+
                     // Return the saved model
                     return $user;
                 }
