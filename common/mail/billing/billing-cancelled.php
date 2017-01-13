@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 $supportEmail = Yii::$app->params['supportEmail'];
 $ctaUrl = "https://agency.plugn.io/billing";
-$expiryDate = "January 6, 2019";
+$expiryDate = Yii::$app->formatter->asDate($stopDate, "long");
 ?>
 
 <!doctype html>
