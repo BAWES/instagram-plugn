@@ -160,7 +160,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public function beforeSave($insert) {
         if (parent::beforeSave($insert)) {
             if($insert){
-                $this->agency_billing_active_until = new Expression('NOW()');
+                $this->agency_billing_active_until = new Expression('SUBDATE(NOW(), 1)');
             }
 
             return true;
