@@ -182,8 +182,27 @@ class Invoice extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
 
-        // Update Agency Billing Deadline based on INS output
-        $this->agency->updateBillingDeadline($this->item_rec_date_next_1);
+        /**
+         * If Billing Stopped, Add Remaining Billing Days as Trial Days
+         */
+        if($this->message_type == "RECURRING_STOPPED"){
+            // Set Trial Days Left to number of billing days left
+            $this->agency->agency_trial_days = $this->agency->getBillingDaysLeft();
+            // Set Billing Deadline to yesterdaty to expire immediately
+            $this->agency->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
+            // Email Customer about Stopped Payment
+            $this->emailCustomerRecurringStopped();
+        }else{
+            // Update Agency Billing Deadline based on INS output
+            $this->agency->updateBillingDeadline($this->item_rec_date_next_1);
+        }
+
+        /**
+         * If Recurring Payment Failed, Email Customer Notifying about Issue
+         */
+        if($this->message_type == "RECURRING_INSTALLMENT_FAILED"){
+            $this->emailCustomerPaymentFailed();
+        }
 
         // When a new invoice is created
         if($insert){
@@ -219,7 +238,6 @@ class Invoice extends \yii\db\ActiveRecord
                 Yii::info($logMessage, __METHOD__);
             }
 
-
             return true;
         }
     }
@@ -238,5 +256,18 @@ class Invoice extends \yii\db\ActiveRecord
                 ->setTo($this->billing->billing_email)
                 ->setSubject('Thanks for your payment. You are making Plugn possible!')
                 ->send();
+    }
+
+    /**
+     * Email Customer about Recurring Payment Stopped
+     */
+    public function emailCustomerRecurringStopped(){
+
+    }
+    /**
+     * Email Customer about failed recurring payment
+     */
+    public function emailCustomerPaymentFailed(){
+
     }
 }

@@ -271,6 +271,8 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function updateBillingDeadline($deadlineDate){
         $this->agency_billing_active_until = $deadlineDate;
+        $this->save(false);
+        $this->refresh();
 
         $billingDaysLeft = $this->getBillingDaysLeft();
 
@@ -319,7 +321,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public function hasActiveTrial(){
         if($this->agency_email_verified == Agency::EMAIL_VERIFIED
             && $this->agency_status == Agency::STATUS_ACTIVE
-            && $this->agency_trial_days > 0){
+            && $this->agency_trial_days > 0 && !$this->getBillingDaysLeft()){
             return true;
         }
         return false;
@@ -345,9 +347,16 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             // Deduct a day from trial days
             $this->agency_trial_days = $this->agency_trial_days - 1;
 
-            // Disable if no days left
+            // Disable Trial if no days left
             if($this->agency_trial_days == 0){
                 $this->_disableAgencyAndManagedAccounts();
+
+                // Log to Slack that this customer trial expired & no billing setup
+                Yii::warning("[Agency #".$this->agency_id." Trial Expired] Owned by ".$this->agency_fullname." and has ".count($this->instagramUsers)." accounts", __METHOD__);
+
+                // Send Email to Customer that his trial expired & need to setup billing
+                
+
             }else{
                 $this->save(false);
             }
