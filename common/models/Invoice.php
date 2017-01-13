@@ -201,9 +201,13 @@ class Invoice extends \yii\db\ActiveRecord
 
         /**
          * If Recurring Payment Failed, Email Customer Notifying about Issue
+         * Also Cancel the Billing for this Customer
          */
         if($this->message_type == "RECURRING_INSTALLMENT_FAILED"){
             $this->emailCustomerPaymentFailed();
+
+            // Cancel Recurring Billing
+            $this->billing->cancelRecurring();
         }
 
         // When a new invoice is created
