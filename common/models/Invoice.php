@@ -234,7 +234,16 @@ class Invoice extends \yii\db\ActiveRecord
             $country = $this->customer_ip_country;
             $expiresOn = Yii::$app->formatter->asDate($this->item_rec_date_next_1);
 
-            $logMessage = "[".$this->message_description.". Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
+            $description = $this->message_description;
+
+            if($this->message_type == "INVOICE_STATUS_CHANGED"){
+                $description .= " to ".$this->invoice_status;
+            }else if($this->message_type == "FRAUD_STATUS_CHANGED"){
+                $description .= " to ".$this->fraud_status;
+            }
+
+
+            $logMessage = "[$description. Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
 
             if($this->message_type == "REFUND_ISSUED" || $this->message_type == "FRAUD_STATUS_CHANGED" || $this->message_type == "RECURRING_RESTARTED"){
                 Yii::warning($logMessage, __METHOD__);
