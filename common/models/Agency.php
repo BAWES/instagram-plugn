@@ -355,7 +355,15 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
                 Yii::warning("[Agency #".$this->agency_id." Trial Expired] Owned by ".$this->agency_fullname." and has ".count($this->instagramUsers)." accounts", __METHOD__);
 
                 // Send Email to Customer that his trial expired & need to setup billing
-                
+                Yii::$app->mailer->compose([
+                        'html' => 'billing/trial-expired',
+                            ], [
+                        'agency' => $this,
+                    ])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                    ->setTo($this->agency_email)
+                    ->setSubject('Your trial has expired. Thanks for giving Plugn a try!')
+                    ->send();
 
             }else{
                 $this->save(false);

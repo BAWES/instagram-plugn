@@ -36,7 +36,7 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Agency Trial Deductions \n", Console::FG_RED, Console::BOLD);
-        //Agency::deductTrialDayFromAllActiveAgencies();
+        Agency::deductTrialDayFromAllActiveAgencies();
     }
 
     /**
