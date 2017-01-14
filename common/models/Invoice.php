@@ -195,14 +195,7 @@ class Invoice extends \yii\db\ActiveRecord
          * If Billing Stopped, Add Remaining Billing Days as Trial Days
          */
         if($this->message_type == "RECURRING_STOPPED"){
-            $originalBillingEndDate = $this->agency->agency_billing_active_until;
-
-            // Set Trial Days Left to number of billing days left
-            $this->agency->agency_trial_days = $this->agency->getBillingDaysLeft();
-            // Set Billing Deadline to yesterdaty to expire immediately
-            $this->agency->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
-            // Email Customer about Stopped Payment
-            $this->emailCustomerRecurringStopped($originalBillingEndDate);
+            $this->billing->processBillingCancellation("2Checkout INS RECURRING_STOPPED");
         }else{
             // Update Agency Billing Deadline based on INS output
             $this->agency->updateBillingDeadline($this->item_rec_date_next_1);

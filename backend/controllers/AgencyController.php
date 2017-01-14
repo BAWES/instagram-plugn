@@ -74,6 +74,7 @@ class AgencyController extends Controller
         // Data Provider to display invoices
         $invoiceQuery = \common\models\Invoice::find();
         $invoiceQuery->where(['agency_id' => $model->agency_id]);
+        $invoiceQuery->orderBy('invoice_updated_at DESC');
         $invoiceDataProvider = new ActiveDataProvider([
             'query' => $invoiceQuery,
         ]);
@@ -81,6 +82,7 @@ class AgencyController extends Controller
         // Data Provider to display billing attempts
         $billingQuery = \common\models\Billing::find();
         $billingQuery->where(['agency_id' => $model->agency_id]);
+        $billingQuery->orderBy('billing_datetime DESC');
         $billingDataProvider = new ActiveDataProvider([
             'query' => $billingQuery,
         ]);

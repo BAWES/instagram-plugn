@@ -193,11 +193,30 @@ class Billing extends \yii\db\ActiveRecord
         try {
             // Stop Recurring for this Billing Plan
             $result = Twocheckout_Sale::stop(['sale_id' => $this->twoco_order_num]);
-            Yii::info("[Disabled Recurring on Billing #".$this->twoco_order_num."] ".print_r($result, true) , __METHOD__);
+            $this->processBillingCancellation("User Request");
         } catch (Twocheckout_Error $e) {
             $message = $e->getMessage();
             Yii::error("[Error when canceling Billing #".$this->twoco_order_num."] $message", __METHOD__);
         }
+    }
+
+    /**
+     * Process the cancellation of the billing plan.
+     */
+    public function processBillingCancellation($source = "unknown"){
+        // If Agency doesn't already have billing set up, ignore cancellation attempt
+        if(!$this->agency->getBillingDaysLeft()) return;
+
+        $originalBillingEndDate = $this->agency->agency_billing_active_until;
+
+        // Set Trial Days Left to number of billing days left
+        $this->agency->agency_trial_days = $this->agency->getBillingDaysLeft();
+        // Set Billing Deadline to yesterdaty to expire immediately
+        $this->agency->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
+        // Email Customer about Stopped Payment
+        $this->emailCustomerRecurringStopped($originalBillingEndDate);
+
+        Yii::warning("[Disabled Recurring on Billing #".$this->twoco_order_num."] Source: $source" , __METHOD__);
     }
 
     /**
@@ -282,5 +301,20 @@ class Billing extends \yii\db\ActiveRecord
         // Log The Error
         Yii::error("[Failed Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
         Yii::error($this->twoco_response_msg, __METHOD__);
+    }
+
+    /**
+     * Email Customer about Recurring Payment Stopped
+     */
+    public function emailCustomerRecurringStopped($originalBillingEndDate){
+        return Yii::$app->mailer->compose([
+                'html' => 'billing/billing-cancelled',
+                    ], [
+                'stopDate' => $originalBillingEndDate,
+            ])
+            ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+            ->setTo($this->billing_email)
+            ->setSubject('Your Plugn subscription will end soon')
+            ->send();
     }
 }
