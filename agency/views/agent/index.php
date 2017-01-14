@@ -15,14 +15,14 @@ $this->params['instagramAccount'] = $account;
 
 <div class="container-fluid">
 
-	<h5 style='margin-bottom:0;'>How to manage an account?</h5>
+	<h4 style='margin-bottom:3px;'>How to manage an account?</h4>
 	<p>
 		Once invited as an agent, you can start managing an account by downloading Plugn's mobile apps
 		or logging into the
 		<a href='http://agent.plugn.io' target='_blank'>agents' web portal</a>
 	</p>
 
-	<h5 style='margin-bottom:0;'>Who is assigned to @<?= $account->user_name ?>?</h5>
+	<h4 style='margin-bottom:3px;'>Who is assigned to @<?= $account->user_name ?>?</h4>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
