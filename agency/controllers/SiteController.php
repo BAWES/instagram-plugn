@@ -26,13 +26,8 @@ class SiteController extends Controller
          return [
              'access' => [
                  'class' => AccessControl::className(),
-                 'only' => ['logout', 'registration'],
+                 'only' => ['logout'],
                  'rules' => [
-                     [
-                         'actions' => ['registration'],
-                         'allow' => true,
-                         'roles' => ['?'],
-                     ],
                      [
                          'actions' => ['logout'],
                          'allow' => true,
@@ -71,6 +66,11 @@ class SiteController extends Controller
      * @return mixed
      */
     public function actionRegistration() {
+        // If user is already logged in, redirect to home page.
+        if(!Yii::$app->user->isGuest){
+            return $this->redirect(['site/index']);
+        }
+        
         $this->layout = 'signup';
 
         $model = new Agency();
