@@ -205,13 +205,56 @@ class Billing extends \yii\db\ActiveRecord
      * https://www.2checkout.com/documentation/payment-api/create-sale
      */
     public function processTwoCheckoutSuccess($charge){
-        //die(print_r($charge['response']));
+        // echo "<pre>";
+        // print_r($charge['response']);
+        // echo "</pre>";
+        // die();
 
         $this->twoco_response_code = $charge['response']['responseCode'];
         $this->twoco_response_msg = $charge['response']['responseMsg'];
         $this->twoco_order_num = $charge['response']['orderNumber'];
         $this->twoco_transaction_id = $charge['response']['transactionId'];
         $this->save(false);
+
+        // Create Invoice for this order - New vs Update Existing Invoice?
+        $invoiceModel = Invoice::findOne(['invoice_id' => $this->twoco_transaction_id]);
+        if(!$invoiceModel){
+            $invoiceModel = new Invoice();
+        }
+        $invoiceModel->invoice_id = $this->twoco_transaction_id;
+        $invoiceModel->agency_id = $this->agency_id;
+        $invoiceModel->billing_id = $this->billing_id;
+        $invoiceModel->pricing_id = $charge['response']['lineItems'][0]['productId'];
+        $invoiceModel->message_id = "0";
+        $invoiceModel->message_type = $this->twoco_response_code;
+        $invoiceModel->message_description = $this->twoco_response_msg;
+        $invoiceModel->vendor_id = Yii::$app->params['2co.sellerId'];
+        $invoiceModel->sale_id = $this->twoco_order_num;
+        $invoiceModel->sale_date_placed = new Expression('NOW()');
+        $invoiceModel->vendor_order_id =  $this->billing_id;
+        $invoiceModel->payment_type = "credit card";
+        $invoiceModel->auth_exp = new Expression('NOW()');
+        $invoiceModel->invoice_status = "pending";
+        $invoiceModel->fraud_status = "wait";
+        $invoiceModel->invoice_usd_amount = $charge['response']['lineItems'][0]['price'];
+        $invoiceModel->customer_ip = "unset";
+        $invoiceModel->customer_ip_country = "unset";
+        $invoiceModel->item_id_1 = $charge['response']['lineItems'][0]['productId'];
+        $invoiceModel->item_name_1 = $charge['response']['lineItems'][0]['name'];
+        $invoiceModel->item_usd_amount_1 = $charge['response']['lineItems'][0]['price'];
+        $invoiceModel->item_type_1 = $charge['response']['lineItems'][0]['type'];
+        $invoiceModel->item_rec_status_1 = "live";
+        $invoiceModel->item_rec_date_next_1 = new Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        $invoiceModel->item_rec_install_billed_1 = 1;
+        $invoiceModel->timestamp = new Expression('NOW()');
+
+        if(!$invoiceModel->save()){
+            // Log to Slack that invoice has failed to save.
+            if($invoiceModel->hasErrors()){
+                $errors = \yii\helpers\Html::encode(print_r($invoiceModel->errors, true));
+                Yii::error("[Billing Invoice Save Error] ".$errors, __METHOD__);
+            }
+        }
 
         // Display Thank You Message via Session Flash
         Yii::$app->getSession()->setFlash('success', "[".$this->twoco_response_code."] ".$this->twoco_response_msg);

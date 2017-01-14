@@ -32,6 +32,7 @@ class InsController extends Controller
         if(!$model){
             $model = new Invoice();
         }
+        $model->scenario = "INSNotification"; // To Validate MD5 Hash
 
         $model->attributes = Yii::$app->request->post();
         $model->billing_id = $model->vendor_order_id;

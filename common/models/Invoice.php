@@ -64,7 +64,8 @@ class Invoice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['md5_hash', 'invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['md5_hash'], 'required', 'on' => 'INSNotification'],
             [['billing_id', 'pricing_id', 'item_rec_install_billed_1'], 'integer'],
             [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
@@ -182,6 +183,14 @@ class Invoice extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
 
+        // Refresh if fresh insert. To get updated datetime from expressions.
+        if($insert){
+            $this->refresh();
+        }
+
+        // Slack Update about Invoice
+        $this->sendSlackAboutInvoice();
+
         /**
          * If Billing Stopped, Add Remaining Billing Days as Trial Days
          */
@@ -211,9 +220,7 @@ class Invoice extends \yii\db\ActiveRecord
         }
 
         // When a new invoice is created
-        if($insert){
-            // Refresh to get latest data from db (such as datetime NOW)
-            $this->refresh();
+        if($this->message_type == "ORDER_CREATED"){
             // Send invoice via email to customer
             $this->emailInvoiceToCustomer();
         }
@@ -225,35 +232,37 @@ class Invoice extends \yii\db\ActiveRecord
     public function beforeSave($insert) {
         if (parent::beforeSave($insert)) {
 
-            /**
-             * Send Slack update about this invoice
-             */
-            $customerName = $this->billing->billing_name;
-            $pricePlanName = $this->item_name_1;
-            $paymentAmount = Yii::$app->formatter->asCurrency($this->item_usd_amount_1);
-            $country = $this->customer_ip_country;
-            $expiresOn = Yii::$app->formatter->asDate($this->item_rec_date_next_1);
-
-            $description = $this->message_description;
-
-            if($this->message_type == "INVOICE_STATUS_CHANGED"){
-                $description .= " to ".$this->invoice_status;
-            }else if($this->message_type == "FRAUD_STATUS_CHANGED"){
-                $description .= " to ".$this->fraud_status;
-            }
-
-
-            $logMessage = "[$description. Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
-
-            if($this->message_type == "REFUND_ISSUED" || $this->message_type == "FRAUD_STATUS_CHANGED" || $this->message_type == "RECURRING_RESTARTED"){
-                Yii::warning($logMessage, __METHOD__);
-            }else if($this->message_type == "RECURRING_STOPPED" || $this->message_type == "RECURRING_COMPLETE" || $this->message_type == "RECURRING_INSTALLMENT_FAILED"){
-                Yii::error($logMessage, __METHOD__);
-            }else{
-                Yii::info($logMessage, __METHOD__);
-            }
-
             return true;
+        }
+    }
+
+    /**
+     * Send Slack update about this invoice
+     */
+    public function sendSlackAboutInvoice(){
+        $customerName = $this->billing->billing_name;
+        $pricePlanName = $this->item_name_1;
+        $paymentAmount = Yii::$app->formatter->asCurrency($this->item_usd_amount_1);
+        $country = $this->customer_ip_country;
+        $expiresOn = Yii::$app->formatter->asDate($this->item_rec_date_next_1);
+
+        $description = $this->message_description;
+
+        if($this->message_type == "INVOICE_STATUS_CHANGED"){
+            $description .= " to ".$this->invoice_status;
+        }else if($this->message_type == "FRAUD_STATUS_CHANGED"){
+            $description .= " to ".$this->fraud_status;
+        }
+
+
+        $logMessage = "[$description. Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
+
+        if($this->message_type == "REFUND_ISSUED" || $this->message_type == "FRAUD_STATUS_CHANGED" || $this->message_type == "RECURRING_RESTARTED"){
+            Yii::warning($logMessage, __METHOD__);
+        }else if($this->message_type == "RECURRING_STOPPED" || $this->message_type == "RECURRING_COMPLETE" || $this->message_type == "RECURRING_INSTALLMENT_FAILED"){
+            Yii::error($logMessage, __METHOD__);
+        }else{
+            Yii::info($logMessage, __METHOD__);
         }
     }
 
