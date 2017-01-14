@@ -114,9 +114,18 @@ class InstagramController extends Controller
 
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
+        // Check if user has any managed accounts
         if(isset($managedAccounts[0])){
+            // Redirect to access token fix if needed
+            if($managedAccounts[0]->user_status == \common\models\InstagramUser::STATUS_INVALID_ACCESS_TOKEN){
+                return $this->redirect(['instagram/invalid-access-token' ,'accountId' => $managedAccounts[0]->user_id]);
+            }
+
+            // Load Agent Management for main account
             return $this->redirect(['agent/list' ,'accountId' => $managedAccounts[0]->user_id]);
         }
+
+        // Show Add Instagram Account Page
         return $this->redirect(['add-account']);
     }
 
