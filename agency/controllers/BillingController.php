@@ -85,6 +85,8 @@ class BillingController extends Controller
             $latestInvoice->billing->cancelRecurring();
         }
 
+        Yii::$app->getSession()->setFlash('warning', "[Plan Cancelled] Billing plan has been cancelled as requested.");
+
         return $this->redirect(['billing/index']);
     }
 
@@ -229,6 +231,7 @@ class BillingController extends Controller
                     ]);
 
                     $billingModel->processTwoCheckoutSuccess($charge);
+                    return $this->redirect(['billing/index']);
                 } catch (Twocheckout_Error $e) {
                     $billingModel->processTwoCheckoutError($e);
                 }

@@ -220,6 +220,8 @@ class Billing extends \yii\db\ActiveRecord
         Yii::info("[Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email.
             " \ Initial Payment: $".$this->billing_total, __METHOD__);
         Yii::info("[".$this->twoco_response_code."] ".$this->twoco_response_msg, __METHOD__);
+
+        return true;
     }
 
     /**
