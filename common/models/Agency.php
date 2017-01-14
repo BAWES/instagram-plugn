@@ -197,6 +197,24 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Return the number of Instagram accounts allowed for this agency
+     * @return integer
+     */
+    public function getLinkedAccountLimit(){
+        // If Billing is Active, check pricing plan for the limit.
+        $billingDaysLeft = $this->getBillingDaysLeft();
+        if($billingDaysLeft){
+            $invoice = $this->getInvoices()->with('pricing')
+                ->orderBy('invoice_created_at DESC')->limit(1)->one();
+            if($invoice && $invoice->pricing){
+                return $invoice->pricing->pricing_account_quantity;
+            }
+        }
+
+        return 9999;
+    }
+
+    /**
      * Create an Agent account with similar access details as Agency
      * if one doesn't already exist.
      * @return mixed

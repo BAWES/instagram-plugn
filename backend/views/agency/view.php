@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'agency_id',
                 'agency_email:email',
                 'agency_email_verified:boolean',
+                'linkedAccountLimit',
                 //'agency_auth_key',
                 //'agency_password_hash',
                 //'agency_password_reset_token',
