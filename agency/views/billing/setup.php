@@ -114,6 +114,18 @@ $('#billing-country_id').change(function(){
 });
 ");
 
+/**
+ * Input Masking for Creditcard Input
+ */
+$this->registerJsFile("@web/js/jquery.payment.min.js", ['depends' => 'yii\web\JqueryAsset']);
+$this->registerJs("
+$('input.cc-num').payment('formatCardNumber');
+$('.cc-cvc').payment('formatCardCVC');
+$('[data-numeric]').payment('restrictNumeric');
+");
+
+
+
 $this->title = 'Billing';
 ?>
 
@@ -155,7 +167,11 @@ $this->title = 'Billing';
 			'enableAjaxValidation' => true,
 
             //'layout' => 'horizontal',
-            'options' => ['enctype' => 'multipart/form-data', 'class' => 'row'],
+            'options' => [
+				'enctype' => 'multipart/form-data',
+				'class' => 'row',
+				'autocomplete' => 'on'
+			],
             'fieldConfig' => [
                 'template' => $fieldTemplate,
                 'horizontalCssClasses' => [
@@ -206,7 +222,10 @@ $this->title = 'Billing';
 				<div>
 					<label>
 					  <span>Card Number</span>
-					  <input class="form-control" id="ccNo" type="text" value="" autocomplete="off" required />
+					  <input class="form-control cc-num" id="ccNo"
+					  	autocomplete="cc-number"
+					  	placeholder="•••• •••• •••• ••••"
+					  	type="text" value="" autocomplete="off" required />
 					</label>
 				</div>
 				<div>
@@ -215,17 +234,20 @@ $this->title = 'Billing';
 					</label>
 					<input class="form-control"
 						style='width:40%; float:left;'
-						id="expMonth" type="text" size="2" placeholder="MM" required />
+						id="expMonth" type="text" size="2" maxlength="2"
+						placeholder="MM" required data-numeric/>
 					<span style='width:10%; text-align:center;float:left;'> / </span>
 					<input class="form-control"
 						style='width:40%; float:left;'
-						id="expYear" type="text" size="4" placeholder="YYYY" required />
+						id="expYear" type="text" size="4" maxlength="4"
+						placeholder="YYYY" required data-numeric/>
 					<div class="clear"></div>
 				</div>
 				<div>
 					<label>
 					  <span>CVC</span>
-					  <input class="form-control" id="cvv" type="text" value="" autocomplete="off" required />
+					  <input class="form-control cc-cvc" placeholder="•••"
+					  	id="cvv" type="text" value="" autocomplete="off" required />
 					</label>
 				</div>
 
