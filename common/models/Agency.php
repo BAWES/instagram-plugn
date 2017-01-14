@@ -197,6 +197,19 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Check whether the agency has hit its account limit
+     * @return boolean
+     */
+    public function getIsAtAccountLimit(){
+        $accountCount = count($this->instagramUsers);
+        $accountLimit = $this->linkedAccountLimit;
+        if($accountCount >= $accountLimit){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Return the number of Instagram accounts allowed for this agency
      * @return integer
      */

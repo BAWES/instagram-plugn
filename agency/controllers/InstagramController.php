@@ -130,6 +130,14 @@ class InstagramController extends Controller
             return $this->redirect(['billing/index']);
         }
 
+        // Agency Hit Account Limit?
+        if(Yii::$app->user->identity->isAtAccountLimit){
+            Yii::$app->getSession()->setFlash('warning',
+                "[Account Limit Reached] Please upgrade your billing plan for additional Instagram accounts.");
+            Yii::error("[Agency #".Yii::$app->user->identity->agency_id." unable to add more accounts] Agency needs to upgrade plan to add more accounts.", __METHOD__);
+            return $this->redirect(['billing/index']);
+        }
+
         return $this->render('addAccount',[]);
     }
 
