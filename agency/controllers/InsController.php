@@ -34,9 +34,16 @@ class InsController extends Controller
         }
         $model->scenario = "INSNotification"; // To Validate MD5 Hash
 
+        $oldInstallmentDate = $model->item_rec_date_next_1;
+
         $model->attributes = Yii::$app->request->post();
         $model->billing_id = $model->vendor_order_id;
         $model->pricing_id = $model->item_id_1;
+
+        // Keep old installment date if the new one is null
+        if(!$model->item_rec_date_next_1){
+            $model->item_rec_date_next_1 = $oldInstallmentDate;
+        }
 
         // Find the Bill belonging to this invoice
         $billing = Billing::findOne(['billing_id' => $model->billing_id]);
