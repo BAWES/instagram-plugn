@@ -28,7 +28,7 @@ $this->title = 'Billing';
 		<?php if($isBillingActive && isset($invoices[0])){ ?>
 			<h4>Current Plan: Up to <?= $invoices[0]->pricing->pricing_account_quantity ?> Instagram Accounts</h4>
 			<p>
-				You're currently paying <b><?= Yii::$app->formatter->asCurrency($invoices[0]->invoice_usd_amount) ?> per month</b> on the <?= $invoices[0]->item_name_1 ?>.
+				You're currently paying <b><?= Yii::$app->formatter->asCurrency($invoices[0]->pricing->pricing_price) ?> per month</b> on the <?= $invoices[0]->item_name_1 ?>.
 			</p>
 
 			<a href='<?= Url::to(['billing/cancel-plan']) ?>'
