@@ -62,7 +62,7 @@ $this->registerCss(".help-block{margin-bottom:0}");
 
     <?= Html::submitButton('Create Account', ['class' => 'btn btn-rounded', 'name' => 'signup-button']) ?>
 
-    <p class="sign-note">Have an account? <a href="<?= Url::to(['site/login']) ?>">Sign in</a></p>
+    <p class="sign-note">Already have an account? <a href="<?= Url::to(['site/login']) ?>">Sign in</a></p>
 
 
 
