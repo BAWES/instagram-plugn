@@ -36,6 +36,6 @@ class TemplateAsset extends AssetBundle
         'yii\web\YiiAsset',
 
         //Sweet Alert to override Yii2 data-confirm dialog
-        'frontend\assets\SweetAlertAsset',
+        'agency\assets\SweetAlertAsset',
     ];
 }

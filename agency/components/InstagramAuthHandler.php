@@ -5,6 +5,7 @@ use common\models\InstagramUser;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * InstagramAuthHandler handles successful authentification via Yii auth component
@@ -51,6 +52,19 @@ class InstagramAuthHandler
         ])->one();
 
         if ($user) {
+            $oldAgencyId = $user->agency_id;
+            if(!$oldAgencyId){
+                // Check if this agency is at its account limit and stop them from adding if not allowed
+                if(Yii::$app->user->identity->isAtAccountLimit){
+                    $billingLink = Url::to(['billing/index']);
+
+                    Yii::$app->getSession()->setFlash('error',
+                        "[Account Limit Reached] Unable to add the account. Please upgrade your <a href=\'$billingLink\'>billing plan</a> to allow additional accounts to be added.");
+                    Yii::error("[Agency hit account limit. Unable to add user @".$user->user_name."] Its still assigned to Agency #$oldAgencyId", __METHOD__);
+                    return;
+                }
+            }
+
             /**
              * Login: Update his details and Login
              */
@@ -66,6 +80,11 @@ class InstagramAuthHandler
             $user->user_ig_access_token = $accessToken;
             $user->user_status = InstagramUser::STATUS_INACTIVE;
 
+            // Check and log if this is an agency change
+            if($oldAgencyId && ($oldAgencyId != $user->agency_id)){
+                Yii::warning("[Instagram account @".$user->user_name." being moved to new agency account] It was previously in Agency #$oldAgencyId", __METHOD__);
+            }
+
 
             if ($user->save()) {
                 Yii::info("[Instagram Updated Token @".$user->user_name."] http://instagram.com/".$user->user_name." - ".$user->user_follower_count." followers - ".$user->user_bio, __METHOD__);
@@ -80,6 +99,16 @@ class InstagramAuthHandler
             /**
              * Signup
              */
+             // Check if this agency is at its account limit and stop them from adding if not allowed
+             if(Yii::$app->user->identity->isAtAccountLimit){
+                 $billingLink = Url::to(['billing/index']);
+
+                 Yii::$app->getSession()->setFlash('error',
+                     "[Account Limit Reached] Unable to add the account. Please upgrade your <a href=\'$billingLink\'>billing plan</a> to allow additional accounts to be added.");
+                 Yii::error("[Agency hit account limit. Unable to add user @".$username."] Get in touch if they need assistance.", __METHOD__);
+                 return;
+             }
+
             if ($username !== null && InstagramUser::find()->where(['user_name' => $username])->exists()) {
                 Yii::$app->getSession()->setFlash('error', [
                     Yii::t('app', "User with the same username as in {client} account already exists but isn't linked to it. Contact us to resolve the issue.", ['client' => $this->client->getTitle()]),
@@ -114,7 +143,7 @@ class InstagramAuthHandler
 
                     // Disable account if trial/billing not setup
                     $user->activateAccountIfPossible();
-                    
+
                     // Return the saved model
                     return $user;
                 }

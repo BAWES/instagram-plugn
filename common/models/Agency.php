@@ -22,10 +22,12 @@ use yii\db\ActiveQuery;
  * @property string $agency_limit_email
  * @property integer $agency_status
  * @property integer $agency_trial_days
+ * @property string $agency_billing_active_until
  * @property string $agency_created_at
  * @property string $agency_updated_at
  *
  * @property Billing[] $billings
+ * @property Invoice[] $invoices
  * @property InstagramUser[] $instagramUsers
  */
 class Agency extends \yii\db\ActiveRecord implements IdentityInterface
@@ -99,9 +101,33 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             'agency_status' => 'Status',
             'agency_limit_email' => 'Limit Email',
             'agency_trial_days' => 'Trial Days Left',
+            'agency_billing_active_until' => 'Billing Active Until',
             'agency_created_at' => 'Created At',
             'agency_updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * Returns String value of current agency status
+     * @return string
+     */
+    public function getStatus(){
+        switch($this->agency_status){
+            case self::STATUS_ACTIVE:
+                return "Active";
+                break;
+            case self::STATUS_INACTIVE:
+                return "Inactive (Billing or Trial Expired)";
+                break;
+            case self::STATUS_BANNED:
+                return "Banned";
+                break;
+            case self::STATUS_DELETED:
+                return "Deleted";
+                break;
+        }
+
+        return "Couldnt find a status";
     }
 
     /**
@@ -115,9 +141,30 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['agency_id' => 'agency_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getInstagramUsers()
     {
         return $this->hasMany(InstagramUser::className(), ['agency_id' => 'agency_id']);
+    }
+
+    /**
+     * BeforeSave
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if($insert){
+                $this->agency_billing_active_until = new Expression('SUBDATE(NOW(), 1)');
+            }
+
+            return true;
+        }
     }
 
     /**
@@ -147,6 +194,37 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         }
 
         return null;
+    }
+
+    /**
+     * Check whether the agency has hit its account limit
+     * @return boolean
+     */
+    public function getIsAtAccountLimit(){
+        $accountCount = count($this->instagramUsers);
+        $accountLimit = $this->linkedAccountLimit;
+        if($accountCount >= $accountLimit){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return the number of Instagram accounts allowed for this agency
+     * @return integer
+     */
+    public function getLinkedAccountLimit(){
+        // If Billing is Active, check pricing plan for the limit.
+        $billingDaysLeft = $this->getBillingDaysLeft();
+        if($billingDaysLeft){
+            $invoice = $this->getInvoices()->with('pricing')
+                ->orderBy('invoice_created_at DESC')->limit(1)->one();
+            if($invoice && $invoice->pricing){
+                return $invoice->pricing->pricing_account_quantity;
+            }
+        }
+
+        return 9999;
     }
 
     /**
@@ -214,6 +292,58 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
                 ->send();
     }
 
+    /**
+     * Sets the new date for the deadline.
+     * It can be set to both future and past dates
+     * Function should check if billing is active after setting the new date then
+     * act accordingly
+     * @param  string $deadlineDate Date when the next payment is due
+     * @return mixed
+     */
+    public function updateBillingDeadline($deadlineDate){
+        $this->agency_billing_active_until = $deadlineDate;
+        $this->save(false);
+        $this->refresh();
+
+        $billingDaysLeft = $this->getBillingDaysLeft();
+
+        // Disable Trial If Billing is Active
+        if($billingDaysLeft){
+            $this->agency_trial_days = 0;
+        }
+        $this->save(false);
+
+        // Disable Agency and its accounts if both billing and trial ran out
+        // OTHERWISE Enable Agency and its accounts if not already enabled.
+        if(!$billingDaysLeft && !$this->hasActiveTrial()){
+            $this->_disableAgencyAndManagedAccounts();
+        }else{
+            $this->_enableAgencyAndManagedAccounts();
+        }
+    }
+
+    /**
+     * Return the number of days left on his billing plan payment (if any)
+     * @return integer
+     */
+    public function getBillingDaysLeft(){
+        $expiresOn = new \DateTime($this->agency_billing_active_until);
+        $today = new \DateTime();
+
+        $daysLeft = $expiresOn->diff($today)->days;
+
+        if($expiresOn > $today){
+            return $daysLeft + 1;
+        }
+
+        // Allow 24 hours additional for user to sort out billing issues
+        if($daysLeft == 0){
+            return 1;
+        }
+
+        return 0;
+    }
+
 
     /**
      * Check if this agency has a valid active trial
@@ -222,7 +352,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     public function hasActiveTrial(){
         if($this->agency_email_verified == Agency::EMAIL_VERIFIED
             && $this->agency_status == Agency::STATUS_ACTIVE
-            && $this->agency_trial_days > 0){
+            && $this->agency_trial_days > 0 && !$this->getBillingDaysLeft()){
             return true;
         }
         return false;
@@ -248,9 +378,24 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
             // Deduct a day from trial days
             $this->agency_trial_days = $this->agency_trial_days - 1;
 
-            // Disable if no days left
+            // Disable Trial if no days left
             if($this->agency_trial_days == 0){
                 $this->_disableAgencyAndManagedAccounts();
+
+                // Log to Slack that this customer trial expired & no billing setup
+                Yii::warning("[Agency #".$this->agency_id." Trial Expired] Owned by ".$this->agency_fullname." and has ".count($this->instagramUsers)." accounts", __METHOD__);
+
+                // Send Email to Customer that his trial expired & need to setup billing
+                Yii::$app->mailer->compose([
+                        'html' => 'billing/trial-expired',
+                            ], [
+                        'agency' => $this,
+                    ])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                    ->setTo($this->agency_email)
+                    ->setSubject('Your trial has expired. Thanks for giving Plugn a try!')
+                    ->send();
+
             }else{
                 $this->save(false);
             }
@@ -264,18 +409,34 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
      * @return mixed
      */
     private function _disableAgencyAndManagedAccounts(){
-        // Deactivate IG accounts that are already active within this agency
-        InstagramUser::updateAll([
-            'user_status' => InstagramUser::STATUS_DISABLED_NO_BILLING
-        ],[// Where
-            'agency_id' => $this->agency_id,
-            'user_status' => InstagramUser::STATUS_ACTIVE
-        ]);
+        // Do nothing if already disabled
+        if($this->agency_status == Agency::STATUS_INACTIVE) return;
+
+        // Update the status of the IG accounts within this agency
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
 
         $this->agency_status = Agency::STATUS_INACTIVE;
         $this->save(false);
+    }
 
-        // Send an email that trial or billing has expired?
+    /**
+     * Enable the active ig accounts when an agency account is reactivated
+     * either by new trial or billing
+     * @return mixed
+     */
+    private function _enableAgencyAndManagedAccounts(){
+        // Do nothing if already enabled
+        if($this->agency_status == Agency::STATUS_ACTIVE) return;
+
+        // Update the status of the IG accounts within this agency
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
+
+        $this->agency_status = Agency::STATUS_ACTIVE;
+        $this->save(false);
     }
 
 

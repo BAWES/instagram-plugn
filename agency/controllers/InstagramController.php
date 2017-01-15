@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use common\models\Agency;
 use agency\components\InstagramAuthHandler;
 
 /**
@@ -106,11 +107,25 @@ class InstagramController extends Controller
      */
     public function actionIndex()
     {
+        // If billing has expired for this user, redirect to billing page
+        if(Yii::$app->user->identity->agency_status == Agency::STATUS_INACTIVE){
+            return $this->redirect(['billing/index']);
+        }
+
         $managedAccounts = Yii::$app->accountManager->managedAccounts;
 
+        // Check if user has any managed accounts
         if(isset($managedAccounts[0])){
+            // Redirect to access token fix if needed
+            if($managedAccounts[0]->user_status == \common\models\InstagramUser::STATUS_INVALID_ACCESS_TOKEN){
+                return $this->redirect(['instagram/invalid-access-token' ,'accountId' => $managedAccounts[0]->user_id]);
+            }
+
+            // Load Agent Management for main account
             return $this->redirect(['agent/list' ,'accountId' => $managedAccounts[0]->user_id]);
         }
+
+        // Show Add Instagram Account Page
         return $this->redirect(['add-account']);
     }
 
@@ -123,7 +138,15 @@ class InstagramController extends Controller
         if(Yii::$app->user->identity->agency_status == \common\models\Agency::STATUS_INACTIVE){
             return $this->redirect(['billing/index']);
         }
-        
+
+        // Agency Hit Account Limit?
+        if(Yii::$app->user->identity->isAtAccountLimit){
+            Yii::$app->getSession()->setFlash('warning',
+                "[Account Limit Reached] Please upgrade your billing plan for additional Instagram accounts.");
+            Yii::error("[Agency #".Yii::$app->user->identity->agency_id." unable to add more accounts] Agency needs to upgrade plan to add more accounts.", __METHOD__);
+            return $this->redirect(['billing/index']);
+        }
+
         return $this->render('addAccount',[]);
     }
 

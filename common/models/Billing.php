@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use Twocheckout;
+use Twocheckout_Sale;
+use Twocheckout_Error;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -29,9 +32,10 @@ use yii\db\Expression;
  * @property string $twoco_response_msg
  * @property string $billing_datetime
  *
+ * @property Agency $agency
  * @property Country $country
  * @property Pricing $pricing
- * @property InstagramUser $user
+ * @property Invoice[] $invoices
  */
 class Billing extends \yii\db\ActiveRecord
 {
@@ -132,13 +136,13 @@ class Billing extends \yii\db\ActiveRecord
             'billing_zip_code' => 'Zip Code',
             'billing_address_line1' => 'Street Address',
             'billing_address_line2' => 'Address Line 2',
-            'billing_total' => 'Total',
+            'billing_total' => 'Total Paid',
             'billing_currency' => 'Currency',
             'twoco_token' => '2co Token',
-            'twoco_order_num' => '2co Order Num',
-            'twoco_transaction_id' => '2co Transaction ID',
-            'twoco_response_code' => '2co Response Code',
-            'twoco_response_msg' => '2co Response Msg',
+            'twoco_order_num' => 'Sale ID',
+            'twoco_transaction_id' => 'Invoice ID',
+            'twoco_response_code' => 'Response Code',
+            'twoco_response_msg' => 'Response Msg',
             'billing_datetime' => 'Billing Datetime',
         ];
     }
@@ -168,17 +172,108 @@ class Billing extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['billing_id' => 'billing_id']);
+    }
+
+    /**
+     * Cancel Active Recurring Subscription within this Bill
+     */
+    public function cancelRecurring(){
+        Twocheckout::privateKey(Yii::$app->params['2co.privateKey']);
+        Twocheckout::sellerId(Yii::$app->params['2co.sellerId']);
+        Twocheckout::username(Yii::$app->params['2co.username']);
+        Twocheckout::password(Yii::$app->params['2co.password']);
+        Twocheckout::verifySSL(Yii::$app->params['2co.verifySSL']);
+        Twocheckout::sandbox(Yii::$app->params['2co.isSandbox']);
+
+        try {
+            // Stop Recurring for this Billing Plan
+            $result = Twocheckout_Sale::stop(['sale_id' => $this->twoco_order_num]);
+            $this->processBillingCancellation("User Request");
+        } catch (Twocheckout_Error $e) {
+            $message = $e->getMessage();
+            Yii::error("[Error when canceling Billing #".$this->twoco_order_num."] $message", __METHOD__);
+        }
+    }
+
+    /**
+     * Process the cancellation of the billing plan.
+     */
+    public function processBillingCancellation($source = "unknown"){
+        // If Agency doesn't already have billing set up, ignore cancellation attempt
+        if(!$this->agency->getBillingDaysLeft()) return;
+
+        $originalBillingEndDate = $this->agency->agency_billing_active_until;
+
+        // Set Trial Days Left to number of billing days left
+        $this->agency->agency_trial_days = $this->agency->getBillingDaysLeft();
+        // Set Billing Deadline to yesterdaty to expire immediately
+        $this->agency->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
+        // Email Customer about Stopped Payment
+        $this->emailCustomerRecurringStopped($originalBillingEndDate);
+
+        Yii::warning("[Disabled Recurring on Billing #".$this->twoco_order_num."] Source: $source" , __METHOD__);
+    }
+
+    /**
      * Success response from a 2Checkout Billing Attempt
      * https://www.2checkout.com/documentation/payment-api/create-sale
      */
     public function processTwoCheckoutSuccess($charge){
-        //die(print_r($charge['response']));
+        // echo "<pre>";
+        // print_r($charge['response']);
+        // echo "</pre>";
+        // die();
 
         $this->twoco_response_code = $charge['response']['responseCode'];
         $this->twoco_response_msg = $charge['response']['responseMsg'];
         $this->twoco_order_num = $charge['response']['orderNumber'];
         $this->twoco_transaction_id = $charge['response']['transactionId'];
         $this->save(false);
+
+        // Create Invoice for this order - New vs Update Existing Invoice?
+        $invoiceModel = Invoice::findOne(['invoice_id' => $this->twoco_transaction_id]);
+        if(!$invoiceModel){
+            $invoiceModel = new Invoice();
+        }
+        $invoiceModel->invoice_id = $this->twoco_transaction_id;
+        $invoiceModel->agency_id = $this->agency_id;
+        $invoiceModel->billing_id = $this->billing_id;
+        $invoiceModel->pricing_id = $charge['response']['lineItems'][0]['productId'];
+        $invoiceModel->message_id = "0";
+        $invoiceModel->message_type = $this->twoco_response_code;
+        $invoiceModel->message_description = $this->twoco_response_msg;
+        $invoiceModel->vendor_id = Yii::$app->params['2co.sellerId'];
+        $invoiceModel->sale_id = $this->twoco_order_num;
+        $invoiceModel->sale_date_placed = new Expression('NOW()');
+        $invoiceModel->vendor_order_id =  $this->billing_id;
+        $invoiceModel->payment_type = "credit card";
+        $invoiceModel->auth_exp = new Expression('NOW()');
+        $invoiceModel->invoice_status = "pending";
+        $invoiceModel->fraud_status = "wait";
+        $invoiceModel->invoice_usd_amount = $charge['response']['lineItems'][0]['price'];
+        $invoiceModel->customer_ip = "unset";
+        $invoiceModel->customer_ip_country = "unset";
+        $invoiceModel->item_id_1 = $charge['response']['lineItems'][0]['productId'];
+        $invoiceModel->item_name_1 = $charge['response']['lineItems'][0]['name'];
+        $invoiceModel->item_usd_amount_1 = $charge['response']['lineItems'][0]['price'];
+        $invoiceModel->item_type_1 = $charge['response']['lineItems'][0]['type'];
+        $invoiceModel->item_rec_status_1 = "live";
+        $invoiceModel->item_rec_date_next_1 = new Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        $invoiceModel->item_rec_install_billed_1 = 1;
+        $invoiceModel->timestamp = new Expression('NOW()');
+
+        if(!$invoiceModel->save()){
+            // Log to Slack that invoice has failed to save.
+            if($invoiceModel->hasErrors()){
+                $errors = \yii\helpers\Html::encode(print_r($invoiceModel->errors, true));
+                Yii::error("[Billing Invoice Save Error] ".$errors, __METHOD__);
+            }
+        }
 
         // Display Thank You Message via Session Flash
         Yii::$app->getSession()->setFlash('success', "[".$this->twoco_response_code."] ".$this->twoco_response_msg);
@@ -188,6 +283,7 @@ class Billing extends \yii\db\ActiveRecord
             " \ Initial Payment: $".$this->billing_total, __METHOD__);
         Yii::info("[".$this->twoco_response_code."] ".$this->twoco_response_msg, __METHOD__);
 
+        return true;
     }
 
     /**
@@ -205,6 +301,20 @@ class Billing extends \yii\db\ActiveRecord
         // Log The Error
         Yii::error("[Failed Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
         Yii::error($this->twoco_response_msg, __METHOD__);
+    }
 
+    /**
+     * Email Customer about Recurring Payment Stopped
+     */
+    public function emailCustomerRecurringStopped($originalBillingEndDate){
+        return Yii::$app->mailer->compose([
+                'html' => 'billing/billing-cancelled',
+                    ], [
+                'stopDate' => $originalBillingEndDate,
+            ])
+            ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+            ->setTo($this->billing_email)
+            ->setSubject('Your Plugn subscription will end soon')
+            ->send();
     }
 }

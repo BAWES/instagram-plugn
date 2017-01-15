@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * AgencyController implements the CRUD actions for Agency model.
@@ -34,6 +35,7 @@ class AgencyController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'cancel-billing-plan' => ['POST'],
                 ],
             ],
         ];
@@ -61,27 +63,36 @@ class AgencyController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $model = $this->findModel($id);
+
+        // Get Managed Accounts
+        $managedAccountsQuery = $model->getInstagramUsers();
+        $accountsDataProvider = new ActiveDataProvider([
+            'query' => $managedAccountsQuery,
         ]);
-    }
 
-    /**
-     * Creates a new Agency model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Agency();
+        // Data Provider to display invoices
+        $invoiceQuery = \common\models\Invoice::find();
+        $invoiceQuery->where(['agency_id' => $model->agency_id]);
+        $invoiceQuery->orderBy('invoice_updated_at DESC');
+        $invoiceDataProvider = new ActiveDataProvider([
+            'query' => $invoiceQuery,
+        ]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->agency_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        // Data Provider to display billing attempts
+        $billingQuery = \common\models\Billing::find();
+        $billingQuery->where(['agency_id' => $model->agency_id]);
+        $billingQuery->orderBy('billing_datetime DESC');
+        $billingDataProvider = new ActiveDataProvider([
+            'query' => $billingQuery,
+        ]);
+
+        return $this->render('view', [
+            'model' => $model,
+            'accountsDataProvider' => $accountsDataProvider,
+            'invoiceDataProvider' => $invoiceDataProvider,
+            'billingDataProvider' => $billingDataProvider,
+        ]);
     }
 
     /**
@@ -101,6 +112,31 @@ class AgencyController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Cancels the currently active billing plan
+     * @param string $id
+     */
+    public function actionCancelBillingPlan($id){
+        $model = $this->findModel($id);
+
+        // Redirect back to billing page if doesnt have a plan active
+        $isBillingActive = $model->getBillingDaysLeft();
+        if(!$isBillingActive){
+            die("Agency doesnt have billing active");
+        }
+
+        $customerName = $model->agency_fullname;
+        $latestInvoice = $model->getInvoices()->orderBy('invoice_created_at DESC')->limit(1)->one();
+
+        if($latestInvoice){
+            Yii::error("[Admin Cancel Recurring Billing #".$latestInvoice->billing->twoco_order_num."] Customer: $customerName", __METHOD__);
+            // Cancel the recurring plan
+            $latestInvoice->billing->cancelRecurring();
+        }
+
+        return $this->redirect(['agency/view', 'id' => $id]);
     }
 
     /**

@@ -15,24 +15,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Note', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'note_id',
-            'user_id',
+            'user.user_name',
             'note_about_username',
             'note_title',
             'note_text:ntext',
             // 'created_by_agent_id',
             // 'updated_by_agent_id',
-            // 'note_created_datetime',
-            // 'note_updated_datetime',
+            'note_created_datetime:datetime',
+            'note_updated_datetime:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

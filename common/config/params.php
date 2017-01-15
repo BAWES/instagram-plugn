@@ -1,6 +1,7 @@
 <?php
 return [
     'adminEmail' => 'hello@plugn.io',
+    'billingEmail' => 'hello@plugn.io',
     'supportEmail' => 'hello@plugn.io',
     'instagram.numberOfPastPostsToCrawl' => 20,
     'instagram.endpointHourlyRateLimit' => 60, //30 per hour for sandbox, 60 per hour for live
@@ -9,6 +10,15 @@ return [
 
     // 2Checkout Is Sandbox or not?
     '2co.isSandbox' => true,
+
+    // Base 2CO Params. Overwritten on Bootstrap \common\components\TwoCheckoutConfig.php
+    '2co.environment' => false,
+    '2co.privateKey' => false,
+    '2co.publishableKey' => false,
+    '2co.sellerId' => false,
+    '2co.username' => false,
+    '2co.password' => false,
+    '2co.verifySSL' => false,
 
     // 2CO Live Info
     '2co.live.environment' => 'production',

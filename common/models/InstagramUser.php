@@ -111,21 +111,21 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         return [
             'user_id' => 'User ID',
             'agency_id' => 'Agency ID',
-            'user_name' => 'User Name',
-            'user_fullname' => 'User Fullname',
-            'user_auth_key' => 'User Auth Key',
-            'user_status' => 'User Status',
-            'user_created_datetime' => 'User Created Datetime',
-            'user_updated_datetime' => 'User Updated Datetime',
-            'user_profile_pic' => 'User Profile Pic',
-            'user_bio' => 'User Bio',
-            'user_website' => 'User Website',
-            'user_instagram_id' => 'User Instagram ID',
-            'user_media_count' => 'User Media Count',
-            'user_following_count' => 'User Following Count',
-            'user_follower_count' => 'User Follower Count',
-            'user_ig_access_token' => 'User Ig Access Token',
-            'user_api_rolling_datetime' => 'User Api Rolling Datetime',
+            'user_name' => 'Name',
+            'user_fullname' => 'Fullname',
+            'user_auth_key' => 'Auth Key',
+            'user_status' => 'Status',
+            'user_created_datetime' => 'Created Datetime',
+            'user_updated_datetime' => 'Updated Datetime',
+            'user_profile_pic' => 'Profile Pic',
+            'user_bio' => 'Bio',
+            'user_website' => 'Website',
+            'user_instagram_id' => 'Instagram ID',
+            'user_media_count' => 'Media Count',
+            'user_following_count' => 'Following Count',
+            'user_follower_count' => 'Follower Count',
+            'user_ig_access_token' => 'Ig Access Token',
+            'user_api_rolling_datetime' => 'Api Rolling Datetime',
             'user_api_post_requests_this_hour' => 'POST Requests This Hour',
             'user_api_delete_requests_this_hour' => 'Delete Requests This Hour',
             'user_initially_crawled' => 'Initially Crawled?',
@@ -207,21 +207,43 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                     ->orderBy("record_date DESC");
     }
 
+
+    /**
+     * Returns String value of current status
+     * @return string
+     */
+    public function getStatus(){
+        switch($this->user_status){
+            case self::STATUS_ACTIVE:
+                return "Active";
+                break;
+            case self::STATUS_INACTIVE:
+                return "Inactive (No longer assigned to agency)";
+                break;
+            case self::STATUS_DISABLED_NO_BILLING:
+                return "No billing/Trial Ended";
+                break;
+            case self::STATUS_INVALID_ACCESS_TOKEN:
+                return "Invalid Access Token";
+                break;
+        }
+
+        return "Couldnt find a status";
+    }
+
     /**
      * Attempts to activate this Instagram account for crawling if possible.
      *
      */
     public function activateAccountIfPossible(){
-        $billingActive = true;
+        // Unable to Activate the account if it has invalid access token
+        if($this->user_status == self::STATUS_INVALID_ACCESS_TOKEN) return;
+
+        // Check if Parent Agency has Billing Active
+        $billingActive = $this->agency->getBillingDaysLeft();
 
         // Check if Parent Agency has a Trial Active
-        $agencyTrialActive = false;
-        if($this->agency){
-            if($this->agency->agency_trial_days > 0){
-                $agencyTrialActive = true;
-            }
-        }
-
+        $agencyTrialActive = $this->agency->hasActiveTrial();
 
         // If billing or trials are valid, fully activate the account
         if($billingActive || $agencyTrialActive){

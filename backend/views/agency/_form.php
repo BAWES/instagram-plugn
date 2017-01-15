@@ -20,13 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'agency_email_verified')->textInput() ?>
 
-    <?= $form->field($model, 'agency_auth_key')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'agency_password_hash')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'agency_password_reset_token')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'agency_status')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
