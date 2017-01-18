@@ -20,7 +20,8 @@ $this->registerCss(".help-block{margin-bottom:0}");
 
 <div style='text-align:center; margin-bottom:5px'>
     <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px; margin-bottom:20px;'>
-    <h3>Agency Login</h3>
+    <h3 style='margin-bottom:5px; padding-bottom:0;'>Agency Login</h3>
+    <pre>Note: Your agency account is not your agent account.<br/><a href='https://plugn.io/features/account-types/' target='_blank'>More info on the different account types</a></pre>
 </div>
 
 <?php $form = ActiveForm::begin(['id' => 'login-form', 'errorCssClass' => 'form-group-error', 'options' => ['class' => 'sign-box']]); ?>
