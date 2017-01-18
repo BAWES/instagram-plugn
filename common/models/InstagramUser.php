@@ -517,4 +517,9 @@ class InstagramUserQuery extends ActiveQuery
     {
         return $this->andWhere(['user_status' => InstagramUser::STATUS_ACTIVE]);
     }
+
+    public function withoutInactive()
+    {
+        return $this->andWhere(['!=', 'user_status', InstagramUser::STATUS_INACTIVE]);
+    }
 }
