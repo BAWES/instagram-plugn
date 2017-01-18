@@ -377,6 +377,7 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
         if($this->hasActiveTrial()){
             // Deduct a day from trial days
             $this->agency_trial_days = $this->agency_trial_days - 1;
+            $this->save(false);
 
             // Disable Trial if no days left
             if($this->agency_trial_days == 0){
@@ -395,9 +396,6 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
                     ->setTo($this->agency_email)
                     ->setSubject('Your trial has expired. Thanks for giving Plugn a try!')
                     ->send();
-
-            }else{
-                $this->save(false);
             }
         }
     }

@@ -47,7 +47,7 @@ class AccountManager extends Object
             // don't want agents viewing the cached content of another agent
         ]);
 
-        $cacheDuration = 60*2; //2 minutes then delete from cache
+        $cacheDuration = 60*1; //1 minute then delete from cache
 
         $this->_managedAccounts = InstagramUser::getDb()->cache(function($db) {
             return Yii::$app->user->identity->getAccountsManaged()
