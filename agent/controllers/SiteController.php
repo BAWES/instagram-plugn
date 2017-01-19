@@ -144,6 +144,7 @@ class SiteController extends Controller
             localStorage.setItem('name', '$name' );
             localStorage.setItem('email', '$email' );
             window.location = 'https://agent.plugn.io/app';
+            </script>
             ";
         }else $script = "Unable to login.";
 
