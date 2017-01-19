@@ -128,6 +128,31 @@ class SiteController extends Controller
             //Handle Slack Authentication
             (new SlackAuthHandler($client))->handle();
         }
+
+        $script = "<script>";
+        if(!Yii::$app->user->isGuest){
+            // Send a token back to app which will be used in future requests
+            $token = Yii::$app->user->identity->getAccessToken()->token_value;
+            $agentId = Yii::$app->user->identity->agent_id;
+            $name = Yii::$app->user->identity->agent_name;
+            $email = Yii::$app->user->identity->agent_email;
+
+            $script .= "
+            localStorage.setItem('bearer', '$token' );
+            localStorage.setItem('agentId', '$agentId' );
+            localStorage.setItem('name', '$name' );
+            localStorage.setItem('email', '$email' );
+            window.location = 'https://agent.plugn.io/app';
+            ";
+        }else $script = "window.location = 'https://agent.plugn.io/app';";
+
+        $script .= "</script>";
+
+        /**
+         * Redirect with values stored in localstorage
+         */
+         Yii::$app->response->content = $script;
+         return Yii::$app->response;
     }
 
     /**
