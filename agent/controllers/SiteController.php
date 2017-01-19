@@ -143,9 +143,7 @@ class SiteController extends Controller
             localStorage.setItem('agentId', '$agentId' );
             localStorage.setItem('name', '$name' );
             localStorage.setItem('email', '$email' );
-            setTimeout(() => window.location = 'https://agent.plugn.io/app', 3000);
-            </script>
-            Logging in..
+            window.location = 'https://agent.plugn.io/app';
             ";
         }else $script = "Unable to login.";
 
@@ -158,11 +156,11 @@ class SiteController extends Controller
     }
 
     /**
-     * Redirects to add account if user has no managed accounts, otherwise sends to his first acc page
+     * Redirects to Ionic2 Agent Panel
      */
     public function actionIndex()
     {
-        return $this->redirect(['dashboard/index']);
+        return $this->redirect("https://agent.plugn.io/app");
     }
 
     public function actionRegistration() {
