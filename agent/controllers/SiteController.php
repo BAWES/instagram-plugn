@@ -129,7 +129,7 @@ class SiteController extends Controller
             (new SlackAuthHandler($client))->handle();
         }
 
-        $script = "<script>";
+        $script = "";
         if(!Yii::$app->user->isGuest){
             // Send a token back to app which will be used in future requests
             $token = Yii::$app->user->identity->getAccessToken()->token_value;
@@ -138,15 +138,17 @@ class SiteController extends Controller
             $email = Yii::$app->user->identity->agent_email;
 
             $script .= "
+            <script>
             localStorage.setItem('bearer', '$token' );
             localStorage.setItem('agentId', '$agentId' );
             localStorage.setItem('name', '$name' );
             localStorage.setItem('email', '$email' );
-            window.location = 'https://agent.plugn.io/app';
+            setTimeout(() => window.location = 'https://agent.plugn.io/app', 3000);
+            </script>
+            Logging in..
             ";
-        }else $script = "window.location = 'https://agent.plugn.io/app';";
+        }else $script = "Unable to login.";
 
-        $script .= "</script>";
 
         /**
          * Redirect with values stored in localstorage
