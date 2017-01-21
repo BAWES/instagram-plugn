@@ -224,7 +224,7 @@ $this->registerJs($analytics);
                     </a>
                 </li>
                 <li>
-                    <a href="#" style='padding-left:22px'>
+                    <a href="http://onelink.to/a8zdkr" target='_blank' style='padding-left:22px'>
                         <img src="<?= Url::to('@web/img/applecomingsoon.png') ?>" alt="Soon on App Store" style="width:88px">
                         <img src="<?= Url::to('@web/img/playcomingsoon.png') ?>" alt="Soon on Play Store" style="width:88px">
                     </a>
