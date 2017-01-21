@@ -72,9 +72,9 @@ $this->registerJs($analytics);
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div>
-									<a class="dropdown-item" href="#"><span class="fa fa-apple"></span> iOS Application</a>
-                                    <a class="dropdown-item" href="#"><span class="fa fa-android"></span> Android Application</a>
-									<a class="dropdown-item" href="#"><span class="fa fa-chrome"></span> Web Application</a>
+									<a class="dropdown-item" target='_blank' href="https://itunes.apple.com/gr/app/plugn-for-instagram/id1196833693?mt=8"><span class="fa fa-apple"></span> iOS Application</a>
+                                    <a class="dropdown-item" target='_blank' href="https://play.google.com/store/apps/details?id=net.bawes.plugn"><span class="fa fa-android"></span> Android Application</a>
+									<a class="dropdown-item" target='_blank' href="https://agent.plugn.io/app"><span class="fa fa-chrome"></span> Web Application</a>
                                 </div>
                             </div>
                         </div>
