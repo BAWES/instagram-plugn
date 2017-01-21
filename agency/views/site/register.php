@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerCss(".help-block{margin-bottom:0}");
 ?>
 
-<div style='text-align:center; margin-bottom:5px'>
-    <img src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="" style='width:180px; margin-bottom:20px;'>
+<div style='text-align:center; margin-bottom:5px; color:white;'>
+    <img src="<?= Url::to('@web/img/logo-trans-white.png') ?>" alt="" style='width:180px; margin-bottom:10px;'>
     <h3 style='margin-bottom:3px;'>Create an Agency Account</h3>
     <h4>Manage Instagram accounts and the agents assigned to them</h4>
 </div>
