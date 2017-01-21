@@ -54,7 +54,7 @@ $this->registerJs($analytics);
 <?php $this->beginBody() ?>
 
 	<div class="page-center">
-		<div class="page-center-in" style='background:#263238'>
+		<div class="page-center-in" style='background:#c6dbe2'>
 			<div class="container-fluid">
 
 				<?= Alert::widget() ?>
