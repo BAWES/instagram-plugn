@@ -6,8 +6,6 @@ use yii\web\Controller;
 use agent\components\authhandlers\GoogleAuthHandler;
 use agent\components\authhandlers\LiveAuthHandler;
 use agent\components\authhandlers\SlackAuthHandler;
-use agent\models\LoginForm;
-use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
 use common\models\Agent;
 

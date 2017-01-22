@@ -1,5 +1,5 @@
 <?php
-namespace agent\models;
+namespace api\models;
 
 use Yii;
 use common\models\Agent;
@@ -62,16 +62,7 @@ class PasswordResetRequestForm extends Model
             $agent->agent_limit_email = new \yii\db\Expression('NOW()');
 
             if ($agent->save(false)) {
-
-                // Generate Different Reset Link If API is calling
-                if(Yii::$app->id == "app-api"){
-                    // API application calling
-                    $resetLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
-                }else{
-                    // Agent portal calling
-                    $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
-                }
-
+                $resetLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
 
                 //Send English Email
                 return \Yii::$app->mailer->compose([
