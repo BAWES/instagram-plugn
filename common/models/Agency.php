@@ -365,7 +365,10 @@ class Agency extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $activeTrialAgencies = static::find()->validTrial();
         foreach($activeTrialAgencies->each(50) as $agency){
-            $agency->deductTrialDay();
+            // Deduct a trial day only if the agency has assigned Instagram accounts
+            if(count($agency->instagramUsers) > 0){
+                $agency->deductTrialDay();
+            }
         }
     }
 
@@ -571,7 +574,8 @@ class AgencyQuery extends ActiveQuery
 {
     public function validTrial()
     {
-        return $this->andWhere(['agency_email_verified' => Agency::EMAIL_VERIFIED])
+        return $this->with("instagramUsers")
+        ->andWhere(['agency_email_verified' => Agency::EMAIL_VERIFIED])
         ->andWhere(['agency_status' => Agency::STATUS_ACTIVE])
         ->andWhere(['>', 'agency_trial_days', 0]);
     }
