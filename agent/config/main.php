@@ -17,9 +17,6 @@ return [
             'identityClass' => 'common\models\Agent',
             'enableAutoLogin' => true,
         ],
-        'accountManager' => [ //Component for agent to manage Instagram Accounts
-            'class' => 'agent\components\AccountManager',
-        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
