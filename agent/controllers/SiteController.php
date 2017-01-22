@@ -16,6 +16,13 @@ use common\models\Agent;
  */
 class SiteController extends Controller
 {
+    /**
+     * Redirects to Ionic2 Agent Panel
+     */
+    public function actionIndex()
+    {
+        return $this->redirect("https://agent.plugn.io/app");
+    }
 
     /**
      * @inheritdoc
@@ -122,14 +129,6 @@ class SiteController extends Controller
          */
          Yii::$app->response->content = $script;
          return Yii::$app->response;
-    }
-
-    /**
-     * Redirects to Ionic2 Agent Panel
-     */
-    public function actionIndex()
-    {
-        return $this->redirect("https://agent.plugn.io/app");
     }
 
     /**
