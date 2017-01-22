@@ -70,8 +70,8 @@ class SiteController extends Controller
         if(!Yii::$app->user->isGuest){
             return $this->redirect(['site/index']);
         }
-        
-        $this->layout = 'signup';
+
+        $this->layout = 'signup-dark';
 
         $model = new Agency();
         $model->scenario = "manualSignup";
@@ -141,7 +141,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $this->layout = 'signup';
+        $this->layout = 'signup-dark';
 
         $model = new LoginForm();
 

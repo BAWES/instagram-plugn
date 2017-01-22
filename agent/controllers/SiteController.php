@@ -6,11 +6,7 @@ use yii\web\Controller;
 use agent\components\authhandlers\GoogleAuthHandler;
 use agent\components\authhandlers\LiveAuthHandler;
 use agent\components\authhandlers\SlackAuthHandler;
-use agent\models\LoginForm;
-use agent\models\PasswordResetRequestForm;
 use agent\models\ResetPasswordForm;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use common\models\Agent;
 
 /**
@@ -19,34 +15,11 @@ use common\models\Agent;
 class SiteController extends Controller
 {
     /**
-     * @inheritdoc
+     * Redirects to Ionic2 Agent Panel
      */
-    public function behaviors()
+    public function actionIndex()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'registration'],
-                'rules' => [
-                    [
-                        'actions' => ['registration'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+        return $this->redirect("https://agent.plugn.io/app");
     }
 
     /**
@@ -128,34 +101,32 @@ class SiteController extends Controller
             //Handle Slack Authentication
             (new SlackAuthHandler($client))->handle();
         }
-    }
 
-    /**
-     * Redirects to add account if user has no managed accounts, otherwise sends to his first acc page
-     */
-    public function actionIndex()
-    {
-        return $this->redirect(['dashboard/index']);
-    }
+        $script = "";
+        if(!Yii::$app->user->isGuest){
+            // Send a token back to app which will be used in future requests
+            $token = Yii::$app->user->identity->getAccessToken()->token_value;
+            $agentId = Yii::$app->user->identity->agent_id;
+            $name = Yii::$app->user->identity->agent_name;
+            $email = Yii::$app->user->identity->agent_email;
 
-    public function actionRegistration() {
-        $this->layout = 'signup';
+            $script .= "
+            <script>
+            localStorage.setItem('bearer', '$token' );
+            localStorage.setItem('agentId', '$agentId' );
+            localStorage.setItem('name', '$name' );
+            localStorage.setItem('email', '$email' );
+            window.location = 'https://agent.plugn.io/app';
+            </script>
+            ";
+        }else $script = "Unable to login.";
 
-        $model = new Agent();
-        $model->scenario = "manualSignup";
 
-        if ($model->load(Yii::$app->request->post()))
-        {
-            if ($model->signup())
-            {
-                Yii::$app->session->setFlash('success', "[Thanks, you are almost done] Please click on the link sent to you by email to verify your account");
-                return $this->redirect(['index']);
-            }
-        }
-
-        return $this->render('register', [
-            'model' => $model,
-        ]);
+        /**
+         * Redirect with values stored in localstorage
+         */
+         Yii::$app->response->content = $script;
+         return Yii::$app->response;
     }
 
     /**
@@ -180,80 +151,11 @@ class SiteController extends Controller
                 Yii::$app->user->login($agent, 0);
             }
 
-            //Render thanks for verifying + Button to go to his portal
-            Yii::$app->getSession()->setFlash('success', '[You have verified your email] You may now use Plugn to manage your accounts');
-
-            return $this->redirect(['dashboard/index']);
+            return $this->render('success', ['title' => 'You have verified your email']);
         } else {
             //inserted code is invalid
-            throw new BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
+            throw new \yii\web\BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
         }
-    }
-
-    public function actionLogin() {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $this->layout = 'signup';
-
-        $model = new LoginForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['dashboard/index']);
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    public function actionLogout() {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    public function actionRequestPasswordReset() {
-        $this->layout = 'signup';
-
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            $agent = Agent::findOne([
-                        'agent_email' => $model->email,
-            ]);
-
-            if ($agent) {
-                //Check if this user sent an email in past few minutes (to limit email spam)
-                $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
-                date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
-                $currentDatetime = new \DateTime();
-
-                if ($currentDatetime < $emailLimitDatetime) {
-                    $difference = $currentDatetime->diff($emailLimitDatetime);
-                    $minuteDifference = (int) $difference->i;
-                    $secondDifference = (int) $difference->s;
-
-                    $warningMessage = Yii::t('app', "Email was sent previously, you may request another one in {numMinutes, number} minutes and {numSeconds, number} seconds", [
-                                'numMinutes' => $minuteDifference,
-                                'numSeconds' => $secondDifference,
-                    ]);
-
-                    Yii::$app->getSession()->setFlash('warning', $warningMessage);
-                } else if ($model->sendEmail($agent)) {
-                    Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'Password reset link sent, please check your email for further instructions.'));
-
-                    return $this->redirect(['login']);
-                } else {
-                    Yii::$app->getSession()->setFlash('error', Yii::t('agent', 'Sorry, we are unable to reset password for email provided.'));
-                }
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-                    'model' => $model,
-        ]);
     }
 
     public function actionResetPassword($token) {
@@ -261,59 +163,17 @@ class SiteController extends Controller
 
         try {
             $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
+        } catch (\yii\base\InvalidParamException $e) {
+            throw new \yii\web\BadRequestHttpException($e->getMessage());
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', Yii::t('agent', 'New password was saved.'));
-
-            return $this->redirect(['login']);
+            return $this->render('success', ['title' => 'Your new password has been saved']);
         }
 
         return $this->render('resetPassword', [
                     'model' => $model,
         ]);
-    }
-
-    /**
-     * Resend verification email
-     * @param int $id the id of the user
-     * @param string $email the email of the user
-     */
-    public function actionResendVerification($id, $email) {
-        $this->layout = 'signup';
-
-        $agent = Agent::findOne([
-                    'agent_id' => (int) $id,
-                    'agent_email' => $email,
-        ]);
-
-        if ($agent) {
-            //Check if this user sent an email in past few minutes (to limit email spam)
-            $emailLimitDatetime = new \DateTime($agent->agent_limit_email);
-            date_add($emailLimitDatetime, date_interval_create_from_date_string('2 minutes'));
-            $currentDatetime = new \DateTime();
-
-            if ($currentDatetime < $emailLimitDatetime) {
-                $difference = $currentDatetime->diff($emailLimitDatetime);
-                $minuteDifference = (int) $difference->i;
-                $secondDifference = (int) $difference->s;
-
-                $warningMessage = Yii::t('app', "Email was sent previously, you may request another one in {numMinutes, number} minutes and {numSeconds, number} seconds", [
-                            'numMinutes' => $minuteDifference,
-                            'numSeconds' => $secondDifference,
-                ]);
-
-                Yii::$app->getSession()->setFlash('warning', $warningMessage);
-
-            } else if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
-                $agent->sendVerificationEmail();
-                Yii::$app->getSession()->setFlash('success', Yii::t('register', 'Please click on the link sent to you by email to verify your account'));
-            }
-        }
-
-        return $this->redirect(['login']);
     }
 
 }
