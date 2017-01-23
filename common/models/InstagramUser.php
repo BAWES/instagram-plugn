@@ -15,7 +15,7 @@ use common\models\Comment;
  * InstagramUser model
  *
  * @property integer $user_id
- * @property string $agency_id
+ * @property string $agent_id
  * @property string $user_name
  * @property string $user_fullname
  * @property string $user_auth_key
@@ -40,7 +40,7 @@ use common\models\Comment;
  * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
- * @property Agency $agency
+ * @property Agenct $agent
  * @property Media[] $media
  * @property Record[] $records
  */
@@ -50,10 +50,10 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     // Trial days for active accounts will be deducted if its parent has no billing setup
     const STATUS_ACTIVE = 10;
 
-    // Account is no longer assigned to any agency
+    // Account is no longer owned by an agent
     const STATUS_INACTIVE = 20;
 
-    // Agency owning the account hasnt paid +
+    // Agent owning the account hasnt paid +
     // their trial ran out OR trial for this account ended
     const STATUS_DISABLED_NO_BILLING = 25;
 
@@ -109,7 +109,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return [
             'user_id' => 'User ID',
-            'agency_id' => 'Agency ID',
+            'agent_id' => 'Agent ID',
             'user_name' => 'Name',
             'user_fullname' => 'Fullname',
             'user_auth_key' => 'Auth Key',
@@ -151,11 +151,12 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * The Agent owning this account
      * @return \yii\db\ActiveQuery
      */
-    public function getAgency()
+    public function getAgent()
     {
-        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
+        return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
@@ -216,7 +217,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 return "Active";
                 break;
             case self::STATUS_INACTIVE:
-                return "Inactive (No longer assigned to agency)";
+                return "Inactive (Not owned by any agent)";
                 break;
             case self::STATUS_DISABLED_NO_BILLING:
                 return "No billing/Trial Ended";
@@ -237,14 +238,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         // Unable to Activate the account if it has invalid access token
         if($this->user_status == self::STATUS_INVALID_ACCESS_TOKEN) return;
 
-        // Check if Parent Agency has Billing Active
-        $billingActive = $this->agency->getBillingDaysLeft();
+        // Check if Owner has Billing Active
+        $billingActive = $this->agent->getBillingDaysLeft();
 
-        // Check if Parent Agency has a Trial Active
-        $agencyTrialActive = $this->agency->hasActiveTrial();
+        // Check if Owner has a Trial Active
+        $agentTrialActive = $this->agent->hasActiveTrial();
 
         // If billing or trials are valid, fully activate the account
-        if($billingActive || $agencyTrialActive){
+        if($billingActive || $agentTrialActive){
             $this->user_status = self::STATUS_ACTIVE;
         }else $this->user_status = self::STATUS_DISABLED_NO_BILLING;
 

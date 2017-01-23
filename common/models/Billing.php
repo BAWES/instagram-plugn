@@ -13,7 +13,7 @@ use yii\db\Expression;
  * This is the model class for table "billing".
  *
  * @property string $billing_id
- * @property integer $agency_id
+ * @property integer $agent_id
  * @property integer $pricing_id
  * @property integer $country_id
  * @property string $billing_name
@@ -32,7 +32,7 @@ use yii\db\Expression;
  * @property string $twoco_response_msg
  * @property string $billing_datetime
  *
- * @property Agency $agency
+ * @property Agent $agent
  * @property Country $country
  * @property Pricing $pricing
  * @property Invoice[] $invoices
@@ -126,7 +126,7 @@ class Billing extends \yii\db\ActiveRecord
     {
         return [
             'billing_id' => 'Billing ID',
-            'agency_id' => 'Agency ID',
+            'agent_id' => 'Agent ID',
             'pricing_id' => 'Pricing ID',
             'country_id' => 'Country',
             'billing_name' => 'Name',
@@ -164,11 +164,12 @@ class Billing extends \yii\db\ActiveRecord
     }
 
     /**
+     * The owner of this bill
      * @return \yii\db\ActiveQuery
      */
-    public function getAgency()
+    public function getAgent()
     {
-        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
+        return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
@@ -204,15 +205,15 @@ class Billing extends \yii\db\ActiveRecord
      * Process the cancellation of the billing plan.
      */
     public function processBillingCancellation($source = "unknown"){
-        // If Agency doesn't already have billing set up, ignore cancellation attempt
-        if(!$this->agency->getBillingDaysLeft()) return;
+        // If agent doesn't already have billing set up, ignore cancellation attempt
+        if(!$this->agent->getBillingDaysLeft()) return;
 
-        $originalBillingEndDate = $this->agency->agency_billing_active_until;
+        $originalBillingEndDate = $this->agent->agent_billing_active_until;
 
         // Set Trial Days Left to number of billing days left
-        $this->agency->agency_trial_days = $this->agency->getBillingDaysLeft();
+        $this->agent->agent_trial_days = $this->agent->getBillingDaysLeft();
         // Set Billing Deadline to yesterdaty to expire immediately
-        $this->agency->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
+        $this->agent->updateBillingDeadline(new Expression("SUBDATE(NOW(), 1)"));
         // Email Customer about Stopped Payment
         $this->emailCustomerRecurringStopped($originalBillingEndDate);
 
@@ -241,7 +242,7 @@ class Billing extends \yii\db\ActiveRecord
             $invoiceModel = new Invoice();
         }
         $invoiceModel->invoice_id = $this->twoco_transaction_id;
-        $invoiceModel->agency_id = $this->agency_id;
+        $invoiceModel->agent_id = $this->agent_id;
         $invoiceModel->billing_id = $this->billing_id;
         $invoiceModel->pricing_id = $charge['response']['lineItems'][0]['productId'];
         $invoiceModel->message_id = "0";
@@ -279,7 +280,7 @@ class Billing extends \yii\db\ActiveRecord
         Yii::$app->getSession()->setFlash('success', "[".$this->twoco_response_code."] ".$this->twoco_response_msg);
 
         // Log The Success
-        Yii::info("[Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email.
+        Yii::info("[Billing Setup by Agent #".$this->agent_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email.
             " \ Initial Payment: $".$this->billing_total, __METHOD__);
         Yii::info("[".$this->twoco_response_code."] ".$this->twoco_response_msg, __METHOD__);
 
@@ -299,7 +300,7 @@ class Billing extends \yii\db\ActiveRecord
         Yii::$app->getSession()->setFlash('error', $this->twoco_response_msg);
 
         // Log The Error
-        Yii::error("[Failed Billing Setup by Agency #".$this->agency_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
+        Yii::error("[Failed Billing Setup by Agent #".$this->agent_id."] Contact: ".$this->billing_name." / Email: ".$this->billing_email, __METHOD__);
         Yii::error($this->twoco_response_msg, __METHOD__);
     }
 
