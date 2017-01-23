@@ -59,6 +59,15 @@ class InstagramUser extends \common\models\InstagramUser {
     }
 
     /**
+     * Get Agent Assignment Records
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgentAssignments()
+    {
+        return $this->hasMany(AgentAssignment::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
      * Mark comments provided as handled by this agent
      * @param array $comments list of comment Ids
      * @return boolean

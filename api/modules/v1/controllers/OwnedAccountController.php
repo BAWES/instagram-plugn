@@ -6,9 +6,9 @@ use Yii;
 use yii\rest\Controller;
 
 /**
- * Account controller will return the actual Instagram Accounts and all controls associated
+ * Owned Account controller
  */
-class AccountController extends Controller
+class OwnedAccountController extends Controller
 {
     public function behaviors()
     {
@@ -56,26 +56,26 @@ class AccountController extends Controller
     }
 
     /**
-     * Return a List of Accounts Managed by User
+     * Return a List of Accounts Owned by User
      */
     public function actionList()
     {
-        // Get cached managed accounts list from account manager component
-        $managedAccounts = Yii::$app->accountManager->managedAccounts;
+        // Get cached owned accounts list from owned account manager component
+        $ownedAccounts = Yii::$app->ownedAccountManager->ownedAccounts;
 
-        return $managedAccounts;
+        return $ownedAccounts;
     }
 
     /**
-     * Return stats records for account with $accountId
+     * Return list of agents managing the account
      */
-    public function actionStats($accountId)
+    public function actionAgents($accountId)
     {
         // Get Instagram account from Account Manager component
-        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+        $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
 
-        $records = $instagramAccount->records;
-        return $records;
+        $agents = $instagramAccount->agentAssignments;
+        return $agents;
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
