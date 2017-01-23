@@ -61,9 +61,11 @@ return [
                     'controller' => 'v1/account',
                     'patterns' => [
                         'GET' => 'list',
+                        'GET owned' => 'list-owned',
                         'GET stats' => 'stats',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
+                        'OPTIONS owned' => 'options',
                         'OPTIONS stats' => 'options',
                     ]
                 ],

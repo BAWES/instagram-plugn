@@ -67,6 +67,17 @@ class AccountController extends Controller
     }
 
     /**
+     * Return a List of Accounts Owned by User
+     */
+    public function actionListOwned()
+    {
+        // Get cached managed accounts list from account manager component
+        $ownedAccounts = Yii::$app->ownedAccountManager->ownedAccounts;
+
+        return $ownedAccounts;
+    }
+
+    /**
      * Return stats records for account with $accountId
      */
     public function actionStats($accountId)

@@ -49,7 +49,7 @@ class OwnedAccountManager extends Object
         $cacheDuration = 60*15; //15 minutes then delete from cache
 
         $this->_ownedAccounts = InstagramUser::getDb()->cache(function($db) {
-            return Yii::$app->user->identity->instagramUsers;
+            return Yii::$app->user->identity->getAccountsOwned()->all();
         }, $cacheDuration, $cacheDependency);
 
         parent::__construct($config);
