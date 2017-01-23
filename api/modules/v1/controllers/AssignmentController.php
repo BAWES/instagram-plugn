@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
+use api\models\AgentAssignment;
 
 /**
  * Agent Assignment controller
@@ -87,7 +88,7 @@ class AssignmentController extends Controller
         $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
 
         // Validate posted input?
-        $model = new \api\models\AgentAssignment();
+        $model = new AgentAssignment();
         $model->user_id = $instagramAccount->user_id;
         $model->instagramAccountModel = $instagramAccount;
         $model->assignment_agent_email = $email;
@@ -121,6 +122,29 @@ class AssignmentController extends Controller
      * @return array
      */
     public function actionRemoveAgent($accountId, $assignmentId){
+        // Get Owned Account
+        $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
+
+        $assignmentModel = AgentAssignment::findOne([
+            'assignment_id' => (int) $assignmentId,
+            'user_id' => $instagramAccount->user_id
+        ]);
+
+        if(!$assignmentModel){
+            // Error for cases not accounted for
+            return [
+                "operation" => "error",
+                "message" => "Agent is no longer assigned to your account."
+            ];
+        }
+
+        // Delete the assignment
+        if($assignmentModel->delete()){
+            return [
+                "operation" => "success"
+            ];
+        }
+
         // Error for cases not accounted for
         return [
             "operation" => "error",
