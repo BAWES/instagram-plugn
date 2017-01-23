@@ -217,7 +217,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 return "Active";
                 break;
             case self::STATUS_INACTIVE:
-                return "Inactive (Not owned by any agent)";
+                return "Inactive (No owner)";
                 break;
             case self::STATUS_DISABLED_NO_BILLING:
                 return "No billing/Trial Ended";

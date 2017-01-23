@@ -43,9 +43,8 @@ AppAsset::register($this);
         $menuItems[] = [
             'label' => 'Accounts',
             'items' => [
-                ['label' => 'Instagram', 'url' => ['/instagram-user/index']],
-                ['label' => 'Agencies', 'url' => ['/agency/index']],
                 ['label' => 'Agents', 'url' => ['/agent/index']],
+                ['label' => 'Instagram', 'url' => ['/instagram-user/index']],
                 ['label' => 'Admins', 'url' => ['/admin/index']],
             ]
         ];
