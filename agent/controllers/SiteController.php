@@ -176,4 +176,11 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Render Success Page with Passed Title
+     */
+    public function actionSuccess($title){
+        return $this->render('success', ['title' => $title]);
+    }
+
 }
