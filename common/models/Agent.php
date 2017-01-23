@@ -64,6 +64,11 @@ class Agent extends ActiveRecord implements IdentityInterface
         return 'agent';
     }
 
+    public static function find()
+    {
+        return new AgentQuery(get_called_class());
+    }
+
     /**
      * @inheritdoc
      */
