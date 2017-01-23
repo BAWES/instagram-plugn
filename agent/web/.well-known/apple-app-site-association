@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "PUJYM5YS6T.net.bawes.plugn",
+                "paths": [ "/app/", "/deeplink/*"]
+            },
+        ]
+    }
+}
