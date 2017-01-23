@@ -36,7 +36,7 @@ class CronController extends \yii\console\Controller {
      */
     public function actionIndex(){
         $this->stdout("Testing Agency Trial Deductions \n", Console::FG_RED, Console::BOLD);
-        //Agency::deductTrialDayFromAllActiveAgencies();
+        //Agency::deductTrialDayFromAllActiveAgents();
     }
 
     /**
@@ -48,7 +48,7 @@ class CronController extends \yii\console\Controller {
         $this->instagram->updateUserData();
 
         // Deduct a Day From Agencies on Trial
-        Agency::deductTrialDayFromAllActiveAgencies();
+        Agency::deductTrialDayFromAllActiveAgents();
 
         //Send email notifications to agents with account summaries
         InstagramUser::broadcastEmailNotifications();

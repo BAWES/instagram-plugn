@@ -34,7 +34,6 @@ use common\models\Comment;
  * @property integer $user_api_post_requests_this_hour
  * @property integer $user_api_delete_requests_this_hour
  * @property integer $user_initially_crawled
- * @property integer $user_trial_days
  *
  * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
@@ -129,7 +128,6 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             'user_api_post_requests_this_hour' => 'POST Requests This Hour',
             'user_api_delete_requests_this_hour' => 'Delete Requests This Hour',
             'user_initially_crawled' => 'Initially Crawled?',
-            'user_trial_days' => 'Trial Days Left'
         ];
     }
 
