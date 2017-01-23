@@ -1,9 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "net.bawes.plugn",
-    "sha256_cert_fingerprints":
-    ["AB:DA:FF:48:10:D9:BF:17:12:63:2F:1C:A0:23:C4:7B:C3:08:D8:E2:2B:05:5D:52:97:4A:E0:EB:5A:D6:53:2D"]
-  }
+  "target" : { "namespace": "android_app", "package_name": "net.bawes.plugn",
+               "sha256_cert_fingerprints": ["AB:DA:FF:48:10:D9:BF:17:12:63:2F:1C:A0:23:C4:7B:C3:08:D8:E2:2B:05:5D:52:97:4A:E0:EB:5A:D6:53:2D"] }
 }]
