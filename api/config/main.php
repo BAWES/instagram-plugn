@@ -32,6 +32,9 @@ return [
         'accountManager' => [ //Component for agent to manage Instagram Accounts
             'class' => 'api\components\AccountManager',
         ],
+        'ownedAccountManager' => [ //Component for agent to manage Owned Instagram Accounts
+            'class' => 'api\components\OwnedAccountManager',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,

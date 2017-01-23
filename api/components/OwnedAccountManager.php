@@ -6,22 +6,22 @@ use Yii;
 use yii\base\Object;
 use yii\base\InvalidParamException;
 use yii\web\NotFoundHttpException;
-use common\models\InstagramUser;
+use api\models\InstagramUser;
 
 /**
- * AccountManager is a component that holds a list of Accounts this agency owns
+ * OwnedAccountManager is a component that holds a list of Accounts this agent owns
  * The purpose of this component is to reduce the stress incurred on the database
  * Example Usage:
- * - Get list of accounts this agent manages
+ * - Get list of accounts this agent owns
  * - Check if agent is authorised to make actions on behalf of an account
  */
-class AccountManager extends Object
+class OwnedAccountManager extends Object
 {
     /**
-     * Accounts this agency manages
+     * Accounts this agent owns
      * @var \common\models\InstagramUser
      */
-    private $_managedAccounts = false;
+    private $_ownedAccounts = false;
 
     /**
      * Sets up the AccountManager component for use to manage accounts
@@ -40,7 +40,7 @@ class AccountManager extends Object
         $cacheDependency = Yii::createObject([
             'class' => 'yii\caching\DbDependency',
             'reusable' => true,
-            'sql' => 'SELECT '.Yii::$app->user->identity->agency_id.', COUNT(*), SUM(user_status) FROM instagram_user WHERE agency_id='.Yii::$app->user->identity->agency_id,
+            'sql' => 'SELECT '.Yii::$app->user->identity->agent_id.', COUNT(*), SUM(user_status) FROM instagram_user WHERE agent_id='.Yii::$app->user->identity->agent_id,
             // we SELECT agent_id as well to make sure every cached sql statement is unique to this agent
             // don't want agents viewing the cached content of another agent
             // SUM of user_status is to bust the cache when status changes
@@ -48,7 +48,7 @@ class AccountManager extends Object
 
         $cacheDuration = 60*15; //15 minutes then delete from cache
 
-        $this->_managedAccounts = InstagramUser::getDb()->cache(function($db) {
+        $this->_ownedAccounts = InstagramUser::getDb()->cache(function($db) {
             return Yii::$app->user->identity->instagramUsers;
         }, $cacheDuration, $cacheDependency);
 
@@ -56,27 +56,27 @@ class AccountManager extends Object
     }
 
     /**
-     * Returns the accounts managed by this agent
+     * Returns the accounts owned by this agent
      *
-     * @return \agent\models\InstagramUser    Records of accounts managed by this agent
+     * @return \agent\models\InstagramUser    Records of accounts owned by this agent
      */
-    public function getManagedAccounts(){
-        return $this->_managedAccounts;
+    public function getOwnedAccounts(){
+        return $this->_ownedAccounts;
     }
 
     /**
-     * Gets the account that the agency manages
+     * Gets a single account that the agent owns based on accountId
      *
      * @param integer $accountId id number of the account
      * @return \agent\models\InstagramUser  The user account
-     * @throws \yii\web\NotFoundHttpException if the account isnt one this agent manages
+     * @throws \yii\web\NotFoundHttpException if the account isnt one this agent owns
      */
-    public function getManagedAccount($accountId){
-        foreach($this->managedAccounts as $account){
+    public function getOwnedAccount($accountId){
+        foreach($this->_ownedAccounts as $account){
             if($account->user_id == $accountId) return $account;
         }
 
-        throw new \yii\web\BadRequestHttpException('You do not manage this account.');
+        throw new \yii\web\BadRequestHttpException('You do not own this account.');
     }
 
 }
