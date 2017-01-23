@@ -72,11 +72,21 @@ return [
                     'controller' => 'v1/owned-account',
                     'patterns' => [
                         'GET' => 'list',
-                        'GET agents' => 'agents',
                         'DELETE' => 'remove-account',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
-                        'OPTIONS agents' => 'options',
+                    ]
+                ],
+                [ // AssignmentController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/assignment',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'list',
+                        'POST' => 'add-agent',
+                        'DELETE' => 'remove-agent',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
                     ]
                 ],
                 [ // MediaController
