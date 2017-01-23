@@ -129,9 +129,6 @@ class CommentController extends Controller
 
     /**
      * Delete a comment
-     */
-    /**
-     * [actionDeleteComment description]
      * @param  integer $accountId
      * @param  integer $commentId
      * @return array
