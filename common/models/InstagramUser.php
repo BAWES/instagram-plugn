@@ -40,7 +40,7 @@ use common\models\Comment;
  * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
- * @property Agenct $agent
+ * @property Agent $agent
  * @property Media[] $media
  * @property Record[] $records
  */
