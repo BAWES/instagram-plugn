@@ -1,2 +1,2 @@
 <?php
-Yii::setAlias('web', 'http://agency.plugn.io/');
+Yii::setAlias('web', 'http://agent.plugn.io/');

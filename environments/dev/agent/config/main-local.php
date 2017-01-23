@@ -7,7 +7,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '/' => 'site/index',
-                'login' => 'site/login',
+                'auth/<authclient:(instagram)>' => 'instagram/auth',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
                 'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
             ],

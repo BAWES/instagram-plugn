@@ -9,7 +9,6 @@ use yii\helpers\Url;
 
 $unsubscribeUrl = "http://agent.plugn.io/email/index";
 $agentPortalUrl = "http://agent.plugn.io";
-$instagramPortalUrl = "http://instagram.plugn.io";
 ?>
 
 <!doctype html>

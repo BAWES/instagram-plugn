@@ -4,7 +4,7 @@
 
 use yii\helpers\Url;
 
-$instagramPortalUrl = "http://agency.plugn.io";
+$instagramPortalUrl = "http://agent.plugn.io";
 ?>
 
 <!doctype html>
