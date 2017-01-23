@@ -73,6 +73,7 @@ return [
                     'patterns' => [
                         'GET' => 'list',
                         'GET agents' => 'agents',
+                        'DELETE' => 'remove-account',
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
                         'OPTIONS agents' => 'options',

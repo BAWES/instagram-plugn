@@ -68,6 +68,8 @@ class OwnedAccountController extends Controller
 
     /**
      * Return list of agents managing the account
+     * @param  integer $accountId
+     * @return array
      */
     public function actionAgents($accountId)
     {
@@ -76,6 +78,30 @@ class OwnedAccountController extends Controller
 
         $agents = $instagramAccount->agentAssignments;
         return $agents;
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+    }
+
+    /**
+     * Remove Account Ownership from an Agent
+     * @param  integer $accountId
+     * @return array
+     */
+    public function actionRemoveAccount($accountId)
+    {
+        // Get Instagram account from Account Manager component
+        $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
+
+        // Remove the agency from this Instagram account
+        $instagramAccount->agent_id = null;
+        // Set account as Inactive to stop crawling data & stop deducting trial days
+        $instagramAccount->user_status = \common\models\InstagramUser::STATUS_INACTIVE;
+        $instagramAccount->save(false);
+
+        return [
+            "operation" => "success",
+        ];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
