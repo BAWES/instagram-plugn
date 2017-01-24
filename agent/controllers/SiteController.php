@@ -176,4 +176,29 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Returns the apple site association file required for deeplinking.
+     */
+    public function actionAppleAppAssociation(){
+        $output = '
+        {
+            "applinks": {
+                "apps": [],
+                "details": [
+                    {
+                        "appID": "PUJYM5YS6T.net.bawes.plugn",
+                        "paths": [ "/app/", "/deeplink/*"]
+                    },
+                ]
+            }
+        }';
+        Yii::$app->response->content = $output;
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        Yii::$app->response->statusCode = 200;
+        Yii::$app->response->acceptMimeType = 'application/pkcs7-mime';
+        Yii::$app->response->headers->set("content-type", "application/pkcs7-mime");
+
+        return Yii::$app->response;
+    }
+
 }
