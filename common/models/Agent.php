@@ -652,6 +652,17 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Generate, save, and return an auth key for this account [1 time use token]
+     * @return string
+     */
+    public function generateAuthKeyAndSave() {
+        $this->generateAuthKey();
+        $this->save(false);
+
+        return $this->agent_auth_key;
+    }
+
+    /**
      * Generates new password reset token
      */
     public function generatePasswordResetToken() {

@@ -89,6 +89,16 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
+                [ // AgentController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/agent',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET authkey' => 'generate-auth-key',
+                        // OPTIONS VERBS
+                        'OPTIONS authkey' => 'options',
+                    ]
+                ],
                 [ // MediaController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/media',
