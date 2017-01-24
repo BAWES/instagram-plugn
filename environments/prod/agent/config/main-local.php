@@ -6,6 +6,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '/' => 'site/index',
+                'apple-app-site-association' => 'site/apple-app-association',
                 'login' => 'site/login',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
                 'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
