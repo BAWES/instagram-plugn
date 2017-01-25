@@ -49,7 +49,7 @@ $this->registerJs($analytics);
 
     <?php $this->head() ?>
 </head>
-<body class="with-side-menu">
+<body>
 <?php $this->beginBody() ?>
 
     <header class="site-header">
@@ -58,12 +58,23 @@ $this->registerJs($analytics);
                 <img class="hidden-md-down" src="<?= Url::to('@web/img/plugn-logo.png') ?>" alt="">
                 <img class="hidden-lg-up" src="<?= Url::to('@web/img/plugn-logo-mob.png') ?>" alt="">
             </a>
-            <button class="hamburger hamburger--htla">
-                <span>toggle menu</span>
-            </button>
             <div class="site-header-content">
                 <div class="site-header-content-in">
                     <div class="site-header-shown">
+						<!-- App Download Links -->
+                        <div class="dropdown dropdown-lang">
+                            <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div>
+									<a class="dropdown-item" target='_blank' href="https://itunes.apple.com/gr/app/plugn-for-instagram/id1196833693?mt=8"><span class="fa fa-apple"></span> iOS Application</a>
+                                    <a class="dropdown-item" target='_blank' href="https://play.google.com/store/apps/details?id=net.bawes.plugn"><span class="fa fa-android"></span> Android Application</a>
+									<a class="dropdown-item" target='_blank' href="https://agent.plugn.io/app"><span class="fa fa-chrome"></span> Web Application</a>
+                                </div>
+                            </div>
+                        </div>
+						<!-- End App Download Links -->
                         <?php /*
                         <div class="dropdown dropdown-lang">
                             <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,10 +114,6 @@ $this->registerJs($analytics);
 
                                 */
                                 ?>
-								<a class="dropdown-item" href="<?= Url::to(['dashboard/activity']) ?>"><span class="font-icon font-icon-zigzag"></span>Your Activity</a>
-								<a class="dropdown-item" href="<?= Url::to(['email/index']) ?>"><span class="font-icon font-icon-mail"></span>Email Preferences</a>
-
-								<div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="<?= Url::to(['site/logout']) ?>" data-method= 'post'>
                                     <span class="font-icon glyphicon glyphicon-log-out"></span>Logout
@@ -121,49 +128,8 @@ $this->registerJs($analytics);
         </div><!--.container-fluid-->
     </header><!--.site-header-->
 
-    <div class="mobile-menu-left-overlay"></div>
-	<nav class="side-menu side-menu-big-icon">
-	    <ul class="side-menu-list">
 
-			<?php
-			if($managedAccounts = Yii::$app->accountManager->managedAccounts){
-				foreach($managedAccounts as $account){?>
-					<li <?= $this->title==$account->user_name?" class='opened'":"" ?>>
-						<a href="<?= Url::to(['media/list' ,'accountId' => $account->user_id]) ?>" class="label-right">
-							<?= Html::img($account->user_profile_pic, ['width'=>32, 'height'=>32, 'style'=>'width:32px; height:32px; margin-bottom:5px']) ?>
-							<span class="lbl">@<?= $account->user_name ?></span>
-							<?php if($account->unhandledCount > 0){ ?>
-							<span class="label label-custom label-pill label-danger">
-								<?= $account->unhandledCount ?>
-							</span>
-							<?php } ?>
-						</a>
-					</li>
-				<?php
-			}}
-			?>
-
-	        <li <?= $this->context->action->id=="add-account"?" class='opened'":"" ?>>
-	            <a href="<?= Url::to(['dashboard/add-account']) ?>">
-	                <i class="icon fa fa-plus"></i>
-	                <span class="lbl">Add Instagram Account</span>
-	            </a>
-	        </li>
-	    </ul>
-	    <section>
-	        <header class="side-menu-title">Mobile Apps [Soon]</header>
-	        <ul class="side-menu-list">
-	            <li>
-	                <a href="#">
-	                    <img src='<?= Url::to('@web/img/applecomingsoon.png') ?>' alt='Soon on App Store' style='width:90px'/>
-	                    <img src='<?= Url::to('@web/img/playcomingsoon.png') ?>' alt='Soon on Play Store' style='width:90px'/>
-	                </a>
-	            </li>
-	        </ul>
-	    </section>
-	</nav><!--.side-menu-->
-
-    <div class="page-content">
+    <div class="page-content" style='padding: 107px 0 0 0;'>
 
 		<?= Alert::widget() ?>
         <?= $content ?>

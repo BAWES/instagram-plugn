@@ -143,6 +143,12 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionLogout() {
+        Yii::$app->user->logout();
+
+        return $this->redirect(['site/login']);
+    }
+
     /**
      * Email verification by clicking on link in email which includes the code that will verify
      * @param string $code Verification key that will verify your account
