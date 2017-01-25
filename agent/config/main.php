@@ -10,7 +10,7 @@ return [
     'id' => 'app-agent',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'agent\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'common\components\TwoCheckoutConfig'],
     'modules' => [],
     'components' => [
         'user' => [
