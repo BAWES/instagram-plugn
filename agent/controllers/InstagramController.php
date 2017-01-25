@@ -83,7 +83,7 @@ class InstagramController extends Controller
      *
      * @return mixed
      */
-    public function actionAddAccount()
+    public function actionIndex()
     {
         $this->layout = 'blank';
 
@@ -95,7 +95,9 @@ class InstagramController extends Controller
         // Agent Hit Account Limit?
         if(Yii::$app->user->identity->isAtAccountLimit){
             Yii::error("[Agent #".Yii::$app->user->identity->agent_id." unable to add more accounts] Agent needs to upgrade plan to add more accounts.", __METHOD__);
-            die("[Account Limit Reached] Please upgrade your billing plan for additional Instagram accounts.");
+            Yii::$app->getSession()->setFlash('warning',
+                "[Account Limit Reached] Please upgrade your billing plan for additional Instagram accounts.");
+            return $this->redirect(['billing/index']);
         }
 
         /**
