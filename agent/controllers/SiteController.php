@@ -8,6 +8,7 @@ use agent\components\authhandlers\LiveAuthHandler;
 use agent\components\authhandlers\SlackAuthHandler;
 use agent\models\ResetPasswordForm;
 use common\models\Agent;
+use agent\models\LoginForm;
 
 /**
  * Site controller
@@ -127,6 +128,24 @@ class SiteController extends Controller
          */
          Yii::$app->response->content = $script;
          return Yii::$app->response;
+    }
+
+    public function actionLogin() {
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $this->layout = 'signup';
+
+        $model = new LoginForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->redirect(['dashboard/index']);
+        } else {
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
