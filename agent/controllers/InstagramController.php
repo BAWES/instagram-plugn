@@ -68,13 +68,25 @@ class InstagramController extends Controller
 
             // Redirect to success page with username shown
             $igUsername = $instagramAccount->user_name;
-            return $this->redirect(['site/success',
-                'title' => "Your account @$igUsername has been linked to Plugn."]);
+            return $this->redirect(['instagram/response', 'responseType' => 'success']);
         }
 
         Yii::error("[Agent #".Yii::$app->user->identity->agent_id." Oauth Success Error] Agent faced EXTREME issue with auth process.", __METHOD__);
-        return $this->redirect(['site/success',
-            'title' => "There was a problem linking your Instagram account. Please try again."]);
+
+        return $this->redirect(['instagram/response', 'responseType' => 'fail']);
+    }
+
+    /**
+     * Display Response based on Response Type
+     */
+    public function actionResponse($responseType = 'success'){
+        if($responseType == 'fail'){
+            // Render Error Page
+            return $this->render("fail", ['message' => "There was a problem linking your Instagram account. Please try again."]);
+        }
+
+        // Render Success Page
+        return $this->render("success", ['message' => "Your Instagram account has been linked to Plugn."]);
     }
 
     /**

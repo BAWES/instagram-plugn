@@ -167,7 +167,7 @@ class SiteController extends Controller
         if(!Yii::$app->user->isGuest){
             return $this->goHome();
         }
-        
+
         $this->layout = 'signup';
 
         $model = new LoginForm();
@@ -228,19 +228,12 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            return $this->render('success', ['title' => 'Your new password has been saved']);
+            return $this->render('success');
         }
 
         return $this->render('resetPassword', [
                     'model' => $model,
         ]);
-    }
-
-    /**
-     * Render Success Page with Passed Title
-     */
-    public function actionSuccess($title){
-        return $this->render('success', ['title' => $title]);
     }
 
     /**
