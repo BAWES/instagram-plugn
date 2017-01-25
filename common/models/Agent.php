@@ -550,29 +550,7 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Find identity by Auth Key
-     */
-    public static function loginViaAuthKey($authKey) {
-        // Log agent out before attempting to log him in
-        if(!Yii::$app->user->isGuest){
-            Yii::$app->user->logout();
-        }
-
-        $agent = static::findOne(['agent_auth_key' => $authKey]);
-        if($agent){
-            // Reset the previously used auth key
-            $agent->generateAuthKey();
-            $agent->save(false);
-
-            // Log the agent in
-            return Yii::$app->user->login($agent, 0);
-        }
-
-        return false;
-    }
-
-    /**
-     * Finds admin by email
+     * Finds agent by email
      *
      * @param string $email
      * @return static|null

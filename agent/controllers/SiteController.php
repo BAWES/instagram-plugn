@@ -130,7 +130,44 @@ class SiteController extends Controller
          return Yii::$app->response;
     }
 
+    /**
+     * Use a previously generated Access Key to login then redirect to where the user wants.
+     * Redirects to billing by default
+     */
+    public function actionLoginAuthKey($key, $path = "billing"){
+        // Find the agent by Auth Key
+        $agent = Agent::findOne(['agent_auth_key' => $key]);
+        if($agent){
+            // Reset the previously used auth key
+            $agent->generateAuthKeyAndSave();
+            // Log agent out before attempting to log him in
+            if(!Yii::$app->user->isGuest){
+                Yii::$app->user->logout();
+            }
+            // Log the agent in
+            Yii::$app->user->login($agent, 0);
+        }
+
+        // Resolve what path the agent wants to follow
+        switch($path){
+            case "billing":
+                $path = "billing/index";
+                break;
+            case "instagram":
+                $path = "instagram/index";
+                break;
+        }
+        return $this->redirect([$path]);
+    }
+
+    /**
+     * Login Page
+     */
     public function actionLogin() {
+        if(!Yii::$app->user->isGuest){
+            return $this->goHome();
+        }
+        
         $this->layout = 'signup';
 
         $model = new LoginForm();
@@ -143,6 +180,9 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Logout Page
+     */
     public function actionLogout() {
         Yii::$app->user->logout();
 
