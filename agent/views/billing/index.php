@@ -10,18 +10,6 @@ use yii\helpers\Url;
 $this->title = 'Billing';
 ?>
 
-<header class="page-content-header">
-	<div class="container-fluid">
-		<div class="tbl">
-			<div class="tbl-row">
-				<div class="tbl-cell">
-					<h3><i class="font-icon font-icon-build"></i> Billing</h3>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
 <div class="container-fluid">
 	<section class="box-typical box-typical-padding">
 

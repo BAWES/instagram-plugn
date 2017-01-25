@@ -130,7 +130,7 @@ class BillingController extends Controller
 
         // If user is attempting to setup a package which is for less than
         // the number of accounts he has attached, show error and redirect to billing
-        $currentAccountCount = count(Yii::$app->accountManager->managedAccounts);
+        $currentAccountCount = count(Yii::$app->ownedAccountManager->ownedAccounts);
         $planLimit = $pricing->pricing_account_quantity;
         if($planLimit < $currentAccountCount){
             Yii::$app->getSession()

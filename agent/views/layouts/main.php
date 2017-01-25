@@ -61,59 +61,12 @@ $this->registerJs($analytics);
             <div class="site-header-content">
                 <div class="site-header-content-in">
                     <div class="site-header-shown">
-						<!-- App Download Links -->
-                        <div class="dropdown dropdown-lang">
-                            <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div>
-									<a class="dropdown-item" target='_blank' href="https://itunes.apple.com/gr/app/plugn-for-instagram/id1196833693?mt=8"><span class="fa fa-apple"></span> iOS Application</a>
-                                    <a class="dropdown-item" target='_blank' href="https://play.google.com/store/apps/details?id=net.bawes.plugn"><span class="fa fa-android"></span> Android Application</a>
-									<a class="dropdown-item" target='_blank' href="https://agent.plugn.io/app"><span class="fa fa-chrome"></span> Web Application</a>
-                                </div>
-                            </div>
-                        </div>
-						<!-- End App Download Links -->
-                        <?php /*
-                        <div class="dropdown dropdown-lang">
-                            <button class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="flag-icon flag-icon-us"></span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-menu-col">
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ru"></span>Русский</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-de"></span>Deutsch</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-it"></span>Italiano</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-es"></span>Español</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-pl"></span>Polski</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-li"></span>Lietuviu</a>
-                                </div>
-                                <div class="dropdown-menu-col">
-                                    <a class="dropdown-item current" href="#"><span class="flag-icon flag-icon-us"></span>English</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-fr"></span>Français</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-by"></span>Беларускi</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ua"></span>Українська</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-cz"></span>Česky</a>
-                                    <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ch"></span>中國</a>
-                                </div>
-                            </div>
-                        </div>
-                        */
-                        ?>
-
+						
                         <div class="dropdown user-menu">
                             <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="<?= Url::to('@web/img/avatar-2-64.png') ?>" alt="">
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
-                                <?php /*
-                                <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-user"></span>Profile</a>
-
-                                <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-question-sign"></span>Help</a>
-
-                                */
-                                ?>
 
                                 <a class="dropdown-item" href="<?= Url::to(['site/logout']) ?>" data-method= 'post'>
                                     <span class="font-icon glyphicon glyphicon-log-out"></span>Logout
@@ -129,7 +82,7 @@ $this->registerJs($analytics);
     </header><!--.site-header-->
 
 
-    <div class="page-content" style='padding: 107px 0 0 0;'>
+    <div class="page-content" <?php /*style='padding: 107px 0 0 0;' */?>>
 
 		<?= Alert::widget() ?>
         <?= $content ?>

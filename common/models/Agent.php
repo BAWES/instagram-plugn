@@ -198,6 +198,15 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Get all Instagram accounts this agent owns
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountsOwned()
+    {
+        return $this->hasMany(InstagramUser::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
      * Get all Instagram accounts this agent is assigned to manage
      * @return \yii\db\ActiveQuery
      */
