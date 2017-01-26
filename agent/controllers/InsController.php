@@ -3,7 +3,6 @@ namespace agent\controllers;
 
 use Yii;
 use yii\web\Controller;
-use common\models\Agency;
 use common\models\Invoice;
 use common\models\Billing;
 
