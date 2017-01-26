@@ -60,10 +60,22 @@ class ProfileController extends Controller
      */
     public function actionDetails()
     {
-        // Get cached owned accounts list from owned account manager component
-        $ownedAccounts = Yii::$app->ownedAccountManager->ownedAccounts;
+        $isTrialActive = Yii::$app->user->identity->hasActiveTrial();
+        $trialDaysLeft = Yii::$app->user->identity->agent_trial_days;
+        $billingDaysLeft = Yii::$app->user->identity->getBillingDaysLeft();
 
-        return $ownedAccounts;
+        return [
+            'accountStatus' => Yii::$app->user->identity->agent_status,
+            'ownedAccountLimit' => Yii::$app->user->identity->linkedAccountLimit,
+            'trial' => [
+                'isActive' => $isTrialActive,
+                'daysLeft' => $trialDaysLeft,
+            ],
+            'billing' => [
+                'isActive' => $billingDaysLeft?true:false,
+                'daysLeft' => $billingDaysLeft,
+            ]
+        ];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
