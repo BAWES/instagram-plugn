@@ -256,7 +256,7 @@ class Billing extends \yii\db\ActiveRecord
         $invoiceModel->auth_exp = new Expression('NOW()');
         $invoiceModel->invoice_status = "pending";
         $invoiceModel->fraud_status = "wait";
-        $invoiceModel->invoice_usd_amount = $charge['response']['lineItems'][0]['price'];
+        $invoiceModel->invoice_usd_amount = $this->billing_total;
         $invoiceModel->customer_ip = "unset";
         $invoiceModel->customer_ip_country = "unset";
         $invoiceModel->item_id_1 = $charge['response']['lineItems'][0]['productId'];
