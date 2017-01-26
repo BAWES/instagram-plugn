@@ -5,7 +5,7 @@
 use yii\helpers\Url;
 
 $supportEmail = Yii::$app->params['supportEmail'];
-$ctaUrl = "https://agency.plugn.io/billing";
+$ctaUrl = "https://agent.plugn.io/billing";
 $customerName = $agent->agent_name;
 ?>
 

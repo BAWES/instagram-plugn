@@ -4,7 +4,7 @@
 
 use yii\helpers\Url;
 
-$instagramPortalUrl = "http://agent.plugn.io";
+$portalUrl = "http://agent.plugn.io/app";
 ?>
 
 <!doctype html>
@@ -101,8 +101,8 @@ $instagramPortalUrl = "http://agent.plugn.io";
       <![endif]--><div aria-labelledby="mj-column-px-350" class="mj-column-px-350" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#333;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:20px;line-height:22px;">
                 Don't worry though, it's very quick to fix
               </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:grey;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;">
-                You only need to log into your Plugn Agency account and re-connect your account and clear the issue.
-            </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:8px 16px 10px;padding-bottom:25px;padding-right:30px;padding-left:30px;" align="left"><table cellpadding="0" cellspacing="0" style="border:none;border-radius:3px;" align="left" border="0"><tbody><tr><td style="background:#00a8ff;border-radius:3px;color:white;cursor:auto;" align="center" valign="middle" bgcolor="#00a8ff"><a href="<?= $instagramPortalUrl ?>" style="display:inline-block;text-decoration:none;background:#00a8ff;border:1px solid #00a8ff;border-radius:3px;color:white;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;padding:8px 16px 10px;" target="_blank">
+                You only need to log into Plugn and re-connect your account and clear the issue.
+            </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:8px 16px 10px;padding-bottom:25px;padding-right:30px;padding-left:30px;" align="left"><table cellpadding="0" cellspacing="0" style="border:none;border-radius:3px;" align="left" border="0"><tbody><tr><td style="background:#00a8ff;border-radius:3px;color:white;cursor:auto;" align="center" valign="middle" bgcolor="#00a8ff"><a href="<?= $portalUrl ?>" style="display:inline-block;text-decoration:none;background:#00a8ff;border:1px solid #00a8ff;border-radius:3px;color:white;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;padding:8px 16px 10px;" target="_blank">
                   Re-connect my Instagram Account
               </a></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
