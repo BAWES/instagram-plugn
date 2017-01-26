@@ -77,6 +77,16 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
+                [ // OwnedAccountController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/profile',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'details',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
                 [ // AssignmentController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/assignment',
