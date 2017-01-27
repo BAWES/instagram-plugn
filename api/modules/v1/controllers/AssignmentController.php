@@ -130,11 +130,20 @@ class AssignmentController extends Controller
             'user_id' => $instagramAccount->user_id
         ]);
 
+        // If no assignment found
         if(!$assignmentModel){
-            // Error for cases not accounted for
             return [
                 "operation" => "error",
                 "message" => "Agent is no longer assigned to your account."
+            ];
+        }
+
+        // Not allowed to remove yourself from managing your own account
+        if($assignmentModel->agent_id && ($assignmentModel->agent_id == Yii::$app->user->identity->agent_id))
+        {
+            return [
+                "operation" => "error",
+                "message" => "You're the admin on this account. You may remove this account if you're no longer interested in managing it"
             ];
         }
 
