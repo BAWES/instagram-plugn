@@ -4,6 +4,7 @@ namespace api\modules\v1\controllers;
 
 use Yii;
 use yii\rest\Controller;
+use yii\helpers\ArrayHelper;
 
 /**
  * Account controller will return the actual Instagram Accounts and all controls associated

@@ -22,6 +22,7 @@ use yii\behaviors\TimestampBehavior;
 class AgentAssignment extends \yii\db\ActiveRecord
 {
     public $instagramAccountModel;
+    public $sendEmail = true;
 
     /**
      * @inheritdoc
@@ -84,21 +85,23 @@ class AgentAssignment extends \yii\db\ActiveRecord
                     $this->agent_id = $agent->agent_id;
                 }
 
-                //Send Email to Agent notifying him that he got assigned
-                Yii::$app->mailer->compose([
-                            'html' => 'agency/agentInvite',
-                                ], [
-                            'accountFullName' => $this->instagramAccountModel->user_fullname,
-                            'accountName' => $this->instagramAccountModel->user_name,
-                            'accountPhoto' => $this->instagramAccountModel->user_profile_pic,
-                        ])
-                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
-                        ->setTo($this->assignment_agent_email)
-                        ->setSubject("You've been invited to manage @".$this->instagramAccountModel->user_name)
-                        ->send();
+                if($this->sendEmail){
+                    //Send Email to Agent notifying him that he got assigned
+                    Yii::$app->mailer->compose([
+                        'html' => 'agency/agentInvite',
+                            ], [
+                        'accountFullName' => $this->instagramAccountModel->user_fullname,
+                        'accountName' => $this->instagramAccountModel->user_name,
+                        'accountPhoto' => $this->instagramAccountModel->user_profile_pic,
+                    ])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                    ->setTo($this->assignment_agent_email)
+                    ->setSubject("You've been invited to manage @".$this->instagramAccountModel->user_name)
+                    ->send();
+                }
 
                 //Send Slack notification of agent assignment
-                Yii::info("[Agent Invite sent by @".$this->instagramAccountModel->user_name."] Sent to ".$this->assignment_agent_email, __METHOD__);
+                Yii::info("[Agent Invite from @".$this->instagramAccountModel->user_name."] Sent to ".$this->assignment_agent_email, __METHOD__);
             }
 
             return true;

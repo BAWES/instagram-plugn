@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use common\models\Agent;
+use common\models\AgentAssignment;
 use agent\components\InstagramAuthHandler;
 
 /**
@@ -59,12 +60,19 @@ class InstagramController extends Controller
 
         // Above variable holds an Instagram Account's info on success
         if($instagramAccount instanceof \common\models\InstagramUser){
-            // Add account owner as an agent of this Instagram Account
-            $agentAssignment = new \common\models\AgentAssignment();
-            $agentAssignment->instagramAccountModel = $instagramAccount;
-            $agentAssignment->user_id = $instagramAccount->user_id;
-            $agentAssignment->assignment_agent_email = Yii::$app->user->identity->agent_email;
-            $agentAssignment->save();
+            $assignment = AgentAssignment::findOne([
+                'user_id' => $instagramAccount->user_id,
+                'assignment_agent_email' => Yii::$app->user->identity->agent_email
+            ]);
+            if(!$assignment){
+                // Add account owner as an agent of this Instagram Account if not already
+                $assignment = new AgentAssignment();
+                $assignment->sendEmail = false;
+                $assignment->instagramAccountModel = $instagramAccount;
+                $assignment->user_id = $instagramAccount->user_id;
+                $assignment->assignment_agent_email = Yii::$app->user->identity->agent_email;
+                $assignment->save();
+            }
 
             // Redirect to success page with username shown
             $igUsername = $instagramAccount->user_name;
