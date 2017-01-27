@@ -77,7 +77,7 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
-                [ // OwnedAccountController
+                [ // ProfileController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/profile',
                     'pluralize' => false,
@@ -105,8 +105,10 @@ return [
                     'pluralize' => false,
                     'patterns' => [
                         'GET authkey' => 'generate-auth-key',
+                        'DELETE unassign' => 'unassign',
                         // OPTIONS VERBS
                         'OPTIONS authkey' => 'options',
+                        'OPTIONS unassign' => 'options',
                     ]
                 ],
                 [ // MediaController

@@ -60,13 +60,46 @@ class AgentController extends Controller
 
     /**
      * Generate a single use Auth Key
-     * @param  integer $accountId
      * @return array
      */
     public function actionGenerateAuthKey()
     {
         // Return a fresh and unique auth key
         return Yii::$app->user->identity->generateAuthKeyAndSave();
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+    }
+
+
+    /**
+     * Allows logged in agent to unassign himself from an IG account hes been assigned to.
+     * @param  integer $accountId
+     * @return array
+     */
+    public function actionUnassign($accountId)
+    {
+        $instagramAccount = Yii::$app->accountManager->getManagedAccount($accountId);
+
+        // Not allowed to remove yourself from managing your own account
+        if($instagramAccount->agent_id == Yii::$app->user->identity->agent_id)
+        {
+            return [
+                "operation" => "error",
+                "message" => "You're the admin on this account. You may remove this account if you're no longer interested in managing it"
+            ];
+        }
+
+        // Find the assignment and delete it
+        $assignmentModel = \common\models\AgentAssignment::findOne([
+            'agent_id' => Yii::$app->user->identity->agent_id,
+            'user_id' => $instagramAccount->user_id
+        ]);
+        $assignmentModel->delete();
+
+        return [
+            "operation" => "success",
+        ];
 
         // Check SQL Query Count and Duration
         return Yii::getLogger()->getDbProfiling();
