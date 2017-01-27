@@ -117,17 +117,12 @@ class AssignmentController extends Controller
 
     /**
      * Remove agent from account
-     * @param  [type] $accountId    [description]
      * @param  [type] $assignmentId [description]
      * @return array
      */
-    public function actionRemoveAgent($accountId, $assignmentId){
-        // Get Owned Account
-        $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
-
+    public function actionRemoveAgent($assignmentId){
         $assignmentModel = AgentAssignment::findOne([
             'assignment_id' => (int) $assignmentId,
-            'user_id' => $instagramAccount->user_id
         ]);
 
         // If no assignment found
@@ -137,6 +132,9 @@ class AssignmentController extends Controller
                 "message" => "Agent is no longer assigned to your account."
             ];
         }
+
+        // Get Owned Account
+        $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($assignmentModel->user_id);
 
         // Not allowed to remove yourself from managing your own account
         if($assignmentModel->agent_id && ($assignmentModel->agent_id == Yii::$app->user->identity->agent_id))
