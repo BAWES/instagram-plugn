@@ -7,7 +7,7 @@ return [
             'rules' => [
                 '/' => 'site/index',
                 'apple-app-site-association' => 'site/apple-app-association',
-                'key/<path:(instagram|billing)>/<key:\w+>' => 'site/login-auth-key',
+                'key/<path:(instagram|billing)>/<key:[^\n]+>' => 'site/login-auth-key',
                 'auth/<authclient:(instagram)>' => 'instagram/auth',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
                 'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
