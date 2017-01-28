@@ -69,6 +69,7 @@ class AgentController extends Controller
 
         return [
             'accountStatus' => Yii::$app->user->identity->agent_status,
+            'numberOfOwnedAccounts' => count(Yii::$app->ownedAccountManager->ownedAccounts),
             'ownedAccountLimit' => Yii::$app->user->identity->linkedAccountLimit,
             'trial' => [
                 'isActive' => $isTrialActive,
