@@ -77,16 +77,6 @@ return [
                         'OPTIONS' => 'options',
                     ]
                 ],
-                [ // ProfileController
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'v1/profile',
-                    'pluralize' => false,
-                    'patterns' => [
-                        'GET' => 'details',
-                        // OPTIONS VERBS
-                        'OPTIONS' => 'options',
-                    ]
-                ],
                 [ // AssignmentController
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'v1/assignment',
@@ -104,9 +94,11 @@ return [
                     'controller' => 'v1/agent',
                     'pluralize' => false,
                     'patterns' => [
+                        'GET' => 'details',
                         'GET authkey' => 'generate-auth-key',
                         'DELETE unassign' => 'unassign',
                         // OPTIONS VERBS
+                        'OPTIONS' => 'options',
                         'OPTIONS authkey' => 'options',
                         'OPTIONS unassign' => 'options',
                     ]

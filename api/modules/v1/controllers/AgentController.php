@@ -59,6 +59,32 @@ class AgentController extends Controller
     }
 
     /**
+     * Return an overview of the users account details
+     */
+    public function actionDetails()
+    {
+        $isTrialActive = Yii::$app->user->identity->hasActiveTrial();
+        $trialDaysLeft = Yii::$app->user->identity->agent_trial_days;
+        $billingDaysLeft = Yii::$app->user->identity->getBillingDaysLeft();
+
+        return [
+            'accountStatus' => Yii::$app->user->identity->agent_status,
+            'ownedAccountLimit' => Yii::$app->user->identity->linkedAccountLimit,
+            'trial' => [
+                'isActive' => $isTrialActive,
+                'daysLeft' => $trialDaysLeft,
+            ],
+            'billing' => [
+                'isActive' => $billingDaysLeft?true:false,
+                'daysLeft' => $billingDaysLeft,
+            ]
+        ];
+
+        // Check SQL Query Count and Duration
+        return Yii::getLogger()->getDbProfiling();
+    }
+
+    /**
      * Generate a single use Auth Key
      * @return array
      */
