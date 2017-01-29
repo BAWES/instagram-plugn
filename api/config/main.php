@@ -46,10 +46,12 @@ return [
                     'pluralize' => false,
                     'patterns' => [
                         'GET login' => 'login',
+                        'PATCH verify' => 'verify-email',
                         'POST create-account' => 'create-account',
                         'POST request-reset-password' => 'request-reset-password',
                         'POST resend-verification-email' => 'resend-verification-email',
                         // OPTIONS VERBS
+                        'OPTIONS verify' => 'options',
                         'OPTIONS login' => 'options',
                         'OPTIONS create-account' => 'options',
                         'OPTIONS request-reset-password' => 'options',

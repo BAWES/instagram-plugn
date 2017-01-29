@@ -51,6 +51,7 @@ class AuthController extends Controller
         // also avoid for public actions like registration and password reset
         $behaviors['authenticator']['except'] = [
             'options',
+            'verify-email',
             'create-account',
             'request-reset-password',
             'resend-verification-email'
@@ -189,6 +190,38 @@ class AuthController extends Controller
         return [
             'operation' => 'success',
             'message' => Yii::t('register', 'Please click on the link sent to you by email to verify your account')
+        ];
+    }
+
+    /**
+     * Process email verification
+     * @return array
+     */
+    public function actionVerifyEmail()
+    {
+        $code = Yii::$app->request->getBodyParam("code");
+        $verify = Yii::$app->request->getBodyParam("verify");
+
+        //Code is his auth key, check if code is valid
+        $agent = Agent::findOne(['agent_auth_key' => $code, 'agent_id' => (int) $verify]);
+        if ($agent) {
+            //If not verified
+            if ($agent->agent_email_verified == Agent::EMAIL_NOT_VERIFIED) {
+                //Verify this agents  email
+                $agent->agent_email_verified = Agent::EMAIL_VERIFIED;
+                $agent->save(false);
+            }
+
+            return [
+                'operation' => 'success',
+                'message' => 'You have verified your email'
+            ];
+        }
+
+        //inserted code is invalid
+        return [
+            'operation' => 'error',
+            'message' => 'Invalid email verification code. Account might already be activated. Please try to login again.'
         ];
     }
 
