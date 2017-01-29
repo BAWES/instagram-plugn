@@ -51,7 +51,7 @@ class CronController extends \yii\console\Controller {
         Agent::deductTrialDayFromAllActiveAgents();
 
         //Send email notifications to agents with account summaries
-        InstagramUser::broadcastEmailNotifications();
+        //InstagramUser::broadcastEmailNotifications();
 
         return self::EXIT_CODE_NORMAL;
     }
