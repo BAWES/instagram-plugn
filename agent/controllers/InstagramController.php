@@ -109,14 +109,8 @@ class InstagramController extends Controller
 
         // If billing has expired for this user, redirect to billing page
         if(Yii::$app->user->identity->agent_status == Agent::STATUS_INACTIVE){
-            return $this->redirect(['billing/index']);
-        }
-
-        // Agent Hit Account Limit?
-        if(Yii::$app->user->identity->isAtAccountLimit){
-            Yii::error("[Agent #".Yii::$app->user->identity->agent_id." unable to add more accounts] Agent needs to upgrade plan to add more accounts.", __METHOD__);
             Yii::$app->getSession()->setFlash('warning',
-                "[Account Limit Reached] Please upgrade your billing plan for additional Instagram accounts.");
+                "[Subscription Expired] Please select a billing plan.");
             return $this->redirect(['billing/index']);
         }
 
