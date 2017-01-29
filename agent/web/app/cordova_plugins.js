@@ -110,6 +110,29 @@ module.exports = [
         "clobbers": [
             "OneSignal"
         ]
+    },
+    {
+        "file": "plugins/ionic-plugin-deploy/www/ionicdeploy.js",
+        "id": "ionic-plugin-deploy.IonicDeploy",
+        "pluginId": "ionic-plugin-deploy",
+        "clobbers": [
+            "IonicDeploy"
+        ]
+    },
+    {
+        "file": "plugins/ionic-plugin-deeplinks/www/deeplink.js",
+        "id": "ionic-plugin-deeplinks.deeplink",
+        "pluginId": "ionic-plugin-deeplinks",
+        "clobbers": [
+            "IonicDeeplink"
+        ],
+        "runs": true
+    },
+    {
+        "file": "plugins/ionic-plugin-deeplinks/src/browser/DeeplinkProxy.js",
+        "id": "ionic-plugin-deeplinks.IonicDeeplinkProxy",
+        "pluginId": "ionic-plugin-deeplinks",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -125,7 +148,9 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.2.1-dev",
     "cordova-plugin-whitelist": "1.3.0",
     "ionic-plugin-keyboard": "2.2.1",
-    "onesignal-cordova-plugin": "2.0.10"
+    "onesignal-cordova-plugin": "2.0.10",
+    "ionic-plugin-deploy": "0.6.5",
+    "ionic-plugin-deeplinks": "1.0.14"
 }
 // BOTTOM OF METADATA
 });
