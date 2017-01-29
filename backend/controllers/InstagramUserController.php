@@ -64,8 +64,8 @@ class InstagramUserController extends Controller
     {
         $model = $this->findModel($id);
 
-        // Get Agency
-        $agency = $model->agency;
+        // Get Agent Owner
+        $agent = $model->agent;
 
         // Get Agents Managing
         $agentsQuery = $model->getAgents();
@@ -81,7 +81,7 @@ class InstagramUserController extends Controller
 
         return $this->render('view', [
             'model' => $model,
-            'agency' => $agency,
+            'agent' => $agent,
             'agentsDataProvider' => $agentsDataProvider,
             'activityDataProvider' => $activityDataProvider
         ]);

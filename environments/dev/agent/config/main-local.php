@@ -8,7 +8,8 @@ $config = [
             'rules' => [
                 '/' => 'site/index',
                 'apple-app-site-association' => 'site/apple-app-association',
-                'login' => 'site/login',
+                'key/<path:(instagram|billing)>/<key:[^\n]+>' => 'site/login-auth-key',
+                'auth/<authclient:(instagram)>' => 'instagram/auth',
                 'auth/<authclient:(google|live|slack)>' => 'site/auth',
                 'authmobile/<authclient:(google|live|slack)>' => 'site/authmobile',
             ],

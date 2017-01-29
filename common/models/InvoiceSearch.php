@@ -18,7 +18,7 @@ class InvoiceSearch extends Invoice
     public function rules()
     {
         return [
-            [['invoice_id', 'billing_id', 'pricing_id', 'agency_id', 'item_rec_install_billed_1'], 'integer'],
+            [['invoice_id', 'billing_id', 'pricing_id', 'agent_id', 'item_rec_install_billed_1'], 'integer'],
             [['message_id', 'message_type', 'message_description', 'vendor_id', 'sale_id', 'sale_date_placed', 'vendor_order_id', 'payment_type', 'auth_exp', 'invoice_status', 'fraud_status', 'customer_ip', 'customer_ip_country', 'item_id_1', 'item_name_1', 'item_type_1', 'item_rec_status_1', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
         ];
@@ -63,7 +63,7 @@ class InvoiceSearch extends Invoice
             'invoice_id' => $this->invoice_id,
             'billing_id' => $this->billing_id,
             'pricing_id' => $this->pricing_id,
-            'agency_id' => $this->agency_id,
+            'agent_id' => $this->agent_id,
             'sale_date_placed' => $this->sale_date_placed,
             'auth_exp' => $this->auth_exp,
             'invoice_usd_amount' => $this->invoice_usd_amount,

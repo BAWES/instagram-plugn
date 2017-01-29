@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="agent-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'agent_name',
             'agent_email:email',
             'agent_email_verified:boolean',
+            'status',
             // 'agent_auth_key',
             // 'agent_password_hash',
             // 'agent_password_reset_token',

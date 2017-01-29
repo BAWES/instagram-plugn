@@ -12,7 +12,7 @@ use yii\db\Expression;
  * @property integer $invoice_id
  * @property string $billing_id
  * @property integer $pricing_id
- * @property string $agency_id
+ * @property string $agent_id
  * @property string $message_id
  * @property string $message_type
  * @property string $message_description
@@ -38,7 +38,7 @@ use yii\db\Expression;
  * @property string $invoice_created_at
  * @property string $invoice_updated_at
  *
- * @property Agency $agency
+ * @property Agent $agent
  * @property Billing $billing
  * @property Pricing $pricing
  */
@@ -64,14 +64,14 @@ class Invoice extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['invoice_id', 'agency_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
+            [['invoice_id', 'agent_id', 'billing_id', 'pricing_id', 'message_type', 'message_description'], 'required'],
             [['md5_hash'], 'required', 'on' => 'INSNotification'],
             [['billing_id', 'pricing_id', 'item_rec_install_billed_1'], 'integer'],
             [['sale_date_placed', 'auth_exp', 'item_rec_date_next_1', 'timestamp'], 'safe'],
             [['invoice_usd_amount', 'item_usd_amount_1'], 'number'],
             [['message_id', 'message_type', 'vendor_id', 'sale_id', 'vendor_order_id', 'payment_type', 'invoice_status', 'fraud_status', 'item_id_1', 'item_type_1', 'item_rec_status_1'], 'string', 'max' => 64],
             [['message_description', 'customer_ip', 'customer_ip_country', 'item_name_1'], 'string', 'max' => 128],
-            [['agency_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agency::className(), 'targetAttribute' => ['agency_id' => 'agency_id']],
+            [['agent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agent::className(), 'targetAttribute' => ['agent_id' => 'agent_id']],
             [['billing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Billing::className(), 'targetAttribute' => ['billing_id' => 'billing_id']],
             [['pricing_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pricing::className(), 'targetAttribute' => ['pricing_id' => 'pricing_id']],
 
@@ -125,7 +125,7 @@ class Invoice extends \yii\db\ActiveRecord
             'invoice_id' => 'Invoice ID',
             'billing_id' => 'Billing ID',
             'pricing_id' => 'Pricing ID',
-            'agency_id' => 'Agency ID',
+            'agent_id' => 'Agent ID',
             'message_id' => 'Message ID',
             'message_type' => 'Message Type',
             'message_description' => 'Message Description',
@@ -154,11 +154,12 @@ class Invoice extends \yii\db\ActiveRecord
     }
 
     /**
+     * The account owner of this invoice
      * @return \yii\db\ActiveQuery
      */
-    public function getAgency()
+    public function getAgent()
     {
-        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
+        return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
@@ -197,8 +198,8 @@ class Invoice extends \yii\db\ActiveRecord
         if($this->message_type == "RECURRING_STOPPED"){
             $this->billing->processBillingCancellation("2Checkout INS RECURRING_STOPPED");
         }else{
-            // Update Agency Billing Deadline based on INS output
-            $this->agency->updateBillingDeadline($this->item_rec_date_next_1);
+            // Update Owner Billing Deadline based on INS output
+            $this->agent->updateBillingDeadline($this->item_rec_date_next_1);
         }
 
         /**
@@ -261,7 +262,7 @@ class Invoice extends \yii\db\ActiveRecord
 
 
     /**
-     * Send the invoice to the agency customer via email
+     * Send the invoice to the customer via email
      */
     public function emailInvoiceToCustomer(){
         return Yii::$app->mailer->compose([

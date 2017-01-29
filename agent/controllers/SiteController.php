@@ -8,6 +8,7 @@ use agent\components\authhandlers\LiveAuthHandler;
 use agent\components\authhandlers\SlackAuthHandler;
 use agent\models\ResetPasswordForm;
 use common\models\Agent;
+use agent\models\LoginForm;
 
 /**
  * Site controller
@@ -130,6 +131,65 @@ class SiteController extends Controller
     }
 
     /**
+     * Use a previously generated Access Key to login then redirect to where the user wants.
+     * Redirects to billing by default
+     */
+    public function actionLoginAuthKey($key, $path = "billing"){
+        // Find the agent by Auth Key
+        $agent = Agent::findOne(['agent_auth_key' => $key]);
+        if($agent){
+            // Reset the previously used auth key
+            $agent->generateAuthKeyAndSave();
+            // Log agent out before attempting to log him in
+            if(!Yii::$app->user->isGuest){
+                Yii::$app->user->logout();
+            }
+            // Log the agent in
+            Yii::$app->user->login($agent, 0);
+        }
+
+        // Resolve what path the agent wants to follow
+        switch($path){
+            case "billing":
+                $path = "billing/index";
+                break;
+            case "instagram":
+                $path = "instagram/index";
+                break;
+        }
+        return $this->redirect([$path]);
+    }
+
+    /**
+     * Login Page
+     */
+    public function actionLogin() {
+        if(!Yii::$app->user->isGuest){
+            return $this->goHome();
+        }
+
+        $this->layout = 'signup';
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->redirect(['billing/index']);
+        }
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Logout Page
+     */
+    public function actionLogout() {
+        Yii::$app->user->logout();
+
+        return $this->redirect(['site/index']);
+    }
+
+    /**
      * Email verification by clicking on link in email which includes the code that will verify
      * @param string $code Verification key that will verify your account
      * @param int $verify Agent ID to verify
@@ -168,7 +228,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            return $this->render('success', ['title' => 'Your new password has been saved']);
+            return $this->render('success');
         }
 
         return $this->render('resetPassword', [

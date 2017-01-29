@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'billing_id',
             'billing_name',
-            'agency.agency_company',
+            'agent.agent_name',
             'billing_email:email',
             'billing_total',
             'twoco_order_num',

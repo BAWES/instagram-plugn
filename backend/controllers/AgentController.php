@@ -35,6 +35,7 @@ class AgentController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'cancel-billing-plan' => ['POST'],
                 ],
             ],
         ];
@@ -71,16 +72,66 @@ class AgentController extends Controller
         ]);
 
         // Get Assigned Accounts
-        $managedAccountsQuery = $model->getAccountsManaged();
-        $accountsDataProvider = new ActiveDataProvider([
-            'query' => $managedAccountsQuery,
+        $assignedAccountsQuery = $model->getAccountsManaged();
+        $assignedAccountsDataProvider = new ActiveDataProvider([
+            'query' => $assignedAccountsQuery,
+        ]);
+
+        // Get Owned Accounts
+        $ownedAccountsQuery = $model->getInstagramUsers();
+        $ownedAccountsDataProvider = new ActiveDataProvider([
+            'query' => $ownedAccountsQuery,
+        ]);
+
+        // Data Provider to display invoices
+        $invoiceQuery = \common\models\Invoice::find();
+        $invoiceQuery->where(['agent_id' => $model->agent_id]);
+        $invoiceQuery->orderBy('invoice_updated_at DESC');
+        $invoiceDataProvider = new ActiveDataProvider([
+            'query' => $invoiceQuery,
+        ]);
+
+        // Data Provider to display billing attempts
+        $billingQuery = \common\models\Billing::find();
+        $billingQuery->where(['agent_id' => $model->agent_id]);
+        $billingQuery->orderBy('billing_datetime DESC');
+        $billingDataProvider = new ActiveDataProvider([
+            'query' => $billingQuery,
         ]);
 
         return $this->render('view', [
             'model' => $model,
             'activityDataProvider' => $activityDataProvider,
-            'accountsDataProvider' => $accountsDataProvider
+            'assignedAccountsDataProvider' => $assignedAccountsDataProvider,
+            'ownedAccountsDataProvider' => $ownedAccountsDataProvider,
+            'invoiceDataProvider' => $invoiceDataProvider,
+            'billingDataProvider' => $billingDataProvider,
         ]);
+    }
+
+    /**
+     * Cancels the currently active billing plan
+     * @param string $id
+     */
+    public function actionCancelBillingPlan($id){
+        $model = $this->findModel($id);
+
+        // Redirect back to billing page if doesnt have a plan active
+        $isBillingActive = $model->getBillingDaysLeft();
+        if(!$isBillingActive){
+            die("Agent doesnt have billing active");
+        }
+
+        $customerName = $model->agent_name;
+        $latestInvoice = $model->getInvoices()->orderBy('invoice_created_at DESC')->limit(1)->one();
+
+        if($latestInvoice){
+            Yii::error("[Admin Cancel Recurring Billing #".$latestInvoice->billing->twoco_order_num."] Customer: $customerName", __METHOD__);
+            // Cancel the recurring plan
+            $latestInvoice->billing->cancelRecurring();
+        }
+
+        return $this->redirect(['agent/view', 'id' => $id]);
     }
 
     /**

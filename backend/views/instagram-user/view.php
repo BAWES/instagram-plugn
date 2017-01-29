@@ -42,14 +42,13 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class='col-md-5'>
-        <?php if($agency){ ?>
-        <h3>Managed by Agency  <a target='_blank' href='<?= Url::to(['agency/view', 'id' => $agency->agency_id]) ?>' class='btn btn-xs btn-primary'>View Agency</a></h3>
+        <?php if($agent){ ?>
+        <h3>Owner  <a target='_blank' href='<?= Url::to(['agent/view', 'id' => $agent->agent_id]) ?>' class='btn btn-xs btn-primary'>View Agent</a></h3>
 
         <?= DetailView::widget([
-            'model' => $agency,
+            'model' => $agent,
             'attributes' => [
-                'agency_fullname',
-                'agency_company',
+                'agent_name',
             ],
         ]) ?>
         <?php } ?>

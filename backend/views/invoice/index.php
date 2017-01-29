@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'invoice_id',
             // 'billing_id',
             // 'pricing_id',
-            //'agency.agency_company',
+            //'agent.agent_name',
             // 'message_id',
 
             'message_type',

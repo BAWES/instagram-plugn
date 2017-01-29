@@ -23,6 +23,15 @@ class Agent extends \common\models\Agent {
     }
 
     /**
+     * Get all Instagram accounts this agent owns
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountsOwned()
+    {
+        return $this->hasMany(InstagramUser::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null) {

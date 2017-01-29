@@ -32,6 +32,9 @@ return [
         'accountManager' => [ //Component for agent to manage Instagram Accounts
             'class' => 'api\components\AccountManager',
         ],
+        'ownedAccountManager' => [ //Component for agent to manage Owned Instagram Accounts
+            'class' => 'api\components\OwnedAccountManager',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
@@ -62,6 +65,42 @@ return [
                         // OPTIONS VERBS
                         'OPTIONS' => 'options',
                         'OPTIONS stats' => 'options',
+                    ]
+                ],
+                [ // OwnedAccountController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/owned-account',
+                    'patterns' => [
+                        'GET' => 'list',
+                        'DELETE' => 'remove-account',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
+                [ // AssignmentController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/assignment',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'list',
+                        'POST' => 'add-agent',
+                        'DELETE' => 'remove-agent',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                    ]
+                ],
+                [ // AgentController
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/agent',
+                    'pluralize' => false,
+                    'patterns' => [
+                        'GET' => 'details',
+                        'GET authkey' => 'generate-auth-key',
+                        'DELETE unassign' => 'unassign',
+                        // OPTIONS VERBS
+                        'OPTIONS' => 'options',
+                        'OPTIONS authkey' => 'options',
+                        'OPTIONS unassign' => 'options',
                     ]
                 ],
                 [ // MediaController

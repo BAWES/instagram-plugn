@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class='col-md-6'>
 
-        <h2>Agency <a target='_blank' href='<?= Url::to(['agency/view', 'id' => $model->agency_id]) ?>' class='btn btn-xs btn-primary'>View Agency</a></h2>
+        <h2>Agent <a target='_blank' href='<?= Url::to(['agent/view', 'id' => $model->agent_id]) ?>' class='btn btn-xs btn-primary'>View Agent</a></h2>
 
         <?= DetailView::widget([
             'model' => $model,
@@ -78,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'invoice_id',
                 // 'billing_id',
                 // 'pricing_id',
-                //'agency.agency_company',
+                //'agent_id',
                 // 'message_id',
 
                 // 'vendor_id',

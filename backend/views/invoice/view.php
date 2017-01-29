@@ -34,12 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
 
-        <h2>Agency <a target='_blank' href='<?= Url::to(['agency/view', 'id' => $model->agency_id]) ?>' class='btn btn-xs btn-primary'>View Agency</a></h2>
+        <h2>Agent <a target='_blank' href='<?= Url::to(['agent/view', 'id' => $model->agent_id]) ?>' class='btn btn-xs btn-primary'>View Agent</a></h2>
         <?= DetailView::widget([
             'model' => $model,
             'attributes' => [
-                'agency.agency_fullname',
-                'agency.agency_company',
+                'agent.agent_name',
                 'customer_ip',
                 'customer_ip_country',
             ],

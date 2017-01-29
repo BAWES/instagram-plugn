@@ -10,12 +10,15 @@ return [
     'id' => 'app-agent',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'agent\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'common\components\TwoCheckoutConfig'],
     'modules' => [],
     'components' => [
         'user' => [
             'identityClass' => 'common\models\Agent',
             'enableAutoLogin' => true,
+        ],
+        'ownedAccountManager' => [ //Component for agent to manage Owned Instagram Accounts
+            'class' => 'api\components\OwnedAccountManager',
         ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
@@ -35,6 +38,12 @@ return [
                     'class' => 'agent\components\SlackAuthClient',
                     'clientId' => '47737144055.58303953975',
                     'clientSecret' => 'ea30c4ae87ed4b866b9771fffc573caf',
+                ],
+                'instagram' => [
+                    'class' => 'common\components\Instagram',
+                    'clientId' => 'a9d7f8aa04ce4dc5be54dcd58d821c08',
+                    'clientSecret' => '33a094c3460a4fdaaa1673ee4f6462a4',
+                    'scope' => 'basic comments public_content'
                 ],
             ],
         ],

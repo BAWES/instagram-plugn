@@ -15,7 +15,7 @@ use common\models\Comment;
  * InstagramUser model
  *
  * @property integer $user_id
- * @property string $agency_id
+ * @property string $agent_id
  * @property string $user_name
  * @property string $user_fullname
  * @property string $user_auth_key
@@ -34,14 +34,13 @@ use common\models\Comment;
  * @property integer $user_api_post_requests_this_hour
  * @property integer $user_api_delete_requests_this_hour
  * @property integer $user_initially_crawled
- * @property integer $user_trial_days
  *
  * @property Activity[] $activities
  * @property AgentAssignment[] $agentAssignments
  * @property Agent[] $agents
  * @property Comment[] $comments
  * @property CommentQueue[] $commentQueues
- * @property Agency $agency
+ * @property Agent $agent
  * @property Media[] $media
  * @property Record[] $records
  */
@@ -51,10 +50,10 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     // Trial days for active accounts will be deducted if its parent has no billing setup
     const STATUS_ACTIVE = 10;
 
-    // Account is no longer assigned to any agency
+    // Account is no longer owned by an agent
     const STATUS_INACTIVE = 20;
 
-    // Agency owning the account hasnt paid +
+    // Agent owning the account hasnt paid +
     // their trial ran out OR trial for this account ended
     const STATUS_DISABLED_NO_BILLING = 25;
 
@@ -110,7 +109,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     {
         return [
             'user_id' => 'User ID',
-            'agency_id' => 'Agency ID',
+            'agent_id' => 'Agent ID',
             'user_name' => 'Name',
             'user_fullname' => 'Fullname',
             'user_auth_key' => 'Auth Key',
@@ -129,7 +128,6 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
             'user_api_post_requests_this_hour' => 'POST Requests This Hour',
             'user_api_delete_requests_this_hour' => 'Delete Requests This Hour',
             'user_initially_crawled' => 'Initially Crawled?',
-            'user_trial_days' => 'Trial Days Left'
         ];
     }
 
@@ -153,11 +151,12 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * The Agent owning this account
      * @return \yii\db\ActiveQuery
      */
-    public function getAgency()
+    public function getAgent()
     {
-        return $this->hasOne(Agency::className(), ['agency_id' => 'agency_id']);
+        return $this->hasOne(Agent::className(), ['agent_id' => 'agent_id']);
     }
 
     /**
@@ -218,7 +217,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 return "Active";
                 break;
             case self::STATUS_INACTIVE:
-                return "Inactive (No longer assigned to agency)";
+                return "Inactive (No owner)";
                 break;
             case self::STATUS_DISABLED_NO_BILLING:
                 return "No billing/Trial Ended";
@@ -239,14 +238,14 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
         // Unable to Activate the account if it has invalid access token
         if($this->user_status == self::STATUS_INVALID_ACCESS_TOKEN) return;
 
-        // Check if Parent Agency has Billing Active
-        $billingActive = $this->agency->getBillingDaysLeft();
+        // Check if Owner has Billing Active
+        $billingActive = $this->agent->getBillingDaysLeft();
 
-        // Check if Parent Agency has a Trial Active
-        $agencyTrialActive = $this->agency->hasActiveTrial();
+        // Check if Owner has a Trial Active
+        $agentTrialActive = $this->agent->hasActiveTrial();
 
         // If billing or trials are valid, fully activate the account
-        if($billingActive || $agencyTrialActive){
+        if($billingActive || $agentTrialActive){
             $this->user_status = self::STATUS_ACTIVE;
         }else $this->user_status = self::STATUS_DISABLED_NO_BILLING;
 
@@ -393,7 +392,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 //Send email to all these agents with summary
                 foreach($agents as $agent){
                     Yii::$app->mailer->compose([
-                            'html' => 'frontend/agentNotification',
+                            'html' => 'agent/agentNotification',
                                 ], [
                             'accountName' => $this->user_name,
                             'numComments' => $numComments,
@@ -441,7 +440,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
          */
         foreach($this->agents as $agent){
             Yii::$app->mailer->compose([
-                        'html' => 'frontend/tokenExpired',
+                        'html' => 'agent/tokenExpired',
                             ], [
                         'accountFullName' => $this->user_fullname,
                         'accountName' => $this->user_name,

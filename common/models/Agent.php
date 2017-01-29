@@ -8,6 +8,7 @@ use yii\db\Expression;
 use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "agent".
@@ -20,6 +21,8 @@ use yii\db\ActiveRecord;
  * @property string $agent_password_hash
  * @property string $agent_password_reset_token
  * @property integer $agent_status
+ * @property integer $agent_trial_days
+ * @property string $agent_billing_active_until
  * @property integer $agent_email_preference
  * @property string $agent_limit_email
  * @property string $agent_created_at
@@ -27,12 +30,15 @@ use yii\db\ActiveRecord;
  *
  * @property Activity[] $activities
  * @property InstagramUser[] $accountsManaged
+ * @property InstagramUser[] $instagramUsers
  * @property AgentAssignment[] $agentAssignments
  * @property AgentAuth[] $agentAuths
  * @property AgentToken[] $accessTokens
  * @property Comment[] $comments
  * @property Comment[] $handledComments
  * @property Comment[] $deletedComments
+ * @property Billing[] $billings
+ * @property Invoice[] $invoices
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
@@ -40,6 +46,7 @@ class Agent extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_BANNED = 5;
     const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 20; // Billing / Trial Expired
 
     //Email verification values for `agent_email_verified`
     const EMAIL_VERIFIED = 1;
@@ -55,6 +62,11 @@ class Agent extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return 'agent';
+    }
+
+    public static function find()
+    {
+        return new AgentQuery(get_called_class());
     }
 
     /**
@@ -114,12 +126,54 @@ class Agent extends ActiveRecord implements IdentityInterface
             'agent_password_hash' => 'Password',
             'agent_password_reset_token' => 'Password Reset Token',
             'agent_status' => 'Status',
-            'agent_limit_email' => 'Email Verif Limit',
+            'agent_trial_days' => 'Trial Days Left',
+            'agent_billing_active_until' => 'Billing Active Until',
+            'agent_email_preference' => 'Email Preference',
+            'agent_limit_email' => 'Limit Email',
             'agent_created_at' => 'Created At',
             'agent_updated_at' => 'Updated At',
         ];
     }
 
+    /**
+     * Returns String value of current status
+     * @return string
+     */
+    public function getStatus(){
+        switch($this->agent_status){
+            case self::STATUS_ACTIVE:
+                return "Active";
+                break;
+            case self::STATUS_INACTIVE:
+                return "Inactive (Billing or Trial Expired)";
+                break;
+            case self::STATUS_BANNED:
+                return "Banned";
+                break;
+            case self::STATUS_DELETED:
+                return "Deleted";
+                break;
+        }
+
+        return "Couldnt find a status";
+    }
+
+    /**
+     * BeforeSave
+     */
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if($insert){
+                $this->agent_billing_active_until = new Expression('SUBDATE(NOW(), 1)');
+            }
+
+            return true;
+        }
+    }
+
+    /**
+     * AfterSave
+     */
     public function afterSave($insert, $changedAttributes) {
         parent::afterSave($insert, $changedAttributes);
 
@@ -135,12 +189,30 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Accounts owned by this agent
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInstagramUsers()
+    {
+        return $this->hasMany(InstagramUser::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * Get all Instagram accounts this agent owns
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccountsOwned()
+    {
+        return $this->hasMany(InstagramUser::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
      * Get all Instagram accounts this agent is assigned to manage
      * @return \yii\db\ActiveQuery
      */
     public function getAccountsManaged()
     {
-        return $this->hasMany(\agent\models\InstagramUser::className(), ['user_id' => 'user_id'])
+        return $this->hasMany(\api\models\InstagramUser::className(), ['user_id' => 'user_id'])
                 ->via('agentAssignments');
     }
 
@@ -206,6 +278,22 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBillings()
+    {
+        return $this->hasMany(Billing::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInvoices()
+    {
+        return $this->hasMany(Invoice::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
      * Sends an email requesting a user to verify his email address
      * @return boolean whether the email was sent
      */
@@ -214,22 +302,13 @@ class Agent extends ActiveRecord implements IdentityInterface
         $this->agent_limit_email = new Expression('NOW()');
         $this->save(false);
 
-        // Generate Different Reset Link If API is calling
-        if(Yii::$app->id == "app-api"){
-            // API application calling
-            $verificationUrl = Yii::$app->urlManagerAgent->createAbsoluteUrl([
-                'site/email-verify',
-                'code' => $this->agent_auth_key,
-                'verify' => $this->agent_id
-            ]);
-        }else{
-            // Agent portal calling
-            $verificationUrl = Yii::$app->urlManager->createAbsoluteUrl([
-                'site/email-verify',
-                'code' => $this->agent_auth_key,
-                'verify' => $this->agent_id
-            ]);
-        }
+        // Generate Reset Link
+        $verificationUrl = Yii::$app->urlManagerAgent->createAbsoluteUrl([
+            'site/email-verify',
+            'code' => $this->agent_auth_key,
+            'verify' => $this->agent_id
+        ]);
+
 
         return Yii::$app->mailer->compose([
                     'html' => 'agent/verificationEmail-html',
@@ -269,6 +348,185 @@ class Agent extends ActiveRecord implements IdentityInterface
         return null;
     }
 
+    /**
+     * Check whether the agent has hit his owned account limit
+     * @return boolean
+     */
+    public function getIsAtAccountLimit(){
+        $accountCount = count($this->instagramUsers);
+        $accountLimit = $this->linkedAccountLimit;
+        if($accountCount >= $accountLimit){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return the number of owned Instagram accounts allowed for this agent
+     * @return integer
+     */
+    public function getLinkedAccountLimit(){
+        // If Billing is Active, check pricing plan for the limit.
+        $billingDaysLeft = $this->getBillingDaysLeft();
+        if($billingDaysLeft){
+            $invoice = $this->getInvoices()->with('pricing')
+                ->orderBy('invoice_created_at DESC')->limit(1)->one();
+            if($invoice && $invoice->pricing){
+                return $invoice->pricing->pricing_account_quantity;
+            }
+        }
+
+        return 9999;
+    }
+
+    /**
+     * Sets the new date for the deadline.
+     * It can be set to both future and past dates
+     * Function should check if billing is active after setting the new date then
+     * act accordingly
+     * @param  string $deadlineDate Date when the next payment is due
+     * @return mixed
+     */
+    public function updateBillingDeadline($deadlineDate){
+        $this->agent_billing_active_until = $deadlineDate;
+        $this->save(false);
+        $this->refresh();
+
+        $billingDaysLeft = $this->getBillingDaysLeft();
+
+        // Disable Trial If Billing is Active
+        if($billingDaysLeft){
+            $this->agent_trial_days = 0;
+        }
+        $this->save(false);
+
+        // Disable Agent and owned accounts if both billing and trial ran out
+        // OTHERWISE Enable Agent and his owned accounts if not already enabled.
+        if(!$billingDaysLeft && !$this->hasActiveTrial()){
+            $this->_disableAgentAndManagedAccounts();
+        }else{
+            $this->_enableAgentAndManagedAccounts();
+        }
+    }
+
+    /**
+     * Return the number of days left on his billing plan payment (if any)
+     * @return integer
+     */
+    public function getBillingDaysLeft(){
+        $expiresOn = new \DateTime($this->agent_billing_active_until);
+        $today = new \DateTime();
+
+        $daysLeft = $expiresOn->diff($today)->days;
+
+        if($expiresOn > $today){
+            return $daysLeft + 1;
+        }
+
+        // Allow 24 hours additional for user to sort out billing issues
+        if($daysLeft == 0){
+            return 1;
+        }
+
+        return 0;
+    }
+
+
+    /**
+     * Check if this agent has a valid active trial
+     * @return boolean
+     */
+    public function hasActiveTrial(){
+        if($this->agent_email_verified == Agent::EMAIL_VERIFIED
+            && $this->agent_status == Agent::STATUS_ACTIVE
+            && $this->agent_trial_days > 0 && !$this->getBillingDaysLeft()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Deducts a trial day from all active agencies
+     */
+    public static function deductTrialDayFromAllActiveAgents()
+    {
+        $agentsWithActiveTrial = static::find()->validTrial();
+        foreach($agentsWithActiveTrial->each(50) as $agent){
+            // Deduct a trial day only if the agent owns Instagram accounts
+            if(count($agent->instagramUsers) > 0){
+                $agent->deductTrialDay();
+            }
+        }
+    }
+
+    /**
+     * Deducts a day from the active trial
+     * @return mixed
+     */
+    public function deductTrialDay(){
+        if($this->hasActiveTrial()){
+            // Deduct a day from trial days
+            $this->agent_trial_days = $this->agent_trial_days - 1;
+            $this->save(false);
+
+            // Disable Trial if no days left
+            if($this->agent_trial_days == 0){
+                $this->_disableAgentAndManagedAccounts();
+
+                // Log to Slack that this customer trial expired & no billing setup
+                Yii::warning("[Agent #".$this->agent_id." Trial Expired] Owned by ".$this->agent_name." and has ".count($this->instagramUsers)." accounts", __METHOD__);
+
+                // Send Email to Customer that his trial expired & need to setup billing
+                Yii::$app->mailer->compose([
+                        'html' => 'billing/trial-expired',
+                            ], [
+                        'agent' => $this,
+                    ])
+                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name ])
+                    ->setTo($this->agent_email)
+                    ->setSubject('Your trial has expired. Thanks for giving Plugn a try!')
+                    ->send();
+            }
+        }
+    }
+
+
+    /**
+     * Disable the active ig accounts when an agent account expires
+     * either by end of trial or expired billing
+     * @return mixed
+     */
+    private function _disableAgentAndManagedAccounts(){
+        // Do nothing if already disabled
+        if($this->agent_status == Agent::STATUS_INACTIVE) return;
+
+        // Update the status of the IG accounts owned by agent
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
+
+        $this->agent_status = Agent::STATUS_INACTIVE;
+        $this->save(false);
+    }
+
+    /**
+     * Enable the active ig accounts when an agent account is reactivated
+     * either by new trial or billing
+     * @return mixed
+     */
+    private function _enableAgentAndManagedAccounts(){
+        // Do nothing if already enabled
+        if($this->agent_status == Agent::STATUS_ACTIVE) return;
+
+        // Update the status of the IG accounts owned by this agent
+        foreach($this->instagramUsers as $user){
+            $user->activateAccountIfPossible();
+        }
+
+        $this->agent_status = Agent::STATUS_ACTIVE;
+        $this->save(false);
+    }
+
 
     /**
      * Start of IdentityInterface Methods
@@ -292,7 +550,7 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Finds admin by email
+     * Finds agent by email
      *
      * @param string $email
      * @return static|null
@@ -374,10 +632,21 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Generates "remember me" authentication key
+     * Generates auth key [1 time use token]
      */
     public function generateAuthKey() {
         $this->agent_auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * Generate, save, and return an auth key for this account [1 time use token]
+     * @return string
+     */
+    public function generateAuthKeyAndSave() {
+        $this->generateAuthKey();
+        $this->save(false);
+
+        return $this->agent_auth_key;
     }
 
     /**
@@ -417,5 +686,19 @@ class Agent extends ActiveRecord implements IdentityInterface
         $token->save(false);
 
         return $token;
+    }
+}
+
+/**
+ * Custom queries for easier management of selection
+ */
+class AgentQuery extends ActiveQuery
+{
+    public function validTrial()
+    {
+        return $this->with("instagramUsers")
+        ->andWhere(['agent_email_verified' => Agent::EMAIL_VERIFIED])
+        ->andWhere(['agent_status' => Agent::STATUS_ACTIVE])
+        ->andWhere(['>', 'agent_trial_days', 0]);
     }
 }

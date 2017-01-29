@@ -23,6 +23,7 @@ class InstagramUser extends \common\models\InstagramUser {
         // Whitelisted fields to return
         return [
             'user_id',
+            'agent_id',
             'user_name',
             'user_fullname',
             'user_profile_pic',
@@ -34,10 +35,10 @@ class InstagramUser extends \common\models\InstagramUser {
             'user_instagram_id',
             'user_status',
             'unhandledCount',
-            'lastAgentActivity'
-            // 'name' => function ($model) {
-            //     return $model->first_name . ' ' . $model->last_name;
-            // },
+            'lastAgentActivity',
+            'assignments' => function ($model) {
+                return $model->agentAssignments;
+            },
         ];
     }
 
@@ -56,6 +57,15 @@ class InstagramUser extends \common\models\InstagramUser {
         return $this->hasMany(Media::className(), ['user_id' => 'user_id'])
                     ->orderBy("media_created_datetime DESC")
                     ->with("unhandledComments");
+    }
+
+    /**
+     * Get Agent Assignment Records
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgentAssignments()
+    {
+        return $this->hasMany(AgentAssignment::className(), ['user_id' => 'user_id']);
     }
 
     /**

@@ -38,21 +38,25 @@ class AccountManager extends Object
             die("ILLEGAL USAGE OF ACCOUNT MANAGER, THROW IN JAIL");
         }
 
-        // Getting a list of accounts this agent manages
-        $cacheDependency = Yii::createObject([
-            'class' => 'yii\caching\DbDependency',
-            'reusable' => true,
-            'sql' => 'SELECT '.Yii::$app->user->identity->agent_id.', COUNT(*) FROM agent_assignment WHERE agent_id='.Yii::$app->user->identity->agent_id,
-            // we SELECT agent_id as well to make sure every cached sql statement is unique to this agent
-            // don't want agents viewing the cached content of another agent
-        ]);
+        // // Getting a list of accounts this agent manages
+        // $cacheDependency = Yii::createObject([
+        //     'class' => 'yii\caching\DbDependency',
+        //     'reusable' => true,
+        //     'sql' => 'SELECT '.Yii::$app->user->identity->agent_id.', COUNT(*) FROM agent_assignment WHERE agent_id='.Yii::$app->user->identity->agent_id,
+        //     // we SELECT agent_id as well to make sure every cached sql statement is unique to this agent
+        //     // don't want agents viewing the cached content of another agent
+        // ]);
+        //
+        // $cacheDuration = 60*1; //1 minute then delete from cache
+        //
+        // $this->_managedAccounts = InstagramUser::getDb()->cache(function($db) {
+        //     return Yii::$app->user->identity->getAccountsManaged()
+        //         ->withoutInactive()->all();
+        // }, $cacheDuration, $cacheDependency);
+        //
 
-        $cacheDuration = 60*1; //1 minute then delete from cache
-
-        $this->_managedAccounts = InstagramUser::getDb()->cache(function($db) {
-            return Yii::$app->user->identity->getAccountsManaged()
-                ->withoutInactive()->all();
-        }, $cacheDuration, $cacheDependency);
+        // No cache
+        $this->_managedAccounts = Yii::$app->user->identity->getAccountsManaged()->withoutInactive()->all();
 
         // Populate accounts with unhandled comment count
         $this->populateAccountsWithUnhandledCountandLastActivity();
