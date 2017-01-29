@@ -304,7 +304,7 @@ class Agent extends ActiveRecord implements IdentityInterface
 
         // Generate Reset Link
         $verificationUrl = Yii::$app->urlManagerAgent->createAbsoluteUrl([
-            'site/email-verify',
+            'deeplink/email-verify',
             'code' => $this->agent_auth_key,
             'verify' => $this->agent_id
         ]);
