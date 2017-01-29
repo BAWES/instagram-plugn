@@ -134,7 +134,7 @@ class BillingController extends Controller
         $planLimit = $pricing->pricing_account_quantity;
         if($planLimit < $currentAccountCount){
             Yii::$app->getSession()
-            ->setFlash('warning', "[You have $currentAccountCount accounts. Selected plan has a limit of $planLimit] You may remove accounts by navigating to their management page and clicking the <b>Remove</b> button");
+            ->setFlash('warning', "[Selected plan only allows $planLimit accounts. You have $currentAccountCount you administer. ] You may remove an account by clicking the <b>Remove</b> button on its right sidebar.");
 
             return $this->redirect(['billing/index']);
         }

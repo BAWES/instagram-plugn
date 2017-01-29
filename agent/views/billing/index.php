@@ -39,10 +39,13 @@ $this->title = 'Billing';
 		<!-- Pricing Tables -->
 		<div class="box-typical-center">
 			<div class="box-typical-center-in prices-page">
-				<header class="prices-page-title">Affordable pricing. No long term contract.</header>
+				<header class="prices-page-title"  style='margin-bottom:0; padding-bottom:0;'>
+					Affordable pricing. No long term contract.
+				</header>
+				<h5>Only pay for the accounts you're an admin of.</h5>
 
 				<?php if($isTrial){ ?>
-					<p class="prices-page-subtitle" style='padding-bottom:15px;'><u>Up to 30% Discount</u> on the <i>first month</i> when setting up billing during the trial period.</p>
+					<p class="prices-page-subtitle" style='padding-bottom:15px;'><u>Up to 30% Discount</u> on your <i>first month</i> when subscribing during the trial period.</p>
 					<p>Note: trial will be deactivated once you subscribe.</p>
 				<?php } ?>
 
