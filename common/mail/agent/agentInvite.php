@@ -4,7 +4,7 @@
 
 use yii\helpers\Url;
 
-$agentPortalUrl = "http://agent.plugn.io";
+$agentPortalUrl = "https://agent.plugn.io/app";
 ?>
 
 <!doctype html>

@@ -88,7 +88,7 @@ class AgentAssignment extends \yii\db\ActiveRecord
                 if($this->sendEmail){
                     //Send Email to Agent notifying him that he got assigned
                     Yii::$app->mailer->compose([
-                        'html' => 'agency/agentInvite',
+                        'html' => 'agent/agentInvite',
                             ], [
                         'accountFullName' => $this->instagramAccountModel->user_fullname,
                         'accountName' => $this->instagramAccountModel->user_name,

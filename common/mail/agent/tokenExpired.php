@@ -4,7 +4,7 @@
 
 use yii\helpers\Url;
 
-$agentPortalUrl = "http://agent.plugn.io";
+$instagramPortalUrl = "https://agent.plugn.io/app";
 ?>
 
 <!doctype html>
@@ -78,7 +78,7 @@ $agentPortalUrl = "http://agent.plugn.io";
       <![endif]--><div style="margin:0 auto;max-width:700px;background:#fcfcfc;"><table cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:#fcfcfc;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;font-size:0px;padding:20px 0px;padding-bottom:0px;"><!--[if mso | IE]>
       <table border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:top;width:700px;">
       <![endif]--><div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><div style="cursor:auto;color:black;font-family:Helvetica Neue;font-size:20px;font-weight:200;line-height:22px;">
-                You’ve received an invite from <?= $accountFullName ?>
+                There's a slight problem connecting to your Instagram account on Plugn
               </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:20px;padding-bottom:0px;padding-right:0px;padding-left:0px;"><p style="font-size:1px;margin:0 auto;border-top:1px solid #f8f8f8;width:100%;"></p><!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="font-size:1px;margin:0 auto;border-top:1px solid #f8f8f8;width:100%;" width="700"><tr><td style="height:0;line-height:0;">&nbsp;</td></tr></table><![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>
@@ -90,7 +90,7 @@ $agentPortalUrl = "http://agent.plugn.io";
           <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
       <![endif]--><div style="margin:0 auto;max-width:700px;background:white;"><table cellpadding="0" cellspacing="0" style="font-size:0px;width:100%;background:white;" align="center" border="0"><tbody><tr><td style="text-align:center;vertical-align:top;font-size:0px;padding:20px 0px;"><!--[if mso | IE]>
       <table border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:top;width:130px;">
-      <![endif]--><div aria-labelledby="mj-column-px-130" class="mj-column-px-130" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><table cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:80px;"><a href="http://instagram.com/<?= $accountName ?>" target="_blank"><img alt="" height="auto" src="<?= $message->embed($accountPhoto); ?>" width="80"></a></td></tr></tbody></table></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px 30px 20px;" align="center"><div style="cursor:auto;color:#000000;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:700;line-height:22px;">
+      <![endif]--><div aria-labelledby="mj-column-px-130" class="mj-column-px-130" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="center"><table cellpadding="0" cellspacing="0" style="border-collapse:collapse;border-spacing:0px;" align="center" border="0"><tbody><tr><td style="width:80px;"><a href="http://instagram.com/<?= $accountName ?>" target="_blank"><img alt="" height="auto" src="<?= $message->embed($accountPhoto); ?>" style="border:none;display:block;outline:none;text-decoration:none;width:100%;height:auto;" width="80"></a></td></tr></tbody></table></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px 30px 20px;" align="center"><div style="cursor:auto;color:#000000;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:700;line-height:22px;">
                   <span style="display: inline-block; text-align: center; min-width: 110px;">
                       <a href="http://instagram.com/<?= $accountName ?>" style="text-decoration: none; color: inherit;">
                           <span style="color: #0081c3;">@<?= $accountName ?></span>
@@ -99,11 +99,11 @@ $agentPortalUrl = "http://agent.plugn.io";
               </div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td><td style="vertical-align:top;width:350px;">
       <![endif]--><div aria-labelledby="mj-column-px-350" class="mj-column-px-350" style="vertical-align:top;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:#333;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:20px;line-height:22px;">
-                You can now manage their Instagram account
+                Don't worry though, it's very quick to fix
               </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;" align="left"><div style="cursor:auto;color:grey;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;">
-                Log into your Plugn Agent account and never lose a comment again!
-              </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:8px 16px 10px;padding-bottom:25px;padding-right:30px;padding-left:30px;" align="left"><table cellpadding="0" cellspacing="0" style="border:none;border-radius:3px;" align="left" border="0"><tbody><tr><td style="background:#00a8ff;border-radius:3px;color:white;cursor:auto;" align="center" valign="middle" bgcolor="#00a8ff"><a href="<?= $agentPortalUrl ?>" style="display:inline-block;text-decoration:none;background:#00a8ff;border:1px solid #00a8ff;border-radius:3px;color:white;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;padding:8px 16px 10px;" target="_blank">
-                  Get Started
+                You only need to log into your Plugn account to re-connect your account and clear the issue.
+            </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:8px 16px 10px;padding-bottom:25px;padding-right:30px;padding-left:30px;" align="left"><table cellpadding="0" cellspacing="0" style="border:none;border-radius:3px;" align="left" border="0"><tbody><tr><td style="background:#00a8ff;border-radius:3px;color:white;cursor:auto;" align="center" valign="middle" bgcolor="#00a8ff"><a href="<?= $instagramPortalUrl ?>" style="display:inline-block;text-decoration:none;background:#00a8ff;border:1px solid #00a8ff;border-radius:3px;color:white;font-family:Proxima Nova, Arial, Arial, Helvetica, sans-serif;font-size:15px;font-weight:400;padding:8px 16px 10px;" target="_blank">
+                  Re-connect my Instagram Account
               </a></td></tr></tbody></table></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div><!--[if mso | IE]>

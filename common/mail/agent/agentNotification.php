@@ -7,8 +7,8 @@
 
 use yii\helpers\Url;
 
-$unsubscribeUrl = "http://agent.plugn.io/email/index";
-$agentPortalUrl = "http://agent.plugn.io";
+$unsubscribeUrl = "https://agent.plugn.io/email/index";
+$agentPortalUrl = "https://agent.plugn.io/app";
 ?>
 
 <!doctype html>

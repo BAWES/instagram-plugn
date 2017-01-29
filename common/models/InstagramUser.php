@@ -392,7 +392,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
                 //Send email to all these agents with summary
                 foreach($agents as $agent){
                     Yii::$app->mailer->compose([
-                            'html' => 'frontend/agentNotification',
+                            'html' => 'agent/agentNotification',
                                 ], [
                             'accountName' => $this->user_name,
                             'numComments' => $numComments,
@@ -440,7 +440,7 @@ class InstagramUser extends ActiveRecord implements IdentityInterface
          */
         foreach($this->agents as $agent){
             Yii::$app->mailer->compose([
-                        'html' => 'frontend/tokenExpired',
+                        'html' => 'agent/tokenExpired',
                             ], [
                         'accountFullName' => $this->user_fullname,
                         'accountName' => $this->user_name,

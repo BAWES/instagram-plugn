@@ -76,7 +76,7 @@ class OwnedAccountController extends Controller
         // Get Instagram account from Account Manager component
         $instagramAccount = Yii::$app->ownedAccountManager->getOwnedAccount($accountId);
 
-        // Remove the agency from this Instagram account
+        // Remove the agent from this Instagram account
         $instagramAccount->agent_id = null;
         // Set account as Inactive to stop crawling data & stop deducting trial days
         $instagramAccount->user_status = \common\models\InstagramUser::STATUS_INACTIVE;
