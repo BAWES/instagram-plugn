@@ -3,6 +3,7 @@ namespace agent\controllers;
 
 use Yii;
 use yii\web\Controller;
+use agent\models\ResetPasswordForm;
 use common\models\Agent;
 
 /**
@@ -34,6 +35,28 @@ class DeeplinkController extends Controller
             //inserted code is invalid
             throw new \yii\web\BadRequestHttpException(Yii::t('register', 'Invalid email verification code'));
         }
+    }
+
+    /**
+     * Handle Password Reset
+     * @param string $token
+     */
+    public function actionResetPassword($token) {
+        $this->layout = 'signup';
+
+        try {
+            $model = new ResetPasswordForm($token);
+        } catch (\yii\base\InvalidParamException $e) {
+            throw new \yii\web\BadRequestHttpException($e->getMessage());
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            return $this->render('resetSuccess');
+        }
+
+        return $this->render('resetPassword', [
+                    'model' => $model,
+        ]);
     }
 
 }
