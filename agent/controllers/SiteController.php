@@ -199,7 +199,7 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            return $this->render('success');
+            return $this->render('passwordReset');
         }
 
         return $this->render('resetPassword', [
