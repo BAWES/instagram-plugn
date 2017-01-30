@@ -6,7 +6,6 @@ use yii\web\Controller;
 use agent\components\authhandlers\GoogleAuthHandler;
 use agent\components\authhandlers\LiveAuthHandler;
 use agent\components\authhandlers\SlackAuthHandler;
-use agent\models\ResetPasswordForm;
 use common\models\Agent;
 use agent\models\LoginForm;
 
@@ -187,24 +186,6 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->redirect(['site/index']);
-    }
-
-    public function actionResetPassword($token) {
-        $this->layout = 'signup';
-
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (\yii\base\InvalidParamException $e) {
-            throw new \yii\web\BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            return $this->render('passwordReset');
-        }
-
-        return $this->render('resetPassword', [
-                    'model' => $model,
-        ]);
     }
 
     /**
