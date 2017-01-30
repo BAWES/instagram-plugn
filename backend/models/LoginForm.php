@@ -61,6 +61,7 @@ class LoginForm extends Model
         if ($this->validate()) {
             return Yii::$app->user->login($this->getAdmin(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
+            Yii::error("[Admin Login Attempt Failed] ".$this->email, __METHOD__);
             return false;
         }
     }
