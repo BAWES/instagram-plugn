@@ -47,6 +47,7 @@ return [
                     'patterns' => [
                         'GET login' => 'login',
                         'PATCH verify' => 'verify-email',
+                        'PATCH update-password' => 'update-password',
                         'POST create-account' => 'create-account',
                         'POST request-reset-password' => 'request-reset-password',
                         'POST resend-verification-email' => 'resend-verification-email',

@@ -62,7 +62,7 @@ class PasswordResetRequestForm extends Model
             $agent->agent_limit_email = new \yii\db\Expression('NOW()');
 
             if ($agent->save(false)) {
-                $resetLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(['site/reset-password', 'token' => $agent->agent_password_reset_token]);
+                $resetLink = Yii::$app->urlManagerAgent->createAbsoluteUrl(['deeplink/reset-password', 'token' => $agent->agent_password_reset_token]);
 
                 //Send English Email
                 return \Yii::$app->mailer->compose([
