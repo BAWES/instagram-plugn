@@ -52,6 +52,7 @@ class AuthController extends Controller
         $behaviors['authenticator']['except'] = [
             'options',
             'verify-email',
+            'update-password',
             'create-account',
             'request-reset-password',
             'resend-verification-email'
@@ -280,6 +281,33 @@ class AuthController extends Controller
         return [
             'operation' => 'success',
             'message' => Yii::t('agent', 'Password reset link sent, please check your email for further instructions.')
+        ];
+    }
+
+    /**
+     * Updates password based on passed token
+     * @return array
+     */
+    public function actionUpdatePassword()
+    {
+        $token = Yii::$app->request->getBodyParam("token");
+        $newPassword = Yii::$app->request->getBodyParam("newPassword");
+
+        $agent =  Agent::findByPasswordResetToken($token);
+        if(!$agent || !$newPassword){
+            return [
+                'operation' => 'error',
+                'message' => 'Invalid password reset token. Please request another password reset email.'
+            ];
+        }
+
+        $agent->setPassword($newPassword);
+        $agent->removePasswordResetToken();
+        $agent->save(false);
+
+        return [
+            'operation' => 'success',
+            'message' => 'Password reset link sent, please check your email for further instructions.'
         ];
     }
 }
