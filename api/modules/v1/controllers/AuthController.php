@@ -307,7 +307,7 @@ class AuthController extends Controller
 
         return [
             'operation' => 'success',
-            'message' => 'Password reset link sent, please check your email for further instructions.'
+            'message' => 'Your password has been reset.'
         ];
     }
 }
