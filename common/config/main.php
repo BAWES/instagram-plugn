@@ -15,6 +15,11 @@ return [
             //Link assets -> create symbolic links to assets
             'linkAssets' => true,
 
+            // Change hash folder name to not utilize timestmap for multi server setup
+            'hashCallback' => function ($path) {
+               return hash('md4', $path);
+            },
+
             //append time stamps to assets for cache busting
             //'appendTimestamp' => true,
         ],
