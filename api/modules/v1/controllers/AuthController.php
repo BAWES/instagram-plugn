@@ -327,7 +327,7 @@ class AuthController extends Controller
         // iOS Auth Client ID
         $clientId2 = "882152609344-thtlv6jpmuc2ugrmnnfe3g1rb0ba5ess.apps.googleusercontent.com";
 
-        $clientRegular = new \Google_Client(['client_id' => $clientId]);
+        $clientRegular = new \Google_Client(['client_id' => $clientId1]);
         $payload = $clientRegular->verifyIdToken($idToken);
         if(!$payload){
             $clientApple =  new \Google_Client(['client_id' => $clientId2]);
