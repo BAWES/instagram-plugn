@@ -322,10 +322,18 @@ class AuthController extends Controller
     {
         $idToken = Yii::$app->request->getBodyParam("id_token");
 
-        $clientId = "882152609344-ahm24v4mttplse2ahf35ffe4g0r6noso.apps.googleusercontent.com";
-        $client = new \Google_Client(['client_id' => $clientId]);
+        // Android and Web Auth Client ID
+        $clientId1 = "882152609344-ahm24v4mttplse2ahf35ffe4g0r6noso.apps.googleusercontent.com";
+        // iOS Auth Client ID
+        $clientId2 = "882152609344-thtlv6jpmuc2ugrmnnfe3g1rb0ba5ess.apps.googleusercontent.com";
 
-        $payload = $client->verifyIdToken($idToken);
+        $clientRegular = new \Google_Client(['client_id' => $clientId]);
+        $payload = $clientRegular->verifyIdToken($idToken);
+        if(!$payload){
+            $clientApple =  new \Google_Client(['client_id' => $clientId2]);
+            $payload = $clientApple->verifyIdToken($idToken);
+        }
+
         if ($payload)
         {
             $fullname = $payload['name'];
