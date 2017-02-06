@@ -321,6 +321,7 @@ class AuthController extends Controller
     public function actionValidate()
     {
         $idToken = Yii::$app->request->getBodyParam("id_token");
+        $displayName = Yii::$app->request->getBodyParam("displayName");
 
         // Android and Web Auth Client ID
         $clientId1 = "882152609344-ahm24v4mttplse2ahf35ffe4g0r6noso.apps.googleusercontent.com";
@@ -336,8 +337,9 @@ class AuthController extends Controller
 
         if ($payload)
         {
-            $fullname = $payload['name'];
             $email = $payload['email'];
+            $displayName = $displayName?$displayName:$email;
+            $fullname = isset($payload['name'])?$payload['name']:$displayName;
 
             $existingAgent = Agent::find()->where(['agent_email' => $email])->one();
             if ($existingAgent) {
