@@ -52,6 +52,7 @@ class AuthController extends Controller
         $behaviors['authenticator']['except'] = [
             'options',
             'verify-email',
+            'validate',
             'update-password',
             'create-account',
             'request-reset-password',
@@ -308,6 +309,91 @@ class AuthController extends Controller
         return [
             'operation' => 'success',
             'message' => 'Your password has been reset.'
+        ];
+    }
+
+
+    /**
+     * Validate Google auth id_token sent from mobile
+     * after a successful google login
+     * @return array
+     */
+    public function actionValidate()
+    {
+        $idToken = Yii::$app->request->getBodyParam("id_token");
+
+        $clientId = "882152609344-ahm24v4mttplse2ahf35ffe4g0r6noso.apps.googleusercontent.com";
+        $client = new \Google_Client(['client_id' => $clientId]);
+
+        $payload = $client->verifyIdToken($idToken);
+        if ($payload)
+        {
+            $fullname = $payload['name'];
+            $email = $payload['email'];
+
+            $existingAgent = Agent::find()->where(['agent_email' => $email])->one();
+            if ($existingAgent) {
+                //There's already an agent with this email, update his details
+                $existingAgent->agent_name = $fullname;
+                $existingAgent->agent_email_verified = Agent::EMAIL_VERIFIED;
+                $existingAgent->generatePasswordResetToken();
+
+                // On Save, Log him in / Send Access Token
+                if ($existingAgent->save()) {
+                    Yii::info("[Agent Login Google Native] ".$existingAgent->agent_email, __METHOD__);
+
+                    $accessToken = $existingAgent->accessToken->token_value;
+                    return [
+                        "operation" => 'success',
+                        "token" => $accessToken,
+                        "agentId" => $existingAgent->agent_id,
+                        "name" => $existingAgent->agent_name,
+                        "email" => $existingAgent->agent_email
+                    ];
+                }
+
+                // If Unable to Update
+                return [
+                    'operation' => 'error',
+                    'message' => 'Unable to update your account. Please contact us for assistance.'
+                ];
+            } else {
+                //Agent Doesn't have an account, create one for him
+                $agent = new Agent([
+                    'agent_name' => $fullname,
+                    'agent_email' => $email,
+                    'agent_email_verified' => Agent::EMAIL_VERIFIED,
+                    'agent_limit_email' => new Expression('NOW()')
+                ]);
+                $agent->setPassword(Yii::$app->security->generateRandomString(6));
+                $agent->generateAuthKey();
+                $agent->generatePasswordResetToken();
+
+                if ($agent->save()) {
+                    //Log agent signup
+                    Yii::info("[New Agent Signup Google Native] ".$agent->agent_email, __METHOD__);
+                    // Log him in / Send Access Token
+                    $accessToken = $agent->accessToken->token_value;
+                    return [
+                        "operation" => 'success',
+                        "token" => $accessToken,
+                        "agentId" => $agent->agent_id,
+                        "name" => $agent->agent_name,
+                        "email" => $agent->agent_email
+                    ];
+                }
+
+                return [
+                    'operation' => 'error',
+                    'message' => 'Unable to create your account. Please contact us for assistance.'
+                ];
+            }
+        }
+
+        // Default Error
+        return [
+            'operation' => 'error',
+            'message' => 'Invalid ID token. Please contact us if this issue persists.'
         ];
     }
 }

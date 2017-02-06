@@ -51,8 +51,10 @@ return [
                         'POST create-account' => 'create-account',
                         'POST request-reset-password' => 'request-reset-password',
                         'POST resend-verification-email' => 'resend-verification-email',
+                        'POST validate' => 'validate',
                         // OPTIONS VERBS
                         'OPTIONS verify' => 'options',
+                        'OPTIONS validate' => 'options',
                         'OPTIONS login' => 'options',
                         'OPTIONS create-account' => 'options',
                         'OPTIONS request-reset-password' => 'options',
