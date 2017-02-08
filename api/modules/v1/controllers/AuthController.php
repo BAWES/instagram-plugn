@@ -373,7 +373,7 @@ class AuthController extends Controller
                     'agent_name' => $fullname,
                     'agent_email' => $email,
                     'agent_email_verified' => Agent::EMAIL_VERIFIED,
-                    'agent_limit_email' => new Expression('NOW()')
+                    'agent_limit_email' => new \yii\db\Expression('NOW()')
                 ]);
                 $agent->setPassword(Yii::$app->security->generateRandomString(6));
                 $agent->generateAuthKey();
