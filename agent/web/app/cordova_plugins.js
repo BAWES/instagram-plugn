@@ -23,6 +23,37 @@ module.exports = [
         "runs": true
     },
     {
+        "file": "plugins/cordova-plugin-google-analytics/www/analytics.js",
+        "id": "cordova-plugin-google-analytics.UniversalAnalytics",
+        "pluginId": "cordova-plugin-google-analytics",
+        "clobbers": [
+            "analytics",
+            "ga"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-google-analytics/browser/UniversalAnalyticsProxy.js",
+        "id": "cordova-plugin-google-analytics.UniversalAnalyticsProxy",
+        "pluginId": "cordova-plugin-google-analytics",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-googleplus/www/GooglePlus.js",
+        "id": "cordova-plugin-googleplus.GooglePlus",
+        "pluginId": "cordova-plugin-googleplus",
+        "clobbers": [
+            "window.plugins.googleplus"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-headercolor/www/HeaderColor.js",
+        "id": "cordova-plugin-headercolor.HeaderColor",
+        "pluginId": "cordova-plugin-headercolor",
+        "clobbers": [
+            "cordova.plugins.headerColor"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "pluginId": "cordova-plugin-inappbrowser",
@@ -86,31 +117,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/ionic-plugin-keyboard/www/browser/keyboard.js",
-        "id": "ionic-plugin-keyboard.keyboard",
-        "pluginId": "ionic-plugin-keyboard",
-        "clobbers": [
-            "cordova.plugins.Keyboard"
-        ],
-        "runs": true
-    },
-    {
-        "file": "plugins/onesignal-cordova-plugin/www/OneSignal.js",
-        "id": "onesignal-cordova-plugin.OneSignal",
-        "pluginId": "onesignal-cordova-plugin",
-        "clobbers": [
-            "OneSignal"
-        ]
-    },
-    {
-        "file": "plugins/ionic-plugin-deploy/www/ionicdeploy.js",
-        "id": "ionic-plugin-deploy.IonicDeploy",
-        "pluginId": "ionic-plugin-deploy",
-        "clobbers": [
-            "IonicDeploy"
-        ]
-    },
-    {
         "file": "plugins/ionic-plugin-deeplinks/www/deeplink.js",
         "id": "ionic-plugin-deeplinks.deeplink",
         "pluginId": "ionic-plugin-deeplinks",
@@ -126,34 +132,28 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-google-analytics/www/analytics.js",
-        "id": "cordova-plugin-google-analytics.UniversalAnalytics",
-        "pluginId": "cordova-plugin-google-analytics",
+        "file": "plugins/ionic-plugin-deploy/www/ionicdeploy.js",
+        "id": "ionic-plugin-deploy.IonicDeploy",
+        "pluginId": "ionic-plugin-deploy",
         "clobbers": [
-            "analytics",
-            "ga"
+            "IonicDeploy"
         ]
     },
     {
-        "file": "plugins/cordova-plugin-google-analytics/browser/UniversalAnalyticsProxy.js",
-        "id": "cordova-plugin-google-analytics.UniversalAnalyticsProxy",
-        "pluginId": "cordova-plugin-google-analytics",
+        "file": "plugins/ionic-plugin-keyboard/www/browser/keyboard.js",
+        "id": "ionic-plugin-keyboard.keyboard",
+        "pluginId": "ionic-plugin-keyboard",
+        "clobbers": [
+            "cordova.plugins.Keyboard"
+        ],
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-googleplus/www/GooglePlus.js",
-        "id": "cordova-plugin-googleplus.GooglePlus",
-        "pluginId": "cordova-plugin-googleplus",
+        "file": "plugins/onesignal-cordova-plugin/www/OneSignal.js",
+        "id": "onesignal-cordova-plugin.OneSignal",
+        "pluginId": "onesignal-cordova-plugin",
         "clobbers": [
-            "window.plugins.googleplus"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-headercolor/www/HeaderColor.js",
-        "id": "cordova-plugin-headercolor.HeaderColor",
-        "pluginId": "cordova-plugin-headercolor",
-        "clobbers": [
-            "cordova.plugins.headerColor"
+            "OneSignal"
         ]
     }
 ];
@@ -163,18 +163,18 @@ module.exports.metadata =
     "com.verso.cordova.clipboard": "0.1.0",
     "cordova-plugin-console": "1.0.4",
     "cordova-plugin-device": "1.1.3",
+    "cordova-plugin-google-analytics": "1.7.4",
+    "cordova-plugin-googleplus": "5.1.1",
+    "cordova-plugin-headercolor": "1.0",
     "cordova-plugin-inappbrowser": "1.5.0",
     "cordova-plugin-nativestorage": "2.0.2",
     "cordova-plugin-splashscreen": "4.0.1-dev",
     "cordova-plugin-statusbar": "2.2.1-dev",
     "cordova-plugin-whitelist": "1.3.0",
-    "ionic-plugin-keyboard": "2.2.1",
-    "onesignal-cordova-plugin": "2.0.10",
-    "ionic-plugin-deploy": "0.6.5",
     "ionic-plugin-deeplinks": "1.0.14",
-    "cordova-plugin-google-analytics": "1.7.4",
-    "cordova-plugin-googleplus": "5.1.1",
-    "cordova-plugin-headercolor": "1.0"
+    "ionic-plugin-deploy": "0.6.5",
+    "ionic-plugin-keyboard": "2.2.1",
+    "onesignal-cordova-plugin": "2.0.10"
 }
 // BOTTOM OF METADATA
 });
