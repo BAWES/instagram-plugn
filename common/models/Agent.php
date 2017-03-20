@@ -474,7 +474,7 @@ class Agent extends ActiveRecord implements IdentityInterface
                 $this->_disableAgentAndManagedAccounts();
 
                 // Log to Slack that this customer trial expired & no billing setup
-                Yii::warning("[Agent #".$this->agent_id." Trial Expired] Owned by ".$this->agent_name." and has ".count($this->instagramUsers)." accounts", __METHOD__);
+                Yii::info("[Agent #".$this->agent_id." Trial Expired] Owned by ".$this->agent_name." and has ".count($this->instagramUsers)." accounts", __METHOD__);
 
                 // Send Email to Customer that his trial expired & need to setup billing
                 Yii::$app->mailer->compose([

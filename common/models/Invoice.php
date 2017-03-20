@@ -252,9 +252,9 @@ class Invoice extends \yii\db\ActiveRecord
         $logMessage = "[$description. Invoice #".$this->invoice_id."] $pricePlanName @ $paymentAmount for $customerName in $country expires on $expiresOn";
 
         if($this->message_type == "REFUND_ISSUED" || $this->message_type == "FRAUD_STATUS_CHANGED" || $this->message_type == "RECURRING_RESTARTED"){
-            Yii::warning($logMessage, __METHOD__);
+            Yii::info($logMessage, __METHOD__);
         }else if($this->message_type == "RECURRING_STOPPED" || $this->message_type == "RECURRING_COMPLETE" || $this->message_type == "RECURRING_INSTALLMENT_FAILED"){
-            Yii::error($logMessage, __METHOD__);
+            Yii::info($logMessage, __METHOD__);
         }else{
             Yii::info($logMessage, __METHOD__);
         }
