@@ -82,7 +82,7 @@ class InstagramAuthHandler
 
             // Check and log if this is an agent change
             if($oldAgentId && ($oldAgentId != $user->agent_id)){
-                Yii::warning("[Instagram account @".$user->user_name." being moved to new agent account] It was previously in Agent #$oldAgentId", __METHOD__);
+                Yii::info("[Instagram account @".$user->user_name." being moved to new agent account] It was previously in Agent #$oldAgentId", __METHOD__);
             }
 
 

@@ -217,7 +217,7 @@ class Billing extends \yii\db\ActiveRecord
         // Email Customer about Stopped Payment
         $this->emailCustomerRecurringStopped($originalBillingEndDate);
 
-        Yii::warning("[Disabled Recurring on Billing #".$this->twoco_order_num."] Source: $source" , __METHOD__);
+        Yii::info("[Disabled Recurring on Billing #".$this->twoco_order_num."] Source: $source" , __METHOD__);
     }
 
     /**

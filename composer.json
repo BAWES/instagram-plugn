@@ -21,7 +21,8 @@
         "yiisoft/yii2-authclient": "2.0.5",
         "kotchuprik/yii2-instagram-authclient": "v1.0",
         "2checkout/2checkout-php": "^0.3.1",
-        "google/apiclient": "^2.1"
+        "google/apiclient": "^2.1",
+        "notamedia/yii2-sentry": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
