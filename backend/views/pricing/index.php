@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'pricing_id',
             'pricing_title',
             //'pricing_features:ntext',
+            'pricing_account_quantity',
             'pricing_price:currency',
             //'pricing_created_at',
             // 'pricing_updated_at',
