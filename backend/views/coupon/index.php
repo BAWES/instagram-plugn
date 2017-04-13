@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'coupon_id',
             'coupon_name',
+            'coupon_reward_days',
             'coupon_user_limit',
             'coupon_expires_at:date',
             'coupon_created_at:date',

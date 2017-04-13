@@ -11,6 +11,7 @@ use yii\db\Expression;
  *
  * @property integer $coupon_id
  * @property string $coupon_name
+ * @property integer $coupon_reward_days
  * @property integer $coupon_user_limit
  * @property string $coupon_expires_at
  * @property string $coupon_created_at
@@ -33,7 +34,7 @@ class Coupon extends \yii\db\ActiveRecord
     {
         return [
             [['coupon_name', 'coupon_user_limit', 'coupon_expires_at'], 'required'],
-            [['coupon_user_limit'], 'integer'],
+            [['coupon_user_limit', 'coupon_reward_days'], 'integer'],
             [['coupon_name'], 'string', 'max' => 255],
         ];
     }
@@ -56,11 +57,12 @@ class Coupon extends \yii\db\ActiveRecord
     {
         return [
             'coupon_id' => 'Coupon ID',
-            'coupon_name' => 'Coupon Name',
-            'coupon_user_limit' => 'Coupon User Limit',
-            'coupon_expires_at' => 'Coupon Expires At',
-            'coupon_created_at' => 'Coupon Created At',
-            'coupon_updated_at' => 'Coupon Updated At',
+            'coupon_name' => 'Coupon Code',
+            'coupon_reward_days' => 'Reward (Days)',
+            'coupon_user_limit' => 'User Limit',
+            'coupon_expires_at' => 'Expires At',
+            'coupon_created_at' => 'Created At',
+            'coupon_updated_at' => 'Updated At',
         ];
     }
 }

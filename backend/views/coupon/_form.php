@@ -15,6 +15,8 @@ use dosamigos\datepicker\DatePicker;
 
     <?= $form->field($model, 'coupon_name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'coupon_reward_days')->textInput() ?>
+
     <?= $form->field($model, 'coupon_user_limit')->textInput() ?>
 
     <?= $form->field($model, 'coupon_expires_at')->widget(
