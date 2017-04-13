@@ -39,6 +39,7 @@ use yii\db\ActiveQuery;
  * @property Comment[] $deletedComments
  * @property Billing[] $billings
  * @property Invoice[] $invoices
+ * @property CouponUsed[] $couponsUsed
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
@@ -291,6 +292,14 @@ class Agent extends ActiveRecord implements IdentityInterface
     public function getInvoices()
     {
         return $this->hasMany(Invoice::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCouponsUsed()
+    {
+        return $this->hasMany(CouponUsed::className(), ['agent_id' => 'agent_id']);
     }
 
     /**

@@ -16,6 +16,8 @@ use yii\db\Expression;
  * @property string $coupon_expires_at
  * @property string $coupon_created_at
  * @property string $coupon_updated_at
+ *
+ * @property CouponUsed[] $couponUsers
  */
 class Coupon extends \yii\db\ActiveRecord
 {
@@ -64,5 +66,13 @@ class Coupon extends \yii\db\ActiveRecord
             'coupon_created_at' => 'Created At',
             'coupon_updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCouponUsers()
+    {
+        return $this->hasMany(CouponUsed::className(), ['coupon_id' => 'coupon_id']);
     }
 }
