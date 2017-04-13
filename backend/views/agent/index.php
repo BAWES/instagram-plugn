@@ -22,6 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'agent_name',
             'agent_email:email',
             'agent_email_verified:boolean',
+            'agent_trial_days',
+            'agent_status',
             'status',
             // 'agent_auth_key',
             // 'agent_password_hash',

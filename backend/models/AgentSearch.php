@@ -18,8 +18,8 @@ class AgentSearch extends Agent
     public function rules()
     {
         return [
-            [['agent_id', 'agent_email_verified', 'agent_status'], 'integer'],
-            [['agent_name', 'agent_email', 'agent_auth_key', 'agent_password_hash', 'agent_password_reset_token', 'agent_limit_email', 'agent_created_at', 'agent_updated_at'], 'safe'],
+            [['agent_id', 'agent_email_verified', 'agent_status', 'agent_trial_days'], 'integer'],
+            [['agent_name', 'agent_email', 'agent_auth_key', 'agent_password_hash', 'agent_password_reset_token', 'agent_limit_email', 'agent_created_at', 'agent_updated_at', 'agent_trial_days'], 'safe'],
         ];
     }
 
