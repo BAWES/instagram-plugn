@@ -22,7 +22,8 @@
         "kotchuprik/yii2-instagram-authclient": "v1.0",
         "2checkout/2checkout-php": "^0.3.1",
         "google/apiclient": "^2.1",
-        "notamedia/yii2-sentry": "^1.2"
+        "notamedia/yii2-sentry": "^1.2",
+        "2amigos/yii2-date-picker-widget": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
