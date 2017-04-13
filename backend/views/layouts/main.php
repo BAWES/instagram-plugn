@@ -68,6 +68,12 @@ AppAsset::register($this);
             ]
         ];
         $menuItems[] = [
+            'label' => 'Marketing',
+            'items' => [
+                ['label' => 'Coupons', 'url' => ['/coupon/index']],
+            ]
+        ];
+        $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->admin_name . ')',
             'url' => ['/site/logout'],
             'linkOptions' => ['data-method' => 'post']
