@@ -19,6 +19,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'coupon_name') ?>
 
+    <?= $form->field($model, 'coupon_reward_days') ?>
+
     <?= $form->field($model, 'coupon_user_limit') ?>
 
     <?= $form->field($model, 'coupon_expires_at') ?>

@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 'coupon_id',
                 'coupon_name',
+                'coupon_reward_days',
                 'coupon_user_limit',
                 'coupon_expires_at:date',
             ],

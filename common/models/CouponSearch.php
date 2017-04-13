@@ -18,8 +18,8 @@ class CouponSearch extends Coupon
     public function rules()
     {
         return [
-            [['coupon_id', 'coupon_user_limit'], 'integer'],
-            [['coupon_name', 'coupon_expires_at', 'coupon_created_at', 'coupon_updated_at'], 'safe'],
+            [['coupon_id', 'coupon_user_limit', 'coupon_reward_days'], 'integer'],
+            [['coupon_name', 'coupon_reward_days', 'coupon_expires_at', 'coupon_created_at', 'coupon_updated_at'], 'safe'],
         ];
     }
 
@@ -60,6 +60,7 @@ class CouponSearch extends Coupon
         // grid filtering conditions
         $query->andFilterWhere([
             'coupon_id' => $this->coupon_id,
+            'coupon_reward_days' => $this->coupon_reward_days,
             'coupon_user_limit' => $this->coupon_user_limit,
             'coupon_expires_at' => $this->coupon_expires_at,
             'coupon_created_at' => $this->coupon_created_at,
