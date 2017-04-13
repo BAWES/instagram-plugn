@@ -55,7 +55,18 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        // Total Money Made
+        $totalRevenue = \common\models\Invoice::find()->sum('invoice_usd_amount');
+        $totalRevenue = $totalRevenue ? $totalRevenue : 0;
+
+        // # of Active Instagram Accounts being crawled
+        $activeAccounts = \common\models\InstagramUser::find()->active()->count();
+        $activeAccounts = $activeAccounts ? $activeAccounts : 0;
+
+        return $this->render('index', [
+            'revenue' => $totalRevenue,
+            'activeAccounts' => $activeAccounts
+        ]);
     }
 
     public function actionLogin()
