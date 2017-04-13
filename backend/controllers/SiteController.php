@@ -63,9 +63,17 @@ class SiteController extends Controller
         $activeAccounts = \common\models\InstagramUser::find()->active()->count();
         $activeAccounts = $activeAccounts ? $activeAccounts : 0;
 
+        // # of Agents currently Paying
+        $paidAgents = \common\models\Agent::find()
+            ->andWhere(['agent_status' => \common\models\Agent::STATUS_ACTIVE])
+            ->andWhere(['agent_trial_days' => 0])
+            ->count();
+        $paidAgents = $paidAgents ? $paidAgents : 0;
+
         return $this->render('index', [
             'revenue' => $totalRevenue,
-            'activeAccounts' => $activeAccounts
+            'activeAccounts' => $activeAccounts,
+            'paidAgents' => $paidAgents
         ]);
     }
 
