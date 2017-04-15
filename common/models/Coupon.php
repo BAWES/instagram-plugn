@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use DateTime;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -66,6 +67,27 @@ class Coupon extends \yii\db\ActiveRecord
             'coupon_created_at' => 'Created At',
             'coupon_updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * Checks if the coupon has reached its user limit
+     * @return boolean
+     */
+    public function isAtUserLimit(){
+        return count($this->couponUsers) >= $this->coupon_user_limit;
+    }
+
+    /**
+     * Checks if the coupon has expired (by expiry date)
+     * @return boolean
+     */
+    public function isExpired(){
+        $now = new DateTime("now");
+        $expiryDate = new DateTime($this->coupon_expires_at);
+        if($now > $expiryDate){
+            return true;
+        }
+        return false;
     }
 
     /**

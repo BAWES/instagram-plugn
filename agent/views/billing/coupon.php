@@ -7,7 +7,7 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 
-$this->title = 'Coupon';
+$this->title = 'Redeem Coupon';
 ?>
 
 
@@ -32,8 +32,8 @@ $this->title = 'Coupon';
 		<form method='post' class='row'>
 			<div class="col-lg-4 col-md-6">
 				<fieldset class="form-group">
-					<label class="form-label semibold" for="exampleInput">Coupon Code</label>
-					<input type="text" class="form-control" id="exampleInput" placeholder="Enter your coupon code here">
+					<label class="form-label semibold" for="codeInput">Coupon Code</label>
+					<input type="text" name='coupon' class="form-control" id="codeInput" placeholder="Enter your coupon code here" autocomplete="off">
 				</fieldset>
 
 				<input type='submit' class='btn btn-primary' value='Redeem'/>

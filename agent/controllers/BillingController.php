@@ -71,7 +71,28 @@ class BillingController extends Controller
      */
     public function actionCoupon(){
         if($couponCode = Yii::$app->request->post('coupon')){
+            $agentEmail = Yii::$app->user->identity->agent_email;
+            $coupon = \common\models\Coupon::find()->where(['coupon_name' => $couponCode])->one();
+            if(!$coupon){
+                Yii::error("[Invalid Coupon Attempted ($couponCode)] Agent: $agentEmail", __METHOD__);
+            }else{
+                $errors = false;
 
+                // Check if its at user limit
+                if($coupon->isAtUserLimit() && !$errors){
+                    $errors = true;
+                    Yii::$app->getSession()->setFlash('warning', "[Invalid Coupon] This coupon is no longer valid.");
+                    Yii::error("[Attempted to redeem coupon thats already reached limit ($couponCode)] Agent: $agentEmail", __METHOD__);
+                }
+
+                // Check if coupon expiry date passed
+                if($coupon->isExpired() && !$errors){
+                    $errors = true;
+                    Yii::$app->getSession()->setFlash('warning', "[Coupon Expired] This coupon has expired on ".Yii::$app->formatter->asDate($coupon->coupon_expires_at, "long").".");
+                    Yii::error("[Attempted to redeem expired coupon ($couponCode)] Agent: $agentEmail", __METHOD__);
+                }
+
+            }
         }
 
         return $this->render('coupon');
