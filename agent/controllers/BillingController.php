@@ -70,8 +70,11 @@ class BillingController extends Controller
      * Allow agent to redeem coupons
      */
     public function actionCoupon(){
+        if($couponCode = Yii::$app->request->post('coupon')){
 
-        return $this->render('coupon', []);
+        }
+
+        return $this->render('coupon');
     }
 
     /**
