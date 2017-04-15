@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use DateTime;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -18,6 +19,7 @@ use yii\db\Expression;
  * @property string $coupon_updated_at
  *
  * @property CouponUsed[] $couponUsers
+ * @property Agent[] $agents
  */
 class Coupon extends \yii\db\ActiveRecord
 {
@@ -61,11 +63,33 @@ class Coupon extends \yii\db\ActiveRecord
             'coupon_id' => 'Coupon ID',
             'coupon_name' => 'Coupon Code',
             'coupon_reward_days' => 'Reward (Days)',
-            'coupon_user_limit' => 'User Limit',
+            'coupon_user_limit' => 'Use Limit',
             'coupon_expires_at' => 'Expires At',
             'coupon_created_at' => 'Created At',
             'coupon_updated_at' => 'Updated At',
+            'couponusersCount' => '# Used'
         ];
+    }
+
+    /**
+     * Checks if the coupon has reached its user limit
+     * @return boolean
+     */
+    public function isAtUserLimit(){
+        return count($this->couponUsers) >= $this->coupon_user_limit;
+    }
+
+    /**
+     * Checks if the coupon has expired (by expiry date)
+     * @return boolean
+     */
+    public function isExpired(){
+        $now = new DateTime("now");
+        $expiryDate = new DateTime($this->coupon_expires_at);
+        if($now > $expiryDate){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -74,5 +98,23 @@ class Coupon extends \yii\db\ActiveRecord
     public function getCouponUsers()
     {
         return $this->hasMany(CouponUsed::className(), ['coupon_id' => 'coupon_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCouponUsersCount()
+    {
+        return $this->getCouponUsers()->count();
+    }
+
+    /**
+     * Get Agents who used this coupon
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAgents()
+    {
+        return $this->hasMany(Agent::className(), ['agent_id' => 'agent_id'])
+                    ->via('couponUsers');
     }
 }
