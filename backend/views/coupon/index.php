@@ -24,11 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            'coupon_id',
+            //'coupon_id',
             'coupon_name',
+            'coupon_reward_days',
             'coupon_user_limit',
+            'couponusersCount',
             'coupon_expires_at:date',
-            'coupon_created_at:date',
+            //'coupon_created_at:date',
             // 'coupon_updated_at',
 
             ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],

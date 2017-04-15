@@ -39,6 +39,7 @@ use yii\db\ActiveQuery;
  * @property Comment[] $deletedComments
  * @property Billing[] $billings
  * @property Invoice[] $invoices
+ * @property CouponUsed[] $couponsUsed
  */
 class Agent extends ActiveRecord implements IdentityInterface
 {
@@ -294,6 +295,14 @@ class Agent extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCouponsUsed()
+    {
+        return $this->hasMany(CouponUsed::className(), ['agent_id' => 'agent_id']);
+    }
+
+    /**
      * Sends an email requesting a user to verify his email address
      * @return boolean whether the email was sent
      */
@@ -405,7 +414,7 @@ class Agent extends ActiveRecord implements IdentityInterface
         if(!$billingDaysLeft && !$this->hasActiveTrial()){
             $this->_disableAgentAndManagedAccounts();
         }else{
-            $this->_enableAgentAndManagedAccounts();
+            $this->enableAgentAndManagedAccounts();
         }
     }
 
@@ -514,7 +523,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      * either by new trial or billing
      * @return mixed
      */
-    private function _enableAgentAndManagedAccounts(){
+    public function enableAgentAndManagedAccounts(){
         // Do nothing if already enabled
         if($this->agent_status == Agent::STATUS_ACTIVE) return;
 

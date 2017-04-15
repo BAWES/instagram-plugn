@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * CouponController implements the CRUD actions for Coupon model.
@@ -61,8 +62,17 @@ class CouponController extends Controller
      */
     public function actionView($id)
     {
+        $model = Coupon::find()->where(['coupon_id' => $id])->one();
+
+        // Get Usage
+        $usageQuery = $model->getCouponUsers();
+        $usageProvider = new ActiveDataProvider([
+            'query' => $usageQuery,
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'usageProvider' => $usageProvider
         ]);
     }
 

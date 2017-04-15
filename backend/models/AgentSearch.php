@@ -62,6 +62,7 @@ class AgentSearch extends Agent
             'agent_id' => $this->agent_id,
             'agent_email_verified' => $this->agent_email_verified,
             'agent_status' => $this->agent_status,
+            'agent_trial_days' => $this->agent_trial_days,
             'agent_limit_email' => $this->agent_limit_email,
             'agent_created_at' => $this->agent_created_at,
             'agent_updated_at' => $this->agent_updated_at,
