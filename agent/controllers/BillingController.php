@@ -82,6 +82,7 @@ class BillingController extends Controller
             $coupon = \common\models\Coupon::find()->where(['coupon_name' => $couponCode])->one();
             if(!$coupon){
                 Yii::error("[Invalid Coupon Attempted ($couponCode)] Agent: $agentEmail", __METHOD__);
+                Yii::$app->getSession()->setFlash('error', "[Invalid Coupon Code] This coupon code is not valid.");
             }else{
                 $errors = false;
 
