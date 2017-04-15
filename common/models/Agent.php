@@ -414,7 +414,7 @@ class Agent extends ActiveRecord implements IdentityInterface
         if(!$billingDaysLeft && !$this->hasActiveTrial()){
             $this->_disableAgentAndManagedAccounts();
         }else{
-            $this->_enableAgentAndManagedAccounts();
+            $this->enableAgentAndManagedAccounts();
         }
     }
 
@@ -523,7 +523,7 @@ class Agent extends ActiveRecord implements IdentityInterface
      * either by new trial or billing
      * @return mixed
      */
-    private function _enableAgentAndManagedAccounts(){
+    public function enableAgentAndManagedAccounts(){
         // Do nothing if already enabled
         if($this->agent_status == Agent::STATUS_ACTIVE) return;
 

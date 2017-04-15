@@ -10,11 +10,13 @@ use yii\helpers\Url;
 $this->title = 'Billing';
 ?>
 
+<?php if(!$isBillingActive){ ?>
 <div class="container-fluid">
 	<section class="box-typical box-typical-padding">
 		Have a coupon? <a href='<?= Url::to('coupon') ?>'>Click here to redeem</a>
 	</setion>
 </div>
+<?php } ?>
 
 <div class="container-fluid">
 	<section class="box-typical box-typical-padding">

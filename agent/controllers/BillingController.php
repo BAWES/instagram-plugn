@@ -70,6 +70,13 @@ class BillingController extends Controller
      * Allow agent to redeem coupons
      */
     public function actionCoupon(){
+        // Redirect away if he has billing setup previously.
+        // Not allowed if customer already has used billing
+        if(count(Yii::$app->user->identity->billings)>0){
+            $this->redirect('index');
+        }
+
+        // Attempt to post coupon
         if($couponCode = Yii::$app->request->post('coupon')){
             $agentEmail = Yii::$app->user->identity->agent_email;
             $coupon = \common\models\Coupon::find()->where(['coupon_name' => $couponCode])->one();
@@ -90,6 +97,35 @@ class BillingController extends Controller
                     $errors = true;
                     Yii::$app->getSession()->setFlash('warning', "[Coupon Expired] This coupon has expired on ".Yii::$app->formatter->asDate($coupon->coupon_expires_at, "long").".");
                     Yii::error("[Attempted to redeem expired coupon ($couponCode)] Agent: $agentEmail", __METHOD__);
+                }
+
+                //If customer already has used a coupon previously
+                if(\common\models\CouponUsed::findOne(['agent_id' => Yii::$app->user->identity->agent_id]) && !$errors){
+                    $errors = true;
+                    Yii::$app->getSession()->setFlash('warning', "[Unable to use coupon] You have already used a coupon");
+                    Yii::error("[Unable to use coupon ($couponCode)] You've already used a coupon. Agent: $agentEmail", __METHOD__);
+                }
+
+                if(!$errors){
+                    // Redeem coupon for that agent
+                    $trialDaysToExtend = $coupon->coupon_reward_days;
+
+                    // Extend Trial for Agent
+                    $agent = Yii::$app->user->identity;
+                    $agent->agent_trial_days = $agent->agent_trial_days + $trialDaysToExtend;
+                    $agent->save(false);
+
+                    // Enable Agent and his Managed Accounts
+                    $agent->enableAgentAndManagedAccounts();
+
+                    // Mark Coupon Usage
+                    $couponUsage = new \common\models\CouponUsed;
+                    $couponUsage->agent_id = $agent->agent_id;
+                    $couponUsage->coupon_id = $coupon->coupon_id;
+                    $couponUsage->save();
+
+                    Yii::$app->getSession()->setFlash('success', "[Coupon Redeemed] Your trial has been extended by $trialDaysToExtend days");
+                    Yii::info("[Coupon used ($couponCode) by $agentEmail] Trial has been extended by $trialDaysToExtend days.", __METHOD__);
                 }
 
             }
