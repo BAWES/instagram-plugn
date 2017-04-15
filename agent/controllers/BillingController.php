@@ -67,6 +67,14 @@ class BillingController extends Controller
     }
 
     /**
+     * Allow agent to redeem coupons
+     */
+    public function actionCoupon(){
+
+        return $this->render('coupon', []);
+    }
+
+    /**
      * Cancels the current active plan
      */
     public function actionCancelPlan(){

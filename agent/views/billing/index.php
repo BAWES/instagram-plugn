@@ -12,6 +12,12 @@ $this->title = 'Billing';
 
 <div class="container-fluid">
 	<section class="box-typical box-typical-padding">
+		Have a coupon? <a href='<?= Url::to('coupon') ?>'>Click here to redeem</a>
+	</setion>
+</div>
+
+<div class="container-fluid">
+	<section class="box-typical box-typical-padding">
 
 		<?php if($isBillingActive && isset($invoices[0])){ ?>
 			<h4>Current Plan: Up to <?= $invoices[0]->pricing->pricing_account_quantity ?> Instagram Accounts</h4>
