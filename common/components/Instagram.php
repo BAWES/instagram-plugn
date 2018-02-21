@@ -183,6 +183,16 @@ class Instagram extends \kotchuprik\authclient\Instagram
             //Delete the Queued Comment as it has been posted successfully
             $pendingComment->delete();
 
+        }else if($responseCode == 400){ // Error posting from API
+
+            $errorType = ArrayHelper::getValue($response, 'meta.error_type');
+            // When media that this queued comment is for has been deleted before posting
+            if($errorType == "APINotFoundError"){
+                // Delete the pending comment as its no longer required.
+                $pendingComment->delete();
+                Yii::error("[APINotFoundError] Media was deleted before comment was posted, deleted comment from queue.", __METHOD__);
+            }
+
         }else Yii::error("[Fatal Error] Issue posting a comment to Instagram", __METHOD__);
 
     }
